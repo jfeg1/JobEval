@@ -1,0 +1,395 @@
+{
+  "version": "1.0",
+  "dataDate": "2024-05",
+  "source": "U.S. Bureau of Labor Statistics - Occupational Employment and Wage Statistics (Sample Data)",
+  "metadata": {
+    "totalOccupations": 50,
+    "lastUpdated": "2025-11-05T00:00:00.000Z",
+    "note": "This is sample data for development. Run 'npm run data:setup' to download real BLS data."
+  },
+  "occupations": [
+    {
+      "code": "11-1021",
+      "title": "General and Operations Managers",
+      "group": "Management",
+      "employment": 2984920,
+      "wages": {
+        "hourlyMean": 59.16,
+        "hourlyMedian": 50.99,
+        "annualMean": 123050,
+        "annualMedian": 106070,
+        "percentile10": 50750,
+        "percentile25": 72100,
+        "percentile75": 152450,
+        "percentile90": 208000
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "13-1111",
+      "title": "Management Analysts",
+      "group": "Business and Financial Operations",
+      "employment": 966100,
+      "wages": {
+        "hourlyMean": 49.45,
+        "hourlyMedian": 46.49,
+        "annualMean": 102850,
+        "annualMedian": 96710,
+        "percentile10": 54250,
+        "percentile25": 67570,
+        "percentile75": 126880,
+        "percentile90": 166560
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "11-2021",
+      "title": "Marketing Managers",
+      "group": "Management",
+      "employment": 353870,
+      "wages": {
+        "hourlyMean": 77.76,
+        "hourlyMedian": 68.08,
+        "annualMean": 161740,
+        "annualMedian": 141630,
+        "percentile10": 72800,
+        "percentile25": 96750,
+        "percentile75": 195470,
+        "percentile90": 239200
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "11-2022",
+      "title": "Sales Managers",
+      "group": "Management",
+      "employment": 481260,
+      "wages": {
+        "hourlyMean": 71.07,
+        "hourlyMedian": 63.43,
+        "annualMean": 147840,
+        "annualMedian": 131910,
+        "percentile10": 62070,
+        "percentile25": 89840,
+        "percentile75": 185200,
+        "percentile90": 239200
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "15-1252",
+      "title": "Software Developers",
+      "group": "Computer and Mathematical",
+      "employment": 1795300,
+      "wages": {
+        "hourlyMean": 65.46,
+        "hourlyMedian": 61.23,
+        "annualMean": 136160,
+        "annualMedian": 127370,
+        "percentile10": 77310,
+        "percentile25": 98350,
+        "percentile75": 163340,
+        "percentile90": 195430
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "15-1244",
+      "title": "Network and Computer Systems Administrators",
+      "group": "Computer and Mathematical",
+      "employment": 353620,
+      "wages": {
+        "hourlyMean": 46.98,
+        "hourlyMedian": 44.63,
+        "annualMean": 97710,
+        "annualMedian": 92830,
+        "percentile10": 56730,
+        "percentile25": 70800,
+        "percentile75": 116750,
+        "percentile90": 144380
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "13-2011",
+      "title": "Accountants and Auditors",
+      "group": "Business and Financial Operations",
+      "employment": 1452840,
+      "wages": {
+        "hourlyMean": 42.62,
+        "hourlyMedian": 39.29,
+        "annualMean": 88650,
+        "annualMedian": 81740,
+        "percentile10": 49820,
+        "percentile25": 61250,
+        "percentile75": 105150,
+        "percentile90": 133230
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "27-3031",
+      "title": "Public Relations Specialists",
+      "group": "Media and Communication",
+      "employment": 264260,
+      "wages": {
+        "hourlyMean": 36.34,
+        "hourlyMedian": 32.60,
+        "annualMean": 75580,
+        "annualMedian": 67810,
+        "percentile10": 38980,
+        "percentile25": 49220,
+        "percentile75": 91300,
+        "percentile90": 124520
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "43-6014",
+      "title": "Secretaries and Administrative Assistants",
+      "group": "Office and Administrative Support",
+      "employment": 1753200,
+      "wages": {
+        "hourlyMean": 21.67,
+        "hourlyMedian": 20.05,
+        "annualMean": 45070,
+        "annualMedian": 41700,
+        "percentile10": 28550,
+        "percentile25": 33700,
+        "percentile75": 52230,
+        "percentile90": 64880
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "41-3099",
+      "title": "Sales Representatives, Services",
+      "group": "Sales and Related",
+      "employment": 983560,
+      "wages": {
+        "hourlyMean": 34.77,
+        "hourlyMedian": 29.04,
+        "annualMean": 72310,
+        "annualMedian": 60400,
+        "percentile10": 31540,
+        "percentile25": 40620,
+        "percentile75": 87680,
+        "percentile90": 128980
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "11-3121",
+      "title": "Human Resources Managers",
+      "group": "Management",
+      "employment": 173040,
+      "wages": {
+        "hourlyMean": 68.58,
+        "hourlyMedian": 62.25,
+        "annualMean": 142640,
+        "annualMedian": 129470,
+        "percentile10": 75810,
+        "percentile25": 95130,
+        "percentile75": 171960,
+        "percentile90": 218920
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "13-1071",
+      "title": "Human Resources Specialists",
+      "group": "Business and Financial Operations",
+      "employment": 663880,
+      "wages": {
+        "hourlyMean": 34.71,
+        "hourlyMedian": 32.02,
+        "annualMean": 72190,
+        "annualMedian": 66600,
+        "percentile10": 40150,
+        "percentile25": 49900,
+        "percentile75": 85260,
+        "percentile90": 109790
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "25-1194",
+      "title": "Career/Technical Education Teachers, Postsecondary",
+      "group": "Educational Instruction and Library",
+      "employment": 128090,
+      "wages": {
+        "hourlyMean": 33.50,
+        "hourlyMedian": 29.41,
+        "annualMean": 69680,
+        "annualMedian": 61180,
+        "percentile10": 36030,
+        "percentile25": 44720,
+        "percentile75": 84720,
+        "percentile90": 113590
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "29-1141",
+      "title": "Registered Nurses",
+      "group": "Healthcare Practitioners and Technical",
+      "employment": 3255300,
+      "wages": {
+        "hourlyMean": 43.58,
+        "hourlyMedian": 40.31,
+        "annualMean": 90640,
+        "annualMedian": 83850,
+        "percentile10": 62030,
+        "percentile25": 70530,
+        "percentile75": 105380,
+        "percentile90": 128840
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "43-4051",
+      "title": "Customer Service Representatives",
+      "group": "Office and Administrative Support",
+      "employment": 2970420,
+      "wages": {
+        "hourlyMean": 20.84,
+        "hourlyMedian": 18.62,
+        "annualMean": 43350,
+        "annualMedian": 38730,
+        "percentile10": 26930,
+        "percentile25": 31640,
+        "percentile75": 49310,
+        "percentile90": 61940
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "17-2051",
+      "title": "Civil Engineers",
+      "group": "Architecture and Engineering",
+      "employment": 322590,
+      "wages": {
+        "hourlyMean": 48.74,
+        "hourlyMedian": 45.54,
+        "annualMean": 101380,
+        "annualMedian": 94740,
+        "percentile10": 60420,
+        "percentile25": 73280,
+        "percentile75": 120610,
+        "percentile90": 149280
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "17-2112",
+      "title": "Industrial Engineers",
+      "group": "Architecture and Engineering",
+      "employment": 305810,
+      "wages": {
+        "hourlyMean": 50.08,
+        "hourlyMedian": 46.89,
+        "annualMean": 104160,
+        "annualMedian": 97530,
+        "percentile10": 61850,
+        "percentile25": 73530,
+        "percentile75": 124850,
+        "percentile90": 154590
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "27-1024",
+      "title": "Graphic Designers",
+      "group": "Arts, Design, Entertainment, Sports, and Media",
+      "employment": 239690,
+      "wages": {
+        "hourlyMean": 29.95,
+        "hourlyMedian": 27.02,
+        "annualMean": 62290,
+        "annualMedian": 56200,
+        "percentile10": 33580,
+        "percentile25": 41910,
+        "percentile75": 75450,
+        "percentile90": 100450
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "15-1256",
+      "title": "Software Quality Assurance Analysts and Testers",
+      "group": "Computer and Mathematical",
+      "employment": 202440,
+      "wages": {
+        "hourlyMean": 51.75,
+        "hourlyMedian": 48.87,
+        "annualMean": 107640,
+        "annualMedian": 101650,
+        "percentile10": 59840,
+        "percentile25": 75590,
+        "percentile75": 130840,
+        "percentile90": 162270
+      },
+      "dataDate": "2024-05"
+    },
+    {
+      "code": "13-1161",
+      "title": "Market Research Analysts and Marketing Specialists",
+      "group": "Business and Financial Operations",
+      "employment": 790030,
+      "wages": {
+        "hourlyMean": 38.13,
+        "hourlyMedian": 33.37,
+        "annualMean": 79310,
+        "annualMedian": 69410,
+        "percentile10": 39520,
+        "percentile25": 49980,
+        "percentile75": 93690,
+        "percentile90": 130820
+      },
+      "dataDate": "2024-05"
+    }
+  ],
+  "index": {
+    "general": ["11-1021"],
+    "operations": ["11-1021"],
+    "managers": ["11-1021", "11-2021", "11-2022", "11-3121"],
+    "management": ["13-1111"],
+    "analysts": ["13-1111", "15-1256", "13-1161"],
+    "marketing": ["11-2021", "13-1161"],
+    "sales": ["11-2022", "41-3099"],
+    "software": ["15-1252", "15-1256"],
+    "developers": ["15-1252"],
+    "network": ["15-1244"],
+    "computer": ["15-1244"],
+    "systems": ["15-1244"],
+    "administrators": ["15-1244"],
+    "accountants": ["13-2011"],
+    "auditors": ["13-2011"],
+    "public": ["27-3031"],
+    "relations": ["27-3031"],
+    "specialists": ["27-3031", "13-1071", "13-1161"],
+    "secretaries": ["43-6014"],
+    "administrative": ["43-6014"],
+    "assistants": ["43-6014"],
+    "representatives": ["41-3099"],
+    "services": ["41-3099"],
+    "human": ["11-3121", "13-1071"],
+    "resources": ["11-3121", "13-1071"],
+    "teachers": ["25-1194"],
+    "education": ["25-1194"],
+    "nurses": ["29-1141"],
+    "registered": ["29-1141"],
+    "customer": ["43-4051"],
+    "service": ["43-4051"],
+    "civil": ["17-2051"],
+    "engineers": ["17-2051", "17-2112"],
+    "industrial": ["17-2112"],
+    "graphic": ["27-1024"],
+    "designers": ["27-1024"],
+    "quality": ["15-1256"],
+    "assurance": ["15-1256"],
+    "testers": ["15-1256"],
+    "market": ["13-1161"],
+    "research": ["13-1161"]
+  }
+}
