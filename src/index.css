@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+  
+  body {
+    @apply m-0 bg-gray-50 text-gray-700 antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  }
+}
+
+@layer components {
+  /* Form inputs */
+  .input {
+    @apply w-full px-4 py-3.5 border border-gray-300 rounded-md text-base bg-gray-50 transition-all;
+    @apply focus:outline-none focus:border-accent focus:bg-white;
+  }
+  
+  .textarea {
+    @apply w-full px-4 py-3.5 border border-gray-300 rounded-md text-base bg-gray-50 transition-all min-h-[120px] resize-y;
+    @apply focus:outline-none focus:border-accent focus:bg-white;
+  }
+  
+  .select {
+    @apply w-full px-4 py-3.5 border border-gray-300 rounded-md text-base bg-gray-50 transition-all;
+    @apply focus:outline-none focus:border-accent focus:bg-white;
+  }
+  
+  .label {
+    @apply block text-sm font-medium text-primary mb-3;
+  }
+  
+  .input-hint {
+    @apply text-sm text-gray-500 mt-2;
+  }
+  
+  /* Buttons */
+  .btn {
+    @apply px-8 py-3.5 rounded-md text-base font-medium cursor-pointer border-0 transition-all;
+    @apply font-sans;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white;
+    @apply hover:bg-primary-light;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent text-gray-600 border border-gray-300;
+    @apply hover:border-gray-400 hover:text-primary;
+  }
+  
+  /* Cards */
+  .card {
+    @apply bg-gray-100 rounded-md p-6;
+  }
+  
+  .card-title {
+    @apply text-base font-semibold text-primary mb-2;
+  }
+  
+  .card-text {
+    @apply text-sm text-gray-600 leading-relaxed;
+  }
+}
