@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCompanyStore, useMatchingStore, useCalculatorStore } from '@/stores';
 import { calculateAffordability } from '../utils/calculateAffordability';

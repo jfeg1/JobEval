@@ -32,7 +32,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           return React.cloneElement(child, {
             'aria-describedby': `${helpText ? helpTextId : ''} ${error ? errorId : ''}`.trim() || undefined,
             'aria-required': required ? 'true' : undefined,
-          } as any);
+          } as Partial<React.HTMLAttributes<HTMLElement>>);
         }
         return child;
       })}
