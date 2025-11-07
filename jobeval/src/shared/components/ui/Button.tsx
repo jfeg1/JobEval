@@ -1,24 +1,21 @@
-import React from 'react';
+import React from "react";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
   children: React.ReactNode;
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  className = '',
+  variant = "primary",
+  className = "",
   children,
   ...props
 }) => {
-  const baseClasses = 'btn';
-  const variantClasses = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
+  const baseClasses = "btn";
+  const variantClasses = variant === "primary" ? "btn-primary" : "btn-secondary";
 
   return (
-    <button
-      className={`${baseClasses} ${variantClasses} ${className}`}
-      {...props}
-    >
+    <button className={`${baseClasses} ${variantClasses} ${className}`} {...props}>
       {children}
     </button>
   );

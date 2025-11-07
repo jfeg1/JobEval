@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCompanyStore } from '@/features/company-setup/companyStore';
-import { usePositionStore } from '@/features/position-wizard/positionStore';
-import { useMatchingStore } from '../matchingStore';
-import { useWizardStore } from '@/features/position-wizard/wizardStore';
-import { useBLSData, type BLSOccupation } from '../hooks/useBLSData';
-import { searchOccupations } from '../services/searchOccupations';
-import { Input, Button } from '@/shared/components/ui';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { usePositionStore } from "@/features/position-wizard/positionStore";
+import { useMatchingStore } from "../matchingStore";
+import { useWizardStore } from "@/features/position-wizard/wizardStore";
+import { useBLSData, type BLSOccupation } from "../hooks/useBLSData";
+import { searchOccupations } from "../services/searchOccupations";
+import { Input, Button } from "@/shared/components/ui";
 
 const BLSMatching: React.FC = () => {
   const navigate = useNavigate();
@@ -18,12 +18,12 @@ const BLSMatching: React.FC = () => {
   // Guard: Redirect if prerequisites not complete
   useEffect(() => {
     if (!companyProfile || !basicInfo || !details) {
-      navigate('/setup/company');
+      navigate("/setup/company");
     }
   }, [companyProfile, basicInfo, details, navigate]);
 
   // Initialize search with job title
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     if (basicInfo?.title && !searchInput) {
@@ -53,7 +53,7 @@ const BLSMatching: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center py-12">
-          <p className="text-red-600">Error loading BLS data: {error || 'Unknown error'}</p>
+          <p className="text-red-600">Error loading BLS data: {error || "Unknown error"}</p>
           <Button onClick={() => window.location.reload()} className="mt-4">
             Retry
           </Button>
@@ -99,17 +99,17 @@ const BLSMatching: React.FC = () => {
     markStepComplete(4);
 
     // Navigate to calculator
-    navigate('/calculator');
+    navigate("/calculator");
   };
 
   const handleBack = () => {
-    navigate('/position/details');
+    navigate("/position/details");
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -118,17 +118,13 @@ const BLSMatching: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Progress indicator */}
-      <div className="mb-6 text-sm text-slate-600">
-        Step 4 of 6
-      </div>
+      <div className="mb-6 text-sm text-slate-600">Step 4 of 6</div>
 
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-light text-sage-900 mb-2">
-          Match to BLS Occupation
-        </h1>
+        <h1 className="text-3xl font-light text-sage-900 mb-2">Match to BLS Occupation</h1>
         <p className="text-slate-600">
-          Find the occupation code that best matches{' '}
+          Find the occupation code that best matches{" "}
           <span className="font-medium text-sage-800">{basicInfo.title}</span>
         </p>
       </div>
@@ -147,13 +143,11 @@ const BLSMatching: React.FC = () => {
       {/* Results count */}
       <div className="mb-4">
         <p className="text-sm text-slate-600">
-          {searchResults.length === 0 ? (
-            'No matches found. Try a different search term.'
-          ) : searchResults.length === 1 ? (
-            '1 occupation found'
-          ) : (
-            `${searchResults.length} occupations found`
-          )}
+          {searchResults.length === 0
+            ? "No matches found. Try a different search term."
+            : searchResults.length === 1
+              ? "1 occupation found"
+              : `${searchResults.length} occupations found`}
         </p>
       </div>
 
@@ -167,8 +161,8 @@ const BLSMatching: React.FC = () => {
               key={occupation.code}
               className={`cursor-pointer transition-all rounded-lg border p-4 ${
                 isSelected
-                  ? 'ring-2 ring-sage-500 bg-sage-50 border-sage-300'
-                  : 'border-slate-200 hover:border-sage-300 bg-white'
+                  ? "ring-2 ring-sage-500 bg-sage-50 border-sage-300"
+                  : "border-slate-200 hover:border-sage-300 bg-white"
               }`}
               onClick={() => handleSelectOccupation(occupation)}
             >
@@ -177,14 +171,10 @@ const BLSMatching: React.FC = () => {
                 <div className="mt-1">
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      isSelected
-                        ? 'border-sage-600 bg-sage-600'
-                        : 'border-slate-300'
+                      isSelected ? "border-sage-600 bg-sage-600" : "border-slate-300"
                     }`}
                   >
-                    {isSelected && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
+                    {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
                   </div>
                 </div>
 
@@ -193,9 +183,7 @@ const BLSMatching: React.FC = () => {
                   <h3 className="font-semibold text-slate-900 mb-1">
                     {occupation.title}
                     {isSelected && (
-                      <span className="ml-2 text-sm font-normal text-sage-700">
-                        (Selected)
-                      </span>
+                      <span className="ml-2 text-sm font-normal text-sage-700">(Selected)</span>
                     )}
                   </h3>
                   <p className="text-sm text-slate-600 mb-2">

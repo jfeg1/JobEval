@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCompanyStore } from '@/features/company-setup/companyStore';
-import { usePositionStore } from '../positionStore';
-import { useWizardStore } from '../wizardStore';
-import { FormField, Textarea, Button } from '@/shared/components/ui';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { usePositionStore } from "../positionStore";
+import { useWizardStore } from "../wizardStore";
+import { FormField, Textarea, Button } from "@/shared/components/ui";
 
 interface FormData {
   responsibilities: string;
@@ -35,16 +35,16 @@ export default function PositionDetails() {
   // Guard: Redirect if prerequisites not complete
   useEffect(() => {
     if (!companyProfile || !basicInfo) {
-      navigate('/setup/company');
+      navigate("/setup/company");
     }
   }, [companyProfile, basicInfo, navigate]);
 
   // Initialize form state from store (if returning to this page)
   const [formData, setFormData] = useState<FormData>({
-    responsibilities: details?.responsibilities || '',
-    requirements: details?.requirements || '',
-    qualifications: details?.qualifications || '',
-    workEnvironment: details?.workEnvironment || '',
+    responsibilities: details?.responsibilities || "",
+    requirements: details?.requirements || "",
+    qualifications: details?.qualifications || "",
+    workEnvironment: details?.workEnvironment || "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -60,48 +60,48 @@ export default function PositionDetails() {
 
     // Responsibilities validation
     if (!data.responsibilities.trim()) {
-      errors.responsibilities = 'Key responsibilities are required';
+      errors.responsibilities = "Key responsibilities are required";
     } else if (data.responsibilities.length < 20) {
-      errors.responsibilities = 'Please provide at least 20 characters';
+      errors.responsibilities = "Please provide at least 20 characters";
     } else if (data.responsibilities.length > 2000) {
-      errors.responsibilities = 'Must be less than 2000 characters';
+      errors.responsibilities = "Must be less than 2000 characters";
     }
 
     // Requirements validation
     if (!data.requirements.trim()) {
-      errors.requirements = 'Required skills are required';
+      errors.requirements = "Required skills are required";
     } else if (data.requirements.length < 20) {
-      errors.requirements = 'Please provide at least 20 characters';
+      errors.requirements = "Please provide at least 20 characters";
     } else if (data.requirements.length > 2000) {
-      errors.requirements = 'Must be less than 2000 characters';
+      errors.requirements = "Must be less than 2000 characters";
     }
 
     // Qualifications validation
     if (!data.qualifications.trim()) {
-      errors.qualifications = 'Preferred qualifications are required';
+      errors.qualifications = "Preferred qualifications are required";
     } else if (data.qualifications.length < 10) {
-      errors.qualifications = 'Please provide at least 10 characters';
+      errors.qualifications = "Please provide at least 10 characters";
     } else if (data.qualifications.length > 1000) {
-      errors.qualifications = 'Must be less than 1000 characters';
+      errors.qualifications = "Must be less than 1000 characters";
     }
 
     // Work environment validation
     if (!data.workEnvironment.trim()) {
-      errors.workEnvironment = 'Work environment details are required';
+      errors.workEnvironment = "Work environment details are required";
     } else if (data.workEnvironment.length < 10) {
-      errors.workEnvironment = 'Please provide at least 10 characters';
+      errors.workEnvironment = "Please provide at least 10 characters";
     } else if (data.workEnvironment.length > 1000) {
-      errors.workEnvironment = 'Must be less than 1000 characters';
+      errors.workEnvironment = "Must be less than 1000 characters";
     }
 
     return errors;
   };
 
   const handleBlur = (fieldName: keyof FormData) => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
 
     const fieldErrors = validateForm(formData);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       [fieldName]: fieldErrors[fieldName],
     }));
@@ -137,23 +137,21 @@ export default function PositionDetails() {
     markStepComplete(3);
 
     // Navigate to next page
-    navigate('/position/match');
+    navigate("/position/match");
   };
 
   const handleBack = () => {
-    navigate('/position/basic');
+    navigate("/position/basic");
   };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Page header with job title context */}
       <div className="mb-8">
-        <h1 className="text-3xl font-light text-sage-900 mb-2">
-          Job Details
-        </h1>
+        <h1 className="text-3xl font-light text-sage-900 mb-2">Job Details</h1>
         <p className="text-slate-600">
-          for <span className="font-medium text-sage-800">{basicInfo.title}</span>
-          {' '}at <span className="font-medium text-sage-800">{companyProfile.name}</span>
+          for <span className="font-medium text-sage-800">{basicInfo.title}</span> at{" "}
+          <span className="font-medium text-sage-800">{companyProfile.name}</span>
         </p>
       </div>
 
@@ -170,8 +168,8 @@ export default function PositionDetails() {
             id="responsibilities"
             rows={6}
             value={formData.responsibilities}
-            onChange={(e) => setFormData(prev => ({ ...prev, responsibilities: e.target.value }))}
-            onBlur={() => handleBlur('responsibilities')}
+            onChange={(e) => setFormData((prev) => ({ ...prev, responsibilities: e.target.value }))}
+            onBlur={() => handleBlur("responsibilities")}
             error={touched.responsibilities && !!errors.responsibilities}
             placeholder="List the main duties and responsibilities for this role..."
           />
@@ -188,8 +186,8 @@ export default function PositionDetails() {
             id="requirements"
             rows={6}
             value={formData.requirements}
-            onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
-            onBlur={() => handleBlur('requirements')}
+            onChange={(e) => setFormData((prev) => ({ ...prev, requirements: e.target.value }))}
+            onBlur={() => handleBlur("requirements")}
             error={touched.requirements && !!errors.requirements}
             placeholder="What skills, education, and experience are absolutely necessary?"
           />
@@ -206,8 +204,8 @@ export default function PositionDetails() {
             id="qualifications"
             rows={4}
             value={formData.qualifications}
-            onChange={(e) => setFormData(prev => ({ ...prev, qualifications: e.target.value }))}
-            onBlur={() => handleBlur('qualifications')}
+            onChange={(e) => setFormData((prev) => ({ ...prev, qualifications: e.target.value }))}
+            onBlur={() => handleBlur("qualifications")}
             error={touched.qualifications && !!errors.qualifications}
             placeholder="What would be nice to have but isn't required?"
           />
@@ -224,8 +222,8 @@ export default function PositionDetails() {
             id="work-environment"
             rows={4}
             value={formData.workEnvironment}
-            onChange={(e) => setFormData(prev => ({ ...prev, workEnvironment: e.target.value }))}
-            onBlur={() => handleBlur('workEnvironment')}
+            onChange={(e) => setFormData((prev) => ({ ...prev, workEnvironment: e.target.value }))}
+            onBlur={() => handleBlur("workEnvironment")}
             error={touched.workEnvironment && !!errors.workEnvironment}
             placeholder="Remote, hybrid, or in-office? Team size? Travel requirements?"
           />
@@ -233,18 +231,11 @@ export default function PositionDetails() {
 
         {/* Button bar */}
         <div className="flex justify-between pt-6 border-t border-slate-200">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleBack}
-          >
+          <Button type="button" variant="secondary" onClick={handleBack}>
             Back
           </Button>
 
-          <Button
-            type="submit"
-            variant="primary"
-          >
+          <Button type="submit" variant="primary">
             Continue
           </Button>
         </div>

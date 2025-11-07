@@ -16,17 +16,14 @@ interface BLSOccupation {
   dataDate: string;
 }
 
-export function searchOccupations(
-  occupations: BLSOccupation[],
-  query: string
-): BLSOccupation[] {
+export function searchOccupations(occupations: BLSOccupation[], query: string): BLSOccupation[] {
   if (!query.trim()) {
     return occupations; // Return all if no search query
   }
 
   const lowerQuery = query.toLowerCase();
 
-  return occupations.filter(occupation => {
+  return occupations.filter((occupation) => {
     // Search in title
     const titleMatch = occupation.title.toLowerCase().includes(lowerQuery);
 
