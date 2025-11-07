@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCompanyStore } from '@/features/company-setup/companyStore';
-import { useMatchingStore } from '@/features/bls-matching/matchingStore';
-import { useCalculatorStore } from '../calculatorStore';
-import { calculateAffordability } from '@/shared/utils/calculateAffordability';
-import { getMinimumWage, MINIMUM_WAGE_LAST_UPDATED } from '@/shared/lib/minimumWages';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { useMatchingStore } from "@/features/bls-matching/matchingStore";
+import { useCalculatorStore } from "../calculatorStore";
+import { calculateAffordability } from "@/shared/utils/calculateAffordability";
+import { getMinimumWage, MINIMUM_WAGE_LAST_UPDATED } from "@/shared/lib/minimumWages";
 
 export default function Calculator() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function Calculator() {
   // Validate prerequisites
   useEffect(() => {
     if (!company || !selectedOccupation) {
-      navigate('/setup/company');
+      navigate("/setup/company");
     }
   }, [company, selectedOccupation, navigate]);
 
@@ -68,7 +68,7 @@ export default function Calculator() {
   };
 
   const handleContinue = () => {
-    navigate('/results');
+    navigate("/results");
   };
 
   if (!company || !selectedOccupation) {
@@ -90,17 +90,13 @@ export default function Calculator() {
             <span className="text-gray-600">83% Complete</span>
           </div>
           <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-green-600" style={{ width: '83%' }}></div>
+            <div className="h-full bg-green-600" style={{ width: "83%" }}></div>
           </div>
         </div>
 
         <div className="mt-8">
-          <h1 className="text-3xl font-light text-gray-900 mb-2">
-            Budget Calculator
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Calculate what you can afford for this position
-          </p>
+          <h1 className="text-3xl font-light text-gray-900 mb-2">Budget Calculator</h1>
+          <p className="text-gray-600 mb-8">Calculate what you can afford for this position</p>
 
           {/* Market Data Summary */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -131,9 +127,7 @@ export default function Calculator() {
 
           {/* Budget Inputs */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 className="text-xl font-medium text-gray-900 mb-6">
-              Your Budget
-            </h2>
+            <h2 className="text-xl font-medium text-gray-900 mb-6">Your Budget</h2>
 
             {/* Company Info Display */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg grid grid-cols-2 gap-4">
@@ -144,12 +138,8 @@ export default function Calculator() {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">
-                  Minimum Wage ({company.state})
-                </p>
-                <p className="text-2xl font-light text-gray-900">
-                  ${minimumWageHourly}/hr
-                </p>
+                <p className="text-sm text-gray-600 mb-1">Minimum Wage ({company.state})</p>
+                <p className="text-2xl font-light text-gray-900">${minimumWageHourly}/hr</p>
                 <p className="text-xs text-gray-500 mt-1">
                   ${(minimumWageHourly * 2080).toLocaleString()}/year
                 </p>
@@ -160,9 +150,7 @@ export default function Calculator() {
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Budget Allocation
-                <span className="text-gray-500 font-normal ml-2">
-                  (% of annual revenue)
-                </span>
+                <span className="text-gray-500 font-normal ml-2">(% of annual revenue)</span>
               </label>
               <div className="flex items-center gap-4">
                 <input
@@ -190,12 +178,10 @@ export default function Calculator() {
                 <span className="text-gray-500 font-normal ml-2">(optional)</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600">
-                  $
-                </span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600">$</span>
                 <input
                   type="number"
-                  value={additionalBudget || ''}
+                  value={additionalBudget || ""}
                   onChange={(e) => setAdditionalBudget(Number(e.target.value) || 0)}
                   placeholder="0"
                   className="w-full pl-8 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -212,7 +198,7 @@ export default function Calculator() {
               <p className="text-3xl font-light text-gray-900">
                 ${totalBudgetBeforeMinimum.toLocaleString()}
               </p>
-              {totalBudgetBeforeMinimum < (minimumWageHourly * 2080) && (
+              {totalBudgetBeforeMinimum < minimumWageHourly * 2080 && (
                 <p className="text-xs text-amber-700 mt-2">
                   ⚠️ Below minimum wage - will be adjusted in calculation
                 </p>
@@ -225,7 +211,7 @@ export default function Calculator() {
             onClick={handleCalculate}
             className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors font-medium mb-6"
           >
-            {hasCalculated ? 'Recalculate' : 'Calculate Affordability'}
+            {hasCalculated ? "Recalculate" : "Calculate Affordability"}
           </button>
 
           {/* Results Display */}
@@ -241,13 +227,13 @@ export default function Calculator() {
                         Below Minimum Wage
                       </h3>
                       <p className="text-sm text-amber-800 mb-3">
-                        Your initial budget (${totalBudgetBeforeMinimum.toLocaleString()})
-                        was below the minimum wage requirement in {company.state}
+                        Your initial budget (${totalBudgetBeforeMinimum.toLocaleString()}) was below
+                        the minimum wage requirement in {company.state}
                         (${minimumWageAmount?.toLocaleString()}/year).
                       </p>
                       <p className="text-sm text-amber-800 font-medium">
-                        Your affordable range has been automatically adjusted to comply
-                        with legal requirements.
+                        Your affordable range has been automatically adjusted to comply with legal
+                        requirements.
                       </p>
                     </div>
                   </div>
@@ -256,15 +242,11 @@ export default function Calculator() {
 
               {/* Calculation Results */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-medium text-gray-900 mb-6">
-                  Calculation Results
-                </h2>
+                <h2 className="text-xl font-medium text-gray-900 mb-6">Calculation Results</h2>
 
                 {/* Affordable Range */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">
-                    Your Affordable Range
-                  </h3>
+                  <h3 className="text-lg font-medium text-gray-800 mb-3">Your Affordable Range</h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-600 mb-1">Minimum</p>
@@ -289,36 +271,33 @@ export default function Calculator() {
 
                 {/* Market Alignment */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">
-                    Market Alignment
-                  </h3>
-                  <div className={`p-4 rounded-lg border-2 ${
-                    marketAlignment === 'below'
-                      ? 'bg-amber-50 border-amber-300'
-                      : marketAlignment === 'above'
-                      ? 'bg-blue-50 border-blue-300'
-                      : 'bg-green-50 border-green-300'
-                  }`}>
+                  <h3 className="text-lg font-medium text-gray-800 mb-3">Market Alignment</h3>
+                  <div
+                    className={`p-4 rounded-lg border-2 ${
+                      marketAlignment === "below"
+                        ? "bg-amber-50 border-amber-300"
+                        : marketAlignment === "above"
+                          ? "bg-blue-50 border-blue-300"
+                          : "bg-green-50 border-green-300"
+                    }`}
+                  >
                     <p className="font-medium text-lg mb-2">
-                      {marketAlignment === 'below' && '⚠️ Below Market Rate'}
-                      {marketAlignment === 'above' && '⬆️ Above Market Rate'}
-                      {marketAlignment === 'within' && '✅ Within Market Range'}
+                      {marketAlignment === "below" && "⚠️ Below Market Rate"}
+                      {marketAlignment === "above" && "⬆️ Above Market Rate"}
+                      {marketAlignment === "within" && "✅ Within Market Range"}
                     </p>
                     <p className="text-sm text-gray-700">
-                      {gap !== null && (
-                        gap > 0
+                      {gap !== null &&
+                        (gap > 0
                           ? `You're $${Math.abs(gap).toLocaleString()} above market median`
-                          : `You're $${Math.abs(gap).toLocaleString()} below market median`
-                      )}
+                          : `You're $${Math.abs(gap).toLocaleString()} below market median`)}
                     </p>
                   </div>
                 </div>
 
                 {/* Visual Comparison */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">
-                    Comparison to Market
-                  </h3>
+                  <h3 className="text-lg font-medium text-gray-800 mb-3">Comparison to Market</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
                       <span className="text-gray-600">Market 10th %ile</span>
@@ -365,7 +344,7 @@ export default function Calculator() {
           {/* Navigation */}
           <div className="flex justify-between items-center mt-8">
             <button
-              onClick={() => navigate('/position/match')}
+              onClick={() => navigate("/position/match")}
               className="text-green-600 hover:text-green-700 font-medium"
             >
               ← Back
@@ -376,8 +355,8 @@ export default function Calculator() {
               disabled={!hasCalculated}
               className={`px-6 py-2 rounded-lg font-medium transition-colors ${
                 hasCalculated
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
             >
               Continue to Results →
@@ -388,12 +367,12 @@ export default function Calculator() {
         {/* Data Attribution Footer */}
         <div className="mt-12 pt-6 border-t border-gray-200 text-xs text-gray-500 text-center">
           <p>
-            Minimum wage data last updated: {MINIMUM_WAGE_LAST_UPDATED} |
-            Source: U.S. Department of Labor
+            Minimum wage data last updated: {MINIMUM_WAGE_LAST_UPDATED} | Source: U.S. Department of
+            Labor
           </p>
           <p className="mt-1">
-            Note: Local ordinances may require higher minimum wages.
-            Consult your local labor authority.
+            Note: Local ordinances may require higher minimum wages. Consult your local labor
+            authority.
           </p>
         </div>
       </div>

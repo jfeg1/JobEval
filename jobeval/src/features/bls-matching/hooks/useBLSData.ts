@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface BLSOccupation {
   code: string;
@@ -39,14 +39,14 @@ export function useBLSData() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/data/bls-data.json');
+        const response = await fetch("/data/bls-data.json");
         if (!response.ok) {
-          throw new Error('Failed to load BLS data');
+          throw new Error("Failed to load BLS data");
         }
         const jsonData = await response.json();
         setData(jsonData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface BasicInfo {
   title: string;
@@ -68,12 +68,7 @@ export const usePositionStore = create<PositionState>()(
 
       isBasicComplete: () => {
         const { basicInfo } = get();
-        return !!(
-          basicInfo &&
-          basicInfo.title &&
-          basicInfo.department &&
-          basicInfo.reportsTo
-        );
+        return !!(basicInfo && basicInfo.title && basicInfo.department && basicInfo.reportsTo);
       },
 
       isDetailsComplete: () => {
@@ -87,16 +82,17 @@ export const usePositionStore = create<PositionState>()(
         );
       },
 
-      clearPosition: () => set({
-        basicInfo: null,
-        details: null,
-        responsibilities: null,
-        requirements: null,
-        compensation: null,
-      }),
+      clearPosition: () =>
+        set({
+          basicInfo: null,
+          details: null,
+          responsibilities: null,
+          requirements: null,
+          compensation: null,
+        }),
     }),
     {
-      name: 'position-storage',
+      name: "position-storage",
     }
   )
 );

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface SelectedOccupation {
   code: string;
@@ -32,17 +32,18 @@ export const useMatchingStore = create<MatchingState>()(
   persist(
     (set) => ({
       selectedOccupation: null,
-      searchQuery: '',
+      searchQuery: "",
 
       selectOccupation: (occupation) => set({ selectedOccupation: occupation }),
       setSearchQuery: (query) => set({ searchQuery: query }),
-      clearMatching: () => set({
-        selectedOccupation: null,
-        searchQuery: '',
-      }),
+      clearMatching: () =>
+        set({
+          selectedOccupation: null,
+          searchQuery: "",
+        }),
     }),
     {
-      name: 'matching-storage',
+      name: "matching-storage",
     }
   )
 );

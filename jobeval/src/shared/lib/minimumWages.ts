@@ -10,62 +10,62 @@
 
 export const minimumWages: Record<string, number> = {
   // States with higher than federal minimum
-  'AK': 11.73,
-  'AZ': 14.35,
-  'AR': 11.00,
-  'CA': 16.00,
-  'CO': 14.42,
-  'CT': 15.69,
-  'DE': 13.25,
-  'FL': 12.00,
-  'HI': 14.00,
-  'IL': 14.00,
-  'ME': 14.15,
-  'MD': 15.00,
-  'MA': 15.00,
-  'MI': 10.33,
-  'MN': 10.85,
-  'MO': 12.30,
-  'MT': 10.30,
-  'NE': 12.00,
-  'NV': 12.00,
-  'NJ': 15.13,
-  'NM': 12.00,
-  'NY': 15.00,
-  'OH': 10.45,
-  'OR': 14.20,
-  'RI': 14.00,
-  'SD': 11.20,
-  'VT': 13.67,
-  'VA': 12.00,
-  'WA': 16.28,
-  'DC': 17.00,
+  AK: 11.73,
+  AZ: 14.35,
+  AR: 11.0,
+  CA: 16.0,
+  CO: 14.42,
+  CT: 15.69,
+  DE: 13.25,
+  FL: 12.0,
+  HI: 14.0,
+  IL: 14.0,
+  ME: 14.15,
+  MD: 15.0,
+  MA: 15.0,
+  MI: 10.33,
+  MN: 10.85,
+  MO: 12.3,
+  MT: 10.3,
+  NE: 12.0,
+  NV: 12.0,
+  NJ: 15.13,
+  NM: 12.0,
+  NY: 15.0,
+  OH: 10.45,
+  OR: 14.2,
+  RI: 14.0,
+  SD: 11.2,
+  VT: 13.67,
+  VA: 12.0,
+  WA: 16.28,
+  DC: 17.0,
 
   // States using federal minimum ($7.25)
-  'AL': 7.25,
-  'GA': 7.25,
-  'ID': 7.25,
-  'IN': 7.25,
-  'IA': 7.25,
-  'KS': 7.25,
-  'KY': 7.25,
-  'LA': 7.25,
-  'MS': 7.25,
-  'NH': 7.25,
-  'NC': 7.25,
-  'ND': 7.25,
-  'OK': 7.25,
-  'PA': 7.25,
-  'SC': 7.25,
-  'TN': 7.25,
-  'TX': 7.25,
-  'UT': 7.25,
-  'WV': 7.25,
-  'WI': 7.25,
-  'WY': 7.25,
+  AL: 7.25,
+  GA: 7.25,
+  ID: 7.25,
+  IN: 7.25,
+  IA: 7.25,
+  KS: 7.25,
+  KY: 7.25,
+  LA: 7.25,
+  MS: 7.25,
+  NH: 7.25,
+  NC: 7.25,
+  ND: 7.25,
+  OK: 7.25,
+  PA: 7.25,
+  SC: 7.25,
+  TN: 7.25,
+  TX: 7.25,
+  UT: 7.25,
+  WV: 7.25,
+  WI: 7.25,
+  WY: 7.25,
 
   // Federal default
-  'FEDERAL': 7.25,
+  FEDERAL: 7.25,
 };
 
 /**
@@ -75,7 +75,7 @@ export const minimumWages: Record<string, number> = {
  */
 export function getMinimumWage(state: string): number {
   const stateCode = state.toUpperCase().trim();
-  return minimumWages[stateCode] || minimumWages['FEDERAL'];
+  return minimumWages[stateCode] || minimumWages["FEDERAL"];
 }
 
 /**
@@ -101,4 +101,4 @@ export function meetsMinimumWage(annualSalary: number, state: string): boolean {
 /**
  * Get the last updated date for minimum wage data
  */
-export const MINIMUM_WAGE_LAST_UPDATED = '2025-01-01';
+export const MINIMUM_WAGE_LAST_UPDATED = "2025-01-01";
