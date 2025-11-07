@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCompanyStore, useMatchingStore, useCalculatorStore } from '@/stores';
-import { calculateAffordability } from '../utils/calculateAffordability';
-import { getMinimumWage, MINIMUM_WAGE_LAST_UPDATED } from '../data/minimumWages';
+import { useCompanyStore } from '@/features/company-setup/companyStore';
+import { useMatchingStore } from '@/features/bls-matching/matchingStore';
+import { useCalculatorStore } from '../calculatorStore';
+import { calculateAffordability } from '@/shared/utils/calculateAffordability';
+import { getMinimumWage, MINIMUM_WAGE_LAST_UPDATED } from '@/shared/lib/minimumWages';
 
 export default function Calculator() {
   const navigate = useNavigate();

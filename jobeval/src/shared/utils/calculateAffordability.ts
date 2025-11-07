@@ -1,6 +1,6 @@
-import type { CompanyProfile } from '../stores/companyStore';
-import type { SelectedOccupation } from '../stores/matchingStore';
-import { getAnnualMinimumWage, getMinimumWage } from '../data/minimumWages';
+import type { CompanyProfile } from '@/features/company-setup/companyStore';
+import type { SelectedOccupation } from '@/features/bls-matching/matchingStore';
+import { getAnnualMinimumWage, getMinimumWage } from '../lib/minimumWages';
 
 interface AffordabilityInputs {
   company: CompanyProfile;
