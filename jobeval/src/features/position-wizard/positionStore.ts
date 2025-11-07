@@ -8,9 +8,10 @@ export interface BasicInfo {
 }
 
 export interface PositionDetails {
-  level: string;
-  employmentType: string;
-  workLocation: string;
+  responsibilities: string;
+  requirements: string;
+  qualifications: string;
+  workEnvironment: string;
 }
 
 export interface Responsibilities {
@@ -79,9 +80,10 @@ export const usePositionStore = create<PositionState>()(
         const { details } = get();
         return !!(
           details &&
-          details.level &&
-          details.employmentType &&
-          details.workLocation
+          details.responsibilities &&
+          details.requirements &&
+          details.qualifications &&
+          details.workEnvironment
         );
       },
 

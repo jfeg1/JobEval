@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCompanyStore } from '@/stores';
-import { useWizardStore } from '@/stores';
-import { Input } from '@/components/shared/Input';
-import { FormField } from '@/components/shared/FormField';
-import { Button } from '@/components/shared/Button';
+import { useCompanyStore } from '../companyStore';
+import { useWizardStore } from '@/features/position-wizard/wizardStore';
+import { Input, FormField, Button } from '@/shared/components/ui';
 
 interface FormData {
   name: string;
