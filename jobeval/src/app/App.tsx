@@ -4,6 +4,7 @@ import PositionBasic from "../features/position-wizard/components/PositionBasic"
 import PositionDetails from "../features/position-wizard/components/PositionDetails";
 import BLSMatching from "../features/bls-matching/components/BLSMatching";
 import Calculator from "../features/calculator/components/Calculator";
+import Results from "../features/results/components/Results";
 import "./App.css";
 
 function App() {
@@ -17,14 +18,7 @@ function App() {
         <Route path="/position/details" element={<PositionDetails />} />
         <Route path="/position/match" element={<BLSMatching />} />
         <Route path="/calculator" element={<Calculator />} />
-        <Route
-          path="/results"
-          element={
-            <div className="container mx-auto px-4 py-8">
-              <h1 className="text-2xl">Results (Coming Soon)</h1>
-            </div>
-          }
-        />
+        <Route path="/results" element={<Results />} />
       </Routes>
     </div>
   );

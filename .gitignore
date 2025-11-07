@@ -1,7 +1,5 @@
-# Extracted project directory (use tarball instead)
-jobeval/
-
 # Node modules
+jobeval/node_modules/
 node_modules/
 
 # Build outputs
