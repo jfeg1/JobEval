@@ -86,10 +86,10 @@ const PositionBasic: React.FC = () => {
   };
 
   const handleBlur = (fieldName: keyof FormData) => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
 
     const fieldErrors = validateForm(formData);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       [fieldName]: fieldErrors[fieldName],
     }));
@@ -134,15 +134,11 @@ const PositionBasic: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Progress indicator placeholder - would be added from WizardLayout */}
-      <div className="mb-6 text-sm text-slate-600">
-        Step 2 of 6
-      </div>
+      <div className="mb-6 text-sm text-slate-600">Step 2 of 6</div>
 
       {/* Page header with company context */}
       <div className="mb-8">
-        <h1 className="text-3xl font-light text-sage-900 mb-2">
-          Position Details
-        </h1>
+        <h1 className="text-3xl font-light text-sage-900 mb-2">Position Details</h1>
         {companyProfile && (
           <p className="text-slate-600">
             for <span className="font-medium text-sage-800">{companyProfile.name}</span>
@@ -163,7 +159,7 @@ const PositionBasic: React.FC = () => {
             id="job-title"
             type="text"
             value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
             onBlur={() => handleBlur('title')}
             error={touched.title && !!errors.title}
             placeholder="e.g., Senior Software Engineer"
@@ -181,7 +177,9 @@ const PositionBasic: React.FC = () => {
             id="department"
             type="text"
             value={formData.department}
-            onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, department: e.target.value }))
+            }
             onBlur={() => handleBlur('department')}
             error={touched.department && !!errors.department}
             placeholder="e.g., Engineering, Marketing, Sales"
@@ -199,7 +197,9 @@ const PositionBasic: React.FC = () => {
             id="reports-to"
             type="text"
             value={formData.reportsTo}
-            onChange={(e) => setFormData(prev => ({ ...prev, reportsTo: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, reportsTo: e.target.value }))
+            }
             onBlur={() => handleBlur('reportsTo')}
             error={touched.reportsTo && !!errors.reportsTo}
             placeholder="e.g., VP of Engineering, CEO, Marketing Director"
@@ -208,18 +208,11 @@ const PositionBasic: React.FC = () => {
 
         {/* Button bar */}
         <div className="flex justify-between pt-6 border-t border-slate-200">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleBack}
-          >
+          <Button type="button" variant="secondary" onClick={handleBack}>
             Back
           </Button>
 
-          <Button
-            type="submit"
-            variant="primary"
-          >
+          <Button type="submit" variant="primary">
             Continue
           </Button>
         </div>

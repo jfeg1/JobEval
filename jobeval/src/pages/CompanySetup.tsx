@@ -66,9 +66,9 @@ const CompanySetup: React.FC = () => {
   };
 
   const handleBlur = (fieldName: keyof FormData) => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
     const fieldErrors = validateForm(formData);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       [fieldName]: fieldErrors[fieldName],
     }));
@@ -106,12 +106,8 @@ const CompanySetup: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-light text-sage-900 mb-2">
-          Company Setup
-        </h1>
-        <p className="text-slate-600">
-          Tell us about your company
-        </p>
+        <h1 className="text-3xl font-light text-sage-900 mb-2">Company Setup</h1>
+        <p className="text-slate-600">Tell us about your company</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -126,7 +122,7 @@ const CompanySetup: React.FC = () => {
             id="company-name"
             type="text"
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             onBlur={() => handleBlur('name')}
             error={touched.name && !!errors.name}
             placeholder="e.g., Acme Corporation"
@@ -144,7 +140,9 @@ const CompanySetup: React.FC = () => {
             id="industry"
             type="text"
             value={formData.industry}
-            onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, industry: e.target.value }))
+            }
             onBlur={() => handleBlur('industry')}
             error={touched.industry && !!errors.industry}
             placeholder="e.g., Technology, Healthcare, Finance"
@@ -162,7 +160,7 @@ const CompanySetup: React.FC = () => {
             id="company-size"
             type="text"
             value={formData.size}
-            onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
+            onChange={(e) => setFormData((prev) => ({ ...prev, size: e.target.value }))}
             onBlur={() => handleBlur('size')}
             error={touched.size && !!errors.size}
             placeholder="e.g., 1-10, 11-50, 51-200, 200+"
@@ -180,7 +178,9 @@ const CompanySetup: React.FC = () => {
             id="location"
             type="text"
             value={formData.location}
-            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, location: e.target.value }))
+            }
             onBlur={() => handleBlur('location')}
             error={touched.location && !!errors.location}
             placeholder="e.g., San Francisco, CA"

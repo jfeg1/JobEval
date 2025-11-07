@@ -85,13 +85,14 @@ export const usePositionStore = create<PositionState>()(
         );
       },
 
-      clearPosition: () => set({
-        basicInfo: null,
-        details: null,
-        responsibilities: null,
-        requirements: null,
-        compensation: null,
-      }),
+      clearPosition: () =>
+        set({
+          basicInfo: null,
+          details: null,
+          responsibilities: null,
+          requirements: null,
+          compensation: null,
+        }),
     }),
     {
       name: 'position-storage',

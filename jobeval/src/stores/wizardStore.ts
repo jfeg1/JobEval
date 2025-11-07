@@ -20,7 +20,12 @@ const initialSteps: WizardStep[] = [
   { id: 1, title: 'Company Setup', path: '/setup/company', completed: false },
   { id: 2, title: 'Position Basic', path: '/position/basic', completed: false },
   { id: 3, title: 'Position Details', path: '/position/details', completed: false },
-  { id: 4, title: 'Responsibilities', path: '/position/responsibilities', completed: false },
+  {
+    id: 4,
+    title: 'Responsibilities',
+    path: '/position/responsibilities',
+    completed: false,
+  },
   { id: 5, title: 'Requirements', path: '/position/requirements', completed: false },
   { id: 6, title: 'Compensation', path: '/position/compensation', completed: false },
 ];

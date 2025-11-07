@@ -30,9 +30,10 @@ export const FormField: React.FC<FormFieldProps> = ({
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
-            'aria-describedby': `${helpText ? helpTextId : ''} ${error ? errorId : ''}`.trim() || undefined,
+            'aria-describedby':
+              `${helpText ? helpTextId : ''} ${error ? errorId : ''}`.trim() || undefined,
             'aria-required': required ? 'true' : undefined,
-          } as any);
+          } as React.Attributes);
         }
         return child;
       })}
