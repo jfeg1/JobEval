@@ -6,6 +6,9 @@ export interface CompanyProfile {
   industry: string;
   size: string;
   location: string;
+  annualRevenue: number;
+  employeeCount: string;
+  state: string;
 }
 
 interface CompanyState {

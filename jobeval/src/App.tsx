@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import CompanySetup from './pages/CompanySetup';
 import PositionBasic from './pages/PositionBasic';
+import Calculator from './pages/Calculator';
 import './App.css';
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
         <Route path="/position/basic" element={<PositionBasic />} />
         {/* Placeholder for future routes */}
         <Route path="/position/details" element={<div className="container mx-auto px-4 py-8"><h1 className="text-2xl">Position Details (Coming Soon)</h1></div>} />
+        <Route path="/position/match" element={<div className="container mx-auto px-4 py-8"><h1 className="text-2xl">BLS Matching (Coming Soon)</h1></div>} />
+        <Route path="/calculator" element={<Calculator />} />
+        <Route path="/results" element={<div className="container mx-auto px-4 py-8"><h1 className="text-2xl">Results (Coming Soon)</h1></div>} />
       </Routes>
     </div>
   );
