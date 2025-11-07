@@ -13,7 +13,8 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
     "data:download": "node scripts/download-bls-data.js",
     "data:process": "node scripts/process-bls-data.js",
-    "data:setup": "npm run data:download && npm run data:process"
+    "data:setup": "npm run data:download && npm run data:process",
+    "prepare": "husky"
   },
   "dependencies": {
     "dexie": "^4.2.1",
@@ -35,6 +36,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "postcss": "^8.5.6",
     "prettier": "^3.4.2",
     "tailwindcss": "^4.1.16",
