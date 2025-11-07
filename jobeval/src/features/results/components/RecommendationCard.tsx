@@ -1,4 +1,4 @@
-import type { RecommendationData } from '@/shared/utils/resultsCalculator';
+import type { RecommendationData } from "@/shared/utils/resultsCalculator";
 
 export interface RecommendationCardProps {
   recommendation: RecommendationData;
@@ -14,41 +14,41 @@ export default function RecommendationCard({
   // Determine styling based on budget status
   const getStatusStyles = () => {
     switch (budgetStatus) {
-      case 'competitive':
+      case "competitive":
         return {
-          border: 'border-green-300',
-          bg: 'bg-green-50',
-          icon: '✅',
-          iconColor: 'text-green-600',
-          title: 'Competitive Budget',
-          titleColor: 'text-green-900',
+          border: "border-green-300",
+          bg: "bg-green-50",
+          icon: "✅",
+          iconColor: "text-green-600",
+          title: "Competitive Budget",
+          titleColor: "text-green-900",
         };
-      case 'below-median':
+      case "below-median":
         return {
-          border: 'border-amber-300',
-          bg: 'bg-amber-50',
-          icon: '💡',
-          iconColor: 'text-amber-600',
-          title: 'Below Median - Strategic Approach Needed',
-          titleColor: 'text-amber-900',
+          border: "border-amber-300",
+          bg: "bg-amber-50",
+          icon: "💡",
+          iconColor: "text-amber-600",
+          title: "Below Median - Strategic Approach Needed",
+          titleColor: "text-amber-900",
         };
-      case 'below-market':
+      case "below-market":
         return {
-          border: 'border-red-300',
-          bg: 'bg-red-50',
-          icon: '⚠️',
-          iconColor: 'text-red-600',
-          title: 'Below Market Rate',
-          titleColor: 'text-red-900',
+          border: "border-red-300",
+          bg: "bg-red-50",
+          icon: "⚠️",
+          iconColor: "text-red-600",
+          title: "Below Market Rate",
+          titleColor: "text-red-900",
         };
       default:
         return {
-          border: 'border-gray-300',
-          bg: 'bg-gray-50',
-          icon: 'ℹ️',
-          iconColor: 'text-gray-600',
-          title: 'Recommendation',
-          titleColor: 'text-gray-900',
+          border: "border-gray-300",
+          bg: "bg-gray-50",
+          icon: "ℹ️",
+          iconColor: "text-gray-600",
+          title: "Recommendation",
+          titleColor: "text-gray-900",
         };
     }
   };
@@ -80,12 +80,12 @@ export default function RecommendationCard({
 
       {/* Recommendation text */}
       <div className="mb-6 prose prose-sm max-w-none">
-        {recommendationText.split('\n').map((line, idx) => {
+        {recommendationText.split("\n").map((line, idx) => {
           // Handle markdown-style bold
-          if (line.startsWith('**') && line.endsWith('**')) {
+          if (line.startsWith("**") && line.endsWith("**")) {
             return (
               <p key={idx} className="font-semibold text-gray-900 my-2">
-                {line.replace(/\*\*/g, '')}
+                {line.replace(/\*\*/g, "")}
               </p>
             );
           }
@@ -101,11 +101,11 @@ export default function RecommendationCard({
       {strategies.length > 0 && (
         <div className="mt-6 pt-6 border-t border-gray-300">
           <h4 className="text-lg font-semibold text-gray-900 mb-3">
-            {budgetStatus === 'competitive'
-              ? 'Recommended Actions:'
-              : budgetStatus === 'below-median'
-                ? 'Strategies to Strengthen Your Offer:'
-                : 'Options to Consider:'}
+            {budgetStatus === "competitive"
+              ? "Recommended Actions:"
+              : budgetStatus === "below-median"
+                ? "Strategies to Strengthen Your Offer:"
+                : "Options to Consider:"}
           </h4>
           <ul className="space-y-2">
             {strategies.map((strategy, idx) => (
@@ -119,12 +119,13 @@ export default function RecommendationCard({
       )}
 
       {/* Additional context for below-market scenarios */}
-      {budgetStatus === 'below-market' && (
+      {budgetStatus === "below-market" && (
         <div className="mt-6 pt-6 border-t border-red-200">
           <p className="text-sm text-red-800 leading-relaxed">
             <strong>Important:</strong> Underpaying often leads to higher turnover costs, difficulty
-            attracting qualified candidates, and reduced performance. Consider whether the budget can
-            be adjusted or the role can be restructured to better align with market expectations.
+            attracting qualified candidates, and reduced performance. Consider whether the budget
+            can be adjusted or the role can be restructured to better align with market
+            expectations.
           </p>
         </div>
       )}

@@ -9,9 +9,9 @@ export function formatSalary(amount: number, abbreviated = false): string {
     return `$${Math.round(amount / 1000)}k`;
   }
 
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);

@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCompanyStore } from '@/features/company-setup/companyStore';
-import { usePositionStore } from '@/features/position-wizard/positionStore';
-import { useMatchingStore } from '@/features/bls-matching/matchingStore';
-import { useCalculatorStore } from '@/features/calculator/calculatorStore';
-import { formatSalary, formatSalaryRange } from '@/shared/utils/formatSalary';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { usePositionStore } from "@/features/position-wizard/positionStore";
+import { useMatchingStore } from "@/features/bls-matching/matchingStore";
+import { useCalculatorStore } from "@/features/calculator/calculatorStore";
+import { formatSalary, formatSalaryRange } from "@/shared/utils/formatSalary";
 import {
   calculateRecommendation,
   formatRecommendationText,
   type BLSPercentiles,
-} from '@/shared/utils/resultsCalculator';
-import SalaryRangeBar from './SalaryRangeBar';
-import RecommendationCard from './RecommendationCard';
-import { Button } from '@/shared/components/ui/Button';
+} from "@/shared/utils/resultsCalculator";
+import SalaryRangeBar from "./SalaryRangeBar";
+import RecommendationCard from "./RecommendationCard";
+import { Button } from "@/shared/components/ui/Button";
 
 export default function Results() {
   const navigate = useNavigate();
@@ -27,22 +27,22 @@ export default function Results() {
   // Validate prerequisites and redirect if missing
   useEffect(() => {
     if (!company || !company.name || !company.annualRevenue) {
-      navigate('/setup/company');
+      navigate("/setup/company");
       return;
     }
 
     if (!position || !position.title) {
-      navigate('/position/basic');
+      navigate("/position/basic");
       return;
     }
 
     if (!selectedOccupation) {
-      navigate('/position/match');
+      navigate("/position/match");
       return;
     }
 
     if (!affordableRange) {
-      navigate('/calculator');
+      navigate("/calculator");
       return;
     }
   }, [company, position, selectedOccupation, affordableRange, navigate]);
@@ -90,11 +90,11 @@ export default function Results() {
     resetCalculator();
 
     // Navigate to start
-    navigate('/setup/company');
+    navigate("/setup/company");
   };
 
   const handleAdjustBudget = () => {
-    navigate('/calculator');
+    navigate("/calculator");
   };
 
   return (
@@ -210,12 +210,12 @@ export default function Results() {
         {/* Data Attribution Footer */}
         <footer className="mt-12 pt-6 border-t border-gray-200 text-xs text-gray-500 text-center">
           <p>
-            Market data from U.S. Bureau of Labor Statistics • Last updated:{' '}
+            Market data from U.S. Bureau of Labor Statistics • Last updated:{" "}
             {selectedOccupation.dataDate}
           </p>
           <p className="mt-1">
-            Note: Salaries vary by region, experience, and company size. This tool provides estimates
-            for planning purposes.
+            Note: Salaries vary by region, experience, and company size. This tool provides
+            estimates for planning purposes.
           </p>
         </footer>
 
