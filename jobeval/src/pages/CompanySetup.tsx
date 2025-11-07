@@ -95,6 +95,10 @@ const CompanySetup: React.FC = () => {
       industry: formData.industry.trim(),
       size: formData.size.trim(),
       location: formData.location.trim(),
+      // Preserve existing values or use defaults (will be filled in later steps)
+      annualRevenue: profile?.annualRevenue ?? 0,
+      employeeCount: profile?.employeeCount ?? '',
+      state: profile?.state ?? '',
     });
 
     const { markStepComplete } = useWizardStore.getState();

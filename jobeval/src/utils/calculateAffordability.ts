@@ -1,5 +1,5 @@
-import { CompanyProfile } from '../stores/companyStore';
-import { SelectedOccupation } from '../stores/matchingStore';
+import type { CompanyProfile } from '../stores/companyStore';
+import type { SelectedOccupation } from '../stores/matchingStore';
 import { getAnnualMinimumWage, getMinimumWage } from '../data/minimumWages';
 
 interface AffordabilityInputs {
@@ -65,9 +65,21 @@ export function calculateAffordability(
     maximum: totalBudget * 1.2,
   };
 
-  // Step 4: Apply minimum wage floor
+  // Step 4: Apply minimum wage floor (both annual and hourly validation)
   const isBelowMinimum = rawRange.minimum < annualMinimumWage;
   const minimumWageAdjusted = isBelowMinimum;
+
+  // Validate hourly rate meets minimum wage (2080 = 40 hrs/week * 52 weeks)
+  const targetHourlyRate = rawRange.target / 2080;
+  const meetsHourlyMinimum = targetHourlyRate >= hourlyMinimumWage;
+
+  // Log warning if hourly calculation doesn't align (shouldn't happen if annual is correct)
+  if (!meetsHourlyMinimum && !isBelowMinimum) {
+    console.warn(
+      `Hourly rate ($${targetHourlyRate.toFixed(2)}/hr) below minimum wage ($${hourlyMinimumWage}/hr) ` +
+      `but annual salary meets requirements. This may indicate a calculation inconsistency.`
+    );
+  }
 
   const affordableRange: AffordableRange = {
     minimum: Math.max(rawRange.minimum, annualMinimumWage),
