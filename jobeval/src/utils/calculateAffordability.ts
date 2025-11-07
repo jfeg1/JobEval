@@ -1,6 +1,6 @@
-import type { CompanyProfile } from '../stores/companyStore';
-import type { SelectedOccupation } from '../stores/matchingStore';
-import { getAnnualMinimumWage, getMinimumWage } from '../data/minimumWages';
+import type { CompanyProfile } from "../stores/companyStore";
+import type { SelectedOccupation } from "../stores/matchingStore";
+import { getAnnualMinimumWage, getMinimumWage } from "../data/minimumWages";
 
 interface AffordabilityInputs {
   company: CompanyProfile;
@@ -26,7 +26,7 @@ interface MarketRange {
 interface AffordabilityResult {
   affordableRange: AffordableRange;
   marketRange: MarketRange;
-  marketAlignment: 'below' | 'within' | 'above';
+  marketAlignment: "below" | "within" | "above";
   gap: number;
   isBelowMinimum: boolean;
   minimumWageAmount: number;
@@ -77,7 +77,7 @@ export function calculateAffordability(
   if (!meetsHourlyMinimum && !isBelowMinimum) {
     console.warn(
       `Hourly rate ($${targetHourlyRate.toFixed(2)}/hr) below minimum wage ($${hourlyMinimumWage}/hr) ` +
-      `but annual salary meets requirements. This may indicate a calculation inconsistency.`
+        `but annual salary meets requirements. This may indicate a calculation inconsistency.`
     );
   }
 
@@ -97,17 +97,17 @@ export function calculateAffordability(
   };
 
   // Step 6: Determine market alignment
-  let marketAlignment: 'below' | 'within' | 'above';
+  let marketAlignment: "below" | "within" | "above";
 
   if (affordableRange.maximum < marketRange.percentile25) {
     // Your max is below the market's 25th percentile
-    marketAlignment = 'below';
+    marketAlignment = "below";
   } else if (affordableRange.minimum > marketRange.percentile75) {
     // Your min is above the market's 75th percentile
-    marketAlignment = 'above';
+    marketAlignment = "above";
   } else {
     // You overlap with the market's middle 50%
-    marketAlignment = 'within';
+    marketAlignment = "within";
   }
 
   // Step 7: Calculate gap (positive = above market, negative = below market)
@@ -141,7 +141,7 @@ export function calculateAffordability(
  * Generate contextual recommendations based on calculation results
  */
 function generateRecommendations(params: {
-  marketAlignment: 'below' | 'within' | 'above';
+  marketAlignment: "below" | "within" | "above";
   gap: number;
   affordableRange: AffordableRange;
   marketRange: MarketRange;
@@ -157,52 +157,55 @@ function generateRecommendations(params: {
     recommendations.push(
       `⚠️ Legal Requirement: Your initial budget was below minimum wage in ${params.state}.`,
       `The range has been adjusted to meet the legal minimum. Consider:`,
-      '• Increasing your budget allocation',
-      '• Reducing the position scope to match available budget',
-      '• Exploring part-time or contract arrangements'
+      "• Increasing your budget allocation",
+      "• Reducing the position scope to match available budget",
+      "• Exploring part-time or contract arrangements"
     );
     return recommendations; // Return early if below minimum
   }
 
   // Market-based recommendations
-  if (params.marketAlignment === 'below') {
-    const percentBelow = Math.abs((params.gap / params.marketRange.median) * 100).toFixed(0);
+  if (params.marketAlignment === "below") {
+    const percentBelow = Math.abs(
+      (params.gap / params.marketRange.median) * 100
+    ).toFixed(0);
 
     recommendations.push(
       `Your budget is ${percentBelow}% below market median. This may limit candidate quality.`,
-      '',
-      'Consider these strategies:',
-      '• Adjust position scope to match budget (junior level, narrower responsibilities)',
-      '• Offer equity, profit-sharing, or performance bonuses',
-      '• Emphasize non-monetary benefits (flexibility, growth, culture)',
-      '• Consider remote work to access lower cost-of-living markets',
-      '• Plan for phased salary increases as company grows'
+      "",
+      "Consider these strategies:",
+      "• Adjust position scope to match budget (junior level, narrower responsibilities)",
+      "• Offer equity, profit-sharing, or performance bonuses",
+      "• Emphasize non-monetary benefits (flexibility, growth, culture)",
+      "• Consider remote work to access lower cost-of-living markets",
+      "• Plan for phased salary increases as company grows"
     );
-
-  } else if (params.marketAlignment === 'above') {
-    const percentAbove = ((params.gap / params.marketRange.median) * 100).toFixed(0);
+  } else if (params.marketAlignment === "above") {
+    const percentAbove = (
+      (params.gap / params.marketRange.median) *
+      100
+    ).toFixed(0);
 
     recommendations.push(
       `Your budget is ${percentAbove}% above market median. You can compete for top talent.`,
-      '',
-      'Opportunities:',
-      '• Attract highly experienced candidates',
-      '• Expand job responsibilities to match compensation',
-      '• Invest in professional development and training',
-      '• Set yourself apart from competitors',
-      '• Consider splitting into multiple roles if budget allows'
+      "",
+      "Opportunities:",
+      "• Attract highly experienced candidates",
+      "• Expand job responsibilities to match compensation",
+      "• Invest in professional development and training",
+      "• Set yourself apart from competitors",
+      "• Consider splitting into multiple roles if budget allows"
     );
-
   } else {
     recommendations.push(
-      '✅ Your budget aligns well with market rates.',
-      '',
-      'Best practices:',
-      '• Emphasize your company culture and mission',
-      '• Highlight growth opportunities and career path',
-      '• Consider performance-based bonuses (10-15% of base)',
-      '• Offer competitive benefits package',
-      '• Provide clear expectations and role clarity'
+      "✅ Your budget aligns well with market rates.",
+      "",
+      "Best practices:",
+      "• Emphasize your company culture and mission",
+      "• Highlight growth opportunities and career path",
+      "• Consider performance-based bonuses (10-15% of base)",
+      "• Offer competitive benefits package",
+      "• Provide clear expectations and role clarity"
     );
   }
 
