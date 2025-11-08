@@ -4,6 +4,42 @@
 
 JobEval helps SMEs establish fair, defensible, and market-aligned base salaries through a systematic job evaluation process—without requiring expensive consultants or HR specialists.
 
+## 📜 License & Dual Licensing
+
+JobEval is dual-licensed to ensure it remains free for small and medium enterprises while creating a sustainable funding model:
+
+### For SMEs, Nonprofits, and Individuals: FREE ✅
+
+JobEval is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). You can:
+- ✅ Use it for free, forever
+- ✅ Self-host on your own infrastructure
+- ✅ Modify and customize for your needs
+- ✅ Contribute improvements back to the community
+
+**No revenue limits. No employee limits. Completely free for SMEs.**
+
+### For Large Enterprises: Commercial License Required 💼
+
+Organizations meeting **any** of the following criteria require a [Commercial License](COMMERCIAL-LICENSE.md):
+- Annual revenue exceeding **$10 million USD**
+- More than **100 employees**
+- Need to use JobEval in proprietary/closed-source products
+- Require priority support, SLA, or custom development
+
+**Why?** Large enterprises can afford to pay, and their contributions fund ongoing development that benefits everyone.
+
+[📧 Contact us for Enterprise Licensing](mailto:enterprise@jobeval.org)
+
+---
+
+### Our Mission 🎯
+
+**We believe sound HR practices shouldn't be a luxury reserved for Fortune 500 companies.**
+
+JobEval exists to democratize compensation analysis and job evaluation for small and medium businesses who can't afford expensive consultants or proprietary HR software. By making this open source, we ensure that every organization—regardless of size or budget—has access to fair, data-driven compensation tools.
+
+Large enterprises who benefit from our work help fund the continued development that keeps it free for everyone else.
+
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Commercial License](https://img.shields.io/badge/Commercial-License_Available-green.svg)](COMMERCIAL-LICENSE.md)
 
