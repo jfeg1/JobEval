@@ -903,13 +903,7 @@
     "title": "Registered Nurses",
     "description": "Registered Nurses provide medical care and support to patients.",
     "group": "Healthcare Practitioners and Technical",
-    "alternateTitles": [
-      "RN",
-      "Nurse",
-      "Staff Nurse",
-      "Clinical Nurse",
-      "Registered Nurse"
-    ],
+    "alternateTitles": ["RN", "Nurse", "Staff Nurse", "Clinical Nurse", "Registered Nurse"],
     "skills": [
       {
         "name": "Critical Thinking",
