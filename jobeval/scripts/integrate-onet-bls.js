@@ -213,30 +213,82 @@ function main() {
   console.log(`   ✓ Loaded ${blsData.occupations.length} BLS occupations`);
 
   // Create BLS lookup by SOC code
+  // BLS uses codes like "11-2021" while O*NET uses "11-2021.00"
+  // Create lookups for both formats
   const blsLookup = {};
+  const blsLookupWithSuffix = {};
+
   blsData.occupations.forEach((occ) => {
+    // Store with original BLS code (e.g., "11-2021")
     blsLookup[occ.code] = occ;
+
+    // Also store with .00 suffix for O*NET matching (e.g., "11-2021.00")
+    const codeWithSuffix = occ.code.includes('.') ? occ.code : `${occ.code}.00`;
+    blsLookupWithSuffix[codeWithSuffix] = occ;
   });
+
+  console.log(`   ✓ Created BLS lookup with ${Object.keys(blsLookup).length} codes`);
 
   // Integrate data
   console.log("\n2. Integrating occupation data...");
   const integrated = {};
   let matchCount = 0;
   let noMatchCount = 0;
+  const matchedCodes = [];
+  const unmatchedCodes = [];
 
   Object.entries(onetData).forEach(([socCode, onetOcc]) => {
-    const blsOcc = blsLookup[socCode];
+    // Try exact match first (handles both "11-2021" and "11-2021.00" formats)
+    let blsOcc = blsLookup[socCode] || blsLookupWithSuffix[socCode];
+
+    // If no match and O*NET code has .00 suffix, try removing it
+    if (!blsOcc && socCode.includes('.')) {
+      const codeWithoutSuffix = socCode.replace(/\.00$/, '');
+      blsOcc = blsLookup[codeWithoutSuffix];
+    }
+
+    // If no match and O*NET code doesn't have .00 suffix, try adding it
+    if (!blsOcc && !socCode.includes('.')) {
+      const codeWithSuffix = `${socCode}.00`;
+      blsOcc = blsLookupWithSuffix[codeWithSuffix];
+    }
+
     integrated[socCode] = integrateOccupation(onetOcc, blsOcc);
 
     if (blsOcc) {
       matchCount++;
+      if (matchedCodes.length < 5) {
+        matchedCodes.push({ onet: socCode, bls: blsOcc.code, title: onetOcc.title });
+      }
     } else {
       noMatchCount++;
+      if (unmatchedCodes.length < 5) {
+        unmatchedCodes.push({ code: socCode, title: onetOcc.title });
+      }
     }
   });
 
+  const coveragePercent = ((matchCount / Object.keys(onetData).length) * 100).toFixed(1);
+
   console.log(`   ✓ Integrated ${matchCount} occupations with wage data`);
   console.log(`   ✓ ${noMatchCount} occupations without wage data`);
+  console.log(`   ✓ Coverage: ${coveragePercent}%`);
+
+  // Show examples of matched codes
+  if (matchedCodes.length > 0) {
+    console.log(`\n   Examples of matched codes:`);
+    matchedCodes.forEach(({ onet, bls, title }) => {
+      console.log(`     - O*NET: ${onet} / BLS: ${bls} - ${title}`);
+    });
+  }
+
+  // Show examples of unmatched codes for debugging
+  if (unmatchedCodes.length > 0) {
+    console.log(`\n   Examples of unmatched codes (no wage data):`);
+    unmatchedCodes.forEach(({ code, title }) => {
+      console.log(`     - ${code} - ${title}`);
+    });
+  }
 
   // Calculate statistics
   console.log("\n3. Calculating statistics...");
