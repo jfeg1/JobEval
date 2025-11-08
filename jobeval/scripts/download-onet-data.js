@@ -152,7 +152,7 @@ function downloadFile(url, destPath) {
 }
 
 /**
- * Extract ZIP file
+ * Extract ZIP file and handle subdirectory structure
  */
 function extractZip(zipPath, outputDir) {
   log(`Extracting: ${path.basename(zipPath)}`);
@@ -166,9 +166,50 @@ function extractZip(zipPath, outputDir) {
     execSync(`unzip -o -q "${zipPath}" -d "${outputDir}"`, { stdio: "pipe" });
     log(`✓ Extracted to: ${outputDir}`);
 
+    // Check for db_30_0_text subdirectory
+    const subDirName = "db_30_0_text";
+    const subDirPath = path.join(outputDir, subDirName);
+
+    if (fs.existsSync(subDirPath) && fs.statSync(subDirPath).isDirectory()) {
+      log(`Found subdirectory: ${subDirName}`);
+      log(`Moving files from subdirectory to ${outputDir}...`);
+
+      // Get all files from subdirectory
+      const filesInSubDir = fs.readdirSync(subDirPath);
+      let movedCount = 0;
+
+      // Move each file from subdirectory to output directory
+      for (const file of filesInSubDir) {
+        const sourcePath = path.join(subDirPath, file);
+        const destPath = path.join(outputDir, file);
+
+        // Skip if it's a directory
+        if (fs.statSync(sourcePath).isDirectory()) {
+          continue;
+        }
+
+        // Move the file
+        fs.renameSync(sourcePath, destPath);
+        movedCount++;
+      }
+
+      log(`✓ Moved ${movedCount} files from subdirectory`);
+
+      // Remove the now-empty subdirectory
+      try {
+        fs.rmdirSync(subDirPath);
+        log(`✓ Removed empty subdirectory: ${subDirName}`);
+      } catch (err) {
+        log(`Warning: Could not remove subdirectory: ${err.message}`);
+      }
+    }
+
     // List extracted files
-    const extractedFiles = fs.readdirSync(outputDir);
-    log(`✓ Extracted ${extractedFiles.length} files`);
+    const extractedFiles = fs.readdirSync(outputDir).filter((file) => {
+      const filePath = path.join(outputDir, file);
+      return fs.statSync(filePath).isFile();
+    });
+    log(`✓ Total files available: ${extractedFiles.length}`);
 
     return extractedFiles;
   } catch (error) {
@@ -382,6 +423,16 @@ async function main() {
 
   // Verify extracted files
   const results = verifyAllFiles();
+
+  // Clean up ZIP file after successful extraction
+  if (fs.existsSync(zipPath)) {
+    try {
+      fs.unlinkSync(zipPath);
+      log(`\n✓ Cleaned up ZIP file: ${ZIP_FILE_NAME}`);
+    } catch (error) {
+      log(`Warning: Could not delete ZIP file: ${error.message}`);
+    }
+  }
 
   // Final summary
   log("\n" + "=".repeat(50));
