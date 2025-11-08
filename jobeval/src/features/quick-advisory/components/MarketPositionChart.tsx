@@ -126,18 +126,30 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
               </div>
             </div>
 
-            {/* Visual bar */}
-            <div className="relative h-8 bg-gradient-to-r from-red-200 via-yellow-200 via-green-200 via-yellow-200 to-red-200 rounded-full">
+            {/* Visual bar with salary marker */}
+            <div className="relative h-8 bg-gradient-to-r from-red-200 via-yellow-200 via-green-200 via-yellow-200 to-red-200 rounded-full mb-16">
               {/* Proposed salary indicator */}
               <div
-                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
+                className="absolute -translate-x-1/2"
                 style={{ left: `${clampedPosition}%` }}
               >
-                <div className="flex flex-col items-center">
-                  <div className="w-3 h-3 bg-sage-600 border-2 border-white rounded-full shadow-lg"></div>
-                  <div className="mt-2 bg-sage-700 text-white text-xs font-medium px-2 py-1 rounded shadow-lg whitespace-nowrap">
-                    Your Salary: {formatCurrency(proposedSalary)}
+                {/* Label above the bar */}
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2">
+                  <div className="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-lg whitespace-nowrap">
+                    You: {formatCurrency(proposedSalary)}
                   </div>
+                  {/* Arrow pointing down */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-blue-600"></div>
+                  </div>
+                </div>
+
+                {/* Vertical line indicator */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-8 bg-blue-600"></div>
+
+                {/* Marker dot on the bar */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <div className="w-4 h-4 bg-blue-600 border-3 border-white rounded-full shadow-lg ring-2 ring-blue-200"></div>
                 </div>
               </div>
             </div>
