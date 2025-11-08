@@ -62,7 +62,7 @@ export interface Occupation {
   code: string; // SOC code
   title: string; // Official title
   description: string; // Description from O*NET
-  group: string; // Occupational group
+  group?: string; // Occupational group - optional, only present if BLS data matched
 
   // O*NET data
   alternateTitles: string[];
