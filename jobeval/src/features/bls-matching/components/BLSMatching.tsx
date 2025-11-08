@@ -4,16 +4,50 @@ import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { useMatchingStore } from "../matchingStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
-import { useBLSData, type BLSOccupation } from "../hooks/useBLSData";
-import { searchOccupations } from "../services/searchOccupations";
+import { type BLSOccupation } from "../hooks/useBLSData";
+import {
+  matchOccupation,
+  getOccupation,
+  searchOccupations as searchOccupationsNew,
+} from "@/utils/occupationMatcher";
+import type { Occupation } from "@/types/occupation";
 import { Input, Button } from "@/shared/components/ui";
+
+/**
+ * Convert Occupation to BLSOccupation for compatibility with existing components
+ */
+function convertToBLSOccupation(occupation: Occupation): BLSOccupation | null {
+  if (!occupation.wageData) return null;
+
+  return {
+    code: occupation.code,
+    title: occupation.title,
+    group: occupation.group,
+    employment: occupation.wageData.employment || 0,
+    wages: {
+      hourlyMean: occupation.wageData.hourly.mean,
+      hourlyMedian: occupation.wageData.hourly.median,
+      annualMean: occupation.wageData.annual.mean,
+      annualMedian: occupation.wageData.annual.median,
+      percentile10: occupation.wageData.percentiles.p10,
+      percentile25: occupation.wageData.percentiles.p25,
+      percentile75: occupation.wageData.percentiles.p75,
+      percentile90: occupation.wageData.percentiles.p90,
+    },
+    dataDate: occupation.wageData.dataDate,
+  };
+}
+
+interface SearchResult {
+  occupation: BLSOccupation;
+  confidence?: number;
+}
 
 const BLSMatching: React.FC = () => {
   const navigate = useNavigate();
   const { profile: companyProfile } = useCompanyStore();
   const { basicInfo, details } = usePositionStore();
   const { selectedOccupation, selectOccupation, setSearchQuery } = useMatchingStore();
-  const { data: blsData, loading, error } = useBLSData();
 
   // Guard: Redirect if prerequisites not complete
   useEffect(() => {
@@ -24,6 +58,7 @@ const BLSMatching: React.FC = () => {
 
   // Initialize search with job title
   const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
   useEffect(() => {
     if (basicInfo?.title && !searchInput) {
@@ -32,38 +67,54 @@ const BLSMatching: React.FC = () => {
     }
   }, [basicInfo, searchInput, setSearchQuery]);
 
+  // Perform search when input changes
+  useEffect(() => {
+    if (!searchInput || searchInput.trim().length === 0) {
+      setSearchResults([]);
+      return;
+    }
+
+    // First, try matching
+    const matches = matchOccupation(searchInput, { maxResults: 10, minConfidence: 0.2 });
+
+    if (matches.length > 0) {
+      // Convert matches to search results
+      const results: SearchResult[] = [];
+
+      for (const match of matches) {
+        const occupation = getOccupation(match.code);
+        if (!occupation) continue;
+
+        const blsOccupation = convertToBLSOccupation(occupation);
+        if (!blsOccupation) continue;
+
+        results.push({
+          occupation: blsOccupation,
+          confidence: match.confidence,
+        });
+      }
+
+      setSearchResults(results);
+    } else {
+      // Fallback to keyword search
+      const keywordResults = searchOccupationsNew(searchInput, 10);
+      const results: SearchResult[] = [];
+
+      for (const occ of keywordResults) {
+        const blsOcc = convertToBLSOccupation(occ);
+        if (blsOcc) {
+          results.push({ occupation: blsOcc });
+        }
+      }
+
+      setSearchResults(results);
+    }
+  }, [searchInput]);
+
   // Show loading while checking guard
   if (!companyProfile || !basicInfo || !details) {
     return null;
   }
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center py-12">
-          <p className="text-slate-600">Loading BLS occupation data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error || !blsData) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center py-12">
-          <p className="text-red-600">Error loading BLS data: {error || "Unknown error"}</p>
-          <Button onClick={() => window.location.reload()} className="mt-4">
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Search results
-  const searchResults = searchOccupations(blsData.occupations, searchInput);
 
   const handleSearch = (value: string) => {
     setSearchInput(value);
@@ -153,7 +204,8 @@ const BLSMatching: React.FC = () => {
 
       {/* Results list */}
       <div className="space-y-3 mb-8">
-        {searchResults.map((occupation) => {
+        {searchResults.map((result) => {
+          const { occupation, confidence } = result;
           const isSelected = selectedOccupation?.code === occupation.code;
 
           return (
@@ -180,12 +232,19 @@ const BLSMatching: React.FC = () => {
 
                 {/* Occupation info */}
                 <div className="flex-1">
-                  <h3 className="font-semibold text-slate-900 mb-1">
-                    {occupation.title}
-                    {isSelected && (
-                      <span className="ml-2 text-sm font-normal text-sage-700">(Selected)</span>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-slate-900">
+                      {occupation.title}
+                      {isSelected && (
+                        <span className="ml-2 text-sm font-normal text-sage-700">(Selected)</span>
+                      )}
+                    </h3>
+                    {confidence !== undefined && confidence < 1.0 && (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                        {(confidence * 100).toFixed(0)}% match
+                      </span>
                     )}
-                  </h3>
+                  </div>
                   <p className="text-sm text-slate-600 mb-2">
                     {occupation.code} | {occupation.group}
                   </p>
@@ -238,7 +297,7 @@ const BLSMatching: React.FC = () => {
                         </div>
                       </div>
                       <p className="text-xs text-slate-500 mt-3">
-                        Data from BLS • {occupation.dataDate}
+                        Occupation data from O*NET 30.0 • Wage data from BLS • {occupation.dataDate}
                       </p>
                     </div>
                   )}

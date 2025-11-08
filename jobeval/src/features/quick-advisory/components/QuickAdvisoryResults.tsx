@@ -1,26 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuickAdvisoryStore } from "../quickAdvisoryStore";
-import { useBLSData } from "@/features/bls-matching/hooks/useBLSData";
 import { Button } from "@/shared/components/ui";
 import MarketPositionChart from "./MarketPositionChart";
 import AffordabilityAnalysis from "./AffordabilityAnalysis";
 import RecommendationCard from "./RecommendationCard";
 import UpgradePrompt from "./UpgradePrompt";
+import { matchOccupation as matchOccupationNew, getOccupation } from "@/utils/occupationMatcher";
 import {
-  matchOccupation,
   calculatePercentile,
   getTargetPercentileRange,
   checkAlignment,
 } from "@/utils/blsComparison";
 import { analyzeAffordability, projectNewPayroll } from "@/utils/affordabilityCalculator";
 import type { MarketPositioningType } from "@/utils/blsComparison";
+import type { Occupation, BLSOccupation } from "@/types/occupation";
+
+/**
+ * Convert Occupation to BLSOccupation for compatibility with existing components
+ */
+function convertToBLSOccupation(occupation: Occupation): BLSOccupation | null {
+  if (!occupation.wageData) return null;
+
+  return {
+    code: occupation.code,
+    title: occupation.title,
+    group: occupation.group,
+    employment: occupation.wageData.employment || 0,
+    wages: {
+      hourlyMean: occupation.wageData.hourly.mean,
+      hourlyMedian: occupation.wageData.hourly.median,
+      annualMean: occupation.wageData.annual.mean,
+      annualMedian: occupation.wageData.annual.median,
+      percentile10: occupation.wageData.percentiles.p10,
+      percentile25: occupation.wageData.percentiles.p25,
+      percentile75: occupation.wageData.percentiles.p75,
+      percentile90: occupation.wageData.percentiles.p90,
+    },
+    dataDate: occupation.wageData.dataDate,
+  };
+}
 
 const QuickAdvisoryResults: React.FC = () => {
   const navigate = useNavigate();
   const { formData, resetQuickAdvisory } = useQuickAdvisoryStore();
-  const { data: blsData, loading: blsLoading, error: blsError } = useBLSData();
   const [noMatchFound, setNoMatchFound] = useState(false);
+  const [matchConfidence, setMatchConfidence] = useState(0);
 
   // Guard: Redirect if no form data
   useEffect(() => {
@@ -34,38 +59,21 @@ const QuickAdvisoryResults: React.FC = () => {
     }
   }, [formData, navigate]);
 
-  // Loading state
-  if (blsLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center py-12">
-          <p className="text-slate-600">Loading market data...</p>
-        </div>
-      </div>
-    );
-  }
+  // Match occupation using new matcher
+  const matches = matchOccupationNew(formData.jobTitle, { maxResults: 3, minConfidence: 0.3 });
+  const bestMatch = matches.length > 0 ? matches[0] : null;
+  const occupation = bestMatch ? getOccupation(bestMatch.code) : null;
+  const matchedOccupation = occupation ? convertToBLSOccupation(occupation) : null;
 
-  // Error state
-  if (blsError || !blsData) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center py-12">
-          <p className="text-red-600 mb-4">Error loading BLS data: {blsError || "Unknown error"}</p>
-          <Button variant="secondary" onClick={() => navigate("/quick")}>
-            Back to Quick Advisory
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Match occupation
-  const matchedOccupation = matchOccupation(formData.jobTitle, blsData.occupations);
-
-  // No match found
-  if (!matchedOccupation && !noMatchFound) {
-    setNoMatchFound(true);
-  }
+  // Update match confidence
+  useEffect(() => {
+    if (bestMatch) {
+      setMatchConfidence(bestMatch.confidence);
+      setNoMatchFound(false);
+    } else {
+      setNoMatchFound(true);
+    }
+  }, [bestMatch]);
 
   if (noMatchFound || !matchedOccupation) {
     return (
@@ -230,10 +238,27 @@ const QuickAdvisoryResults: React.FC = () => {
         </div>
       </div>
 
+      {/* Match confidence indicator (if below 0.9) */}
+      {matchConfidence < 0.9 && matchConfidence > 0 && (
+        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-blue-600">ℹ</span>
+            <div className="text-sm text-blue-800">
+              <strong>Match Confidence: {(matchConfidence * 100).toFixed(0)}%</strong>
+              <p className="mt-1">
+                We matched "{formData.jobTitle}" to "{matchedOccupation.title}". If this doesn't
+                seem right, try our in-depth analysis for more accurate results.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Data source note */}
       <div className="mt-8 text-center">
         <p className="text-xs text-slate-500">
-          Market data from U.S. Bureau of Labor Statistics (BLS) • {blsData.dataDate}
+          Occupation data from O*NET 30.0 • Wage data from U.S. Bureau of Labor Statistics (BLS) •{" "}
+          {matchedOccupation.dataDate}
         </p>
       </div>
     </div>
