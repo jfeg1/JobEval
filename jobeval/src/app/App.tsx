@@ -7,6 +7,7 @@ import BLSMatching from "../features/bls-matching/components/BLSMatching";
 import Calculator from "../features/calculator/components/Calculator";
 import Results from "../features/results/components/Results";
 import QuickAdvisoryForm from "../features/quick-advisory/components/QuickAdvisoryForm";
+import QuickAdvisoryResults from "../features/quick-advisory/components/QuickAdvisoryResults";
 import "./App.css";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/quick" element={<QuickAdvisoryForm />} />
+        <Route path="/quick/results" element={<QuickAdvisoryResults />} />
         <Route path="/setup/company" element={<CompanySetup />} />
         <Route path="/position/basic" element={<PositionBasic />} />
         {/* Placeholder for future routes */}
