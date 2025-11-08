@@ -143,18 +143,36 @@ export function calculatePercentile(salary: number, occupation: BLSOccupation): 
 }
 
 /**
- * Get the salary value at a specific percentile
+ * Get the salary value at a specific percentile using linear interpolation
  */
 export function getSalaryAtPercentile(percentile: number, occupation: BLSOccupation): number {
   const { wages } = occupation;
 
-  if (percentile <= 10) return wages.percentile10;
-  if (percentile <= 25) return wages.percentile25;
-  if (percentile <= 50) return wages.annualMedian;
-  if (percentile <= 75) return wages.percentile75;
-  if (percentile <= 90) return wages.percentile90;
+  const points = [
+    { percentile: 10, salary: wages.percentile10 },
+    { percentile: 25, salary: wages.percentile25 },
+    { percentile: 50, salary: wages.annualMedian },
+    { percentile: 75, salary: wages.percentile75 },
+    { percentile: 90, salary: wages.percentile90 },
+  ];
 
-  return wages.percentile90; // Max we have data for
+  // Handle edge cases
+  if (percentile <= 10) return wages.percentile10;
+  if (percentile >= 90) return wages.percentile90;
+
+  // Find the two points to interpolate between
+  for (let i = 0; i < points.length - 1; i++) {
+    if (percentile >= points[i].percentile && percentile <= points[i + 1].percentile) {
+      // Linear interpolation
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const ratio = (percentile - p1.percentile) / (p2.percentile - p1.percentile);
+      const salary = p1.salary + ratio * (p2.salary - p1.salary);
+      return Math.round(salary);
+    }
+  }
+
+  return wages.annualMedian; // Fallback
 }
 
 /**
@@ -200,6 +218,13 @@ export function checkAlignment(
   aligned: boolean;
   message: string;
   status: "aligned" | "below" | "above";
+  percentile: number;
+  targetRange: MarketPositionRange;
+  gap?: {
+    percentilePoints: string;
+    recommendedSalary: number;
+    salaryIncrease: number;
+  };
 } {
   const targetRange = getTargetPercentileRange(positioning);
   const result = calculatePercentile(salary, occupation);
@@ -208,6 +233,7 @@ export function checkAlignment(
 
   let status: "aligned" | "below" | "above";
   let message: string;
+  let gap;
 
   if (isAligned) {
     status = "aligned";
@@ -215,12 +241,24 @@ export function checkAlignment(
   } else if (result.percentile < targetRange.min) {
     status = "below";
     message = `Your salary (${result.percentileLabel}) is BELOW your stated goal to ${getPositioningLabel(positioning)}`;
+
+    // Calculate gap information
+    const minGap = targetRange.min - result.percentile;
+    const maxGap = targetRange.max - result.percentile;
+    const recommendedSalary = getSalaryAtPercentile(targetRange.min, occupation);
+    const salaryIncrease = recommendedSalary - salary;
+
+    gap = {
+      percentilePoints: minGap === maxGap ? `${minGap}` : `${minGap}-${maxGap}`,
+      recommendedSalary,
+      salaryIncrease,
+    };
   } else {
     status = "above";
     message = `Your salary (${result.percentileLabel}) is ABOVE typical rates for your strategy`;
   }
 
-  return { aligned: isAligned, message, status };
+  return { aligned: isAligned, message, status, percentile: result.percentile, targetRange, gap };
 }
 
 /**
