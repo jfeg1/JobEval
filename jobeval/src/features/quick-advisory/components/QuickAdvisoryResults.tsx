@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuickAdvisoryStore } from "../quickAdvisoryStore";
-import { useBLSData } from "@/hooks/useBLSData";
+import { useBLSData } from "@/features/bls-matching/hooks/useBLSData";
 import { Button } from "@/shared/components/ui";
 import MarketPositionChart from "./MarketPositionChart";
 import AffordabilityAnalysis from "./AffordabilityAnalysis";

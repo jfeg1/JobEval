@@ -1,5 +1,5 @@
 import React from "react";
-import type { BLSOccupation } from "@/hooks/useBLSData";
+import type { BLSOccupation } from "@/features/bls-matching/hooks/useBLSData";
 import type { MarketPositioningType } from "@/utils/blsComparison";
 import { getRecommendedSalaryRange } from "@/utils/blsComparison";
 import type { AffordabilityStatus } from "@/utils/affordabilityCalculator";

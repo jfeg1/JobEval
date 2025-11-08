@@ -5,8 +5,8 @@
  * for the Quick Advisory flow.
  */
 
-import type { BLSOccupation } from "@/hooks/useBLSData";
-import { searchOccupations } from "./searchOccupations";
+import type { BLSOccupation } from "@/features/bls-matching/hooks/useBLSData";
+import { searchOccupations } from "@/features/bls-matching/services/searchOccupations";
 
 export interface PercentileResult {
   percentile: number;
