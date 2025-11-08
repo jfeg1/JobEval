@@ -11,6 +11,13 @@ interface MarketPositionChartProps {
     aligned: boolean;
     message: string;
     status: "aligned" | "below" | "above";
+    percentile: number;
+    targetRange: MarketPositionRange;
+    gap?: {
+      percentilePoints: string;
+      recommendedSalary: number;
+      salaryIncrease: number;
+    };
   };
 }
 
@@ -169,8 +176,66 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
               {getStatusIcon()}
             </span>
             <div className="flex-1">
-              <p className="font-medium mb-1">{alignment.message}</p>
-              <p className="text-sm opacity-90">Target range: {targetRange.label}</p>
+              {alignment.status === "below" && alignment.gap ? (
+                <>
+                  <p className="font-semibold mb-3">Market Positioning Comparison</p>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium">Your proposed salary:</span>{" "}
+                      {formatCurrency(proposedSalary)} ({percentileResult.percentileLabel})
+                    </div>
+                    <div>
+                      <span className="font-medium">You selected:</span> {targetRange.label}
+                    </div>
+                    <div>
+                      <span className="font-medium">Gap:</span> You're ~
+                      {alignment.gap.percentilePoints} percentile points below your target range
+                    </div>
+                  </div>
+
+                  {/* Visual gap indicator */}
+                  <div className="mt-4 p-3 bg-white bg-opacity-50 rounded border border-amber-300">
+                    <div className="text-xs font-medium mb-2">Visual Gap</div>
+                    <div className="space-y-2 font-mono text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-700">Your Salary:</span>
+                        <span className="text-amber-900 font-semibold">
+                          [{percentileResult.percentile}th]
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-700">Your Goal: </span>
+                        <span className="inline-block ml-8 text-amber-900 font-semibold">
+                          [{targetRange.min}th-{targetRange.max}th]
+                        </span>
+                      </div>
+                      <div className="text-amber-700">
+                        ← Gap: Consider increasing by{" "}
+                        <span className="font-semibold">
+                          {formatCurrency(alignment.gap.salaryIncrease)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Specific recommendation */}
+                  <div className="mt-4 p-3 bg-white bg-opacity-50 rounded border border-amber-300">
+                    <p className="text-sm font-medium mb-1">💡 Recommendation</p>
+                    <p className="text-sm">
+                      To reach the lower end of your target range ({targetRange.min}th percentile),
+                      consider increasing the salary to{" "}
+                      <span className="font-semibold">
+                        {formatCurrency(alignment.gap.recommendedSalary)}
+                      </span>
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="font-medium mb-1">{alignment.message}</p>
+                  <p className="text-sm opacity-90">Target range: {targetRange.label}</p>
+                </>
+              )}
             </div>
           </div>
         </div>
