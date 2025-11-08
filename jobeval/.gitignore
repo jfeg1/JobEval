@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Data files
+src/data/onet/raw/*.txt
+src/data/onet/raw/*.zip
+src/data/onet/processed/*.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
