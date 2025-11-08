@@ -69,8 +69,6 @@ export function calculateRecommendation(userBudget: number, blsData: BLSData): R
     budgetStatus,
     recommendedMin,
     recommendedMax,
-    formattedMin,
-    formattedMax,
     strategies,
     warningMessage,
   };

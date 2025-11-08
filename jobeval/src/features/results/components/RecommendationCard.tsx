@@ -1,4 +1,4 @@
-import { RecommendationData } from "@/shared/utils/resultsCalculator";
+import type { RecommendationData } from "@/shared/utils/resultsCalculator";
 import { formatSalaryRange } from "@/shared/utils/formatSalary";
 
 interface RecommendationCardProps {
