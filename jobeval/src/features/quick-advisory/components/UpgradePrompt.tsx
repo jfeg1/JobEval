@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/ui";
+import { transferQuickDataToWizard } from "@/utils/dataTransfer";
 
 interface UpgradePromptProps {
   jobTitle?: string;
@@ -9,11 +10,32 @@ interface UpgradePromptProps {
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({ jobTitle, location }) => {
   const navigate = useNavigate();
+  const [isTransferring, setIsTransferring] = useState(false);
 
   const handleUpgrade = () => {
-    // TODO: Pre-populate wizard with Quick Advisory data
-    // For now, just navigate to company setup (first step of wizard)
-    navigate("/setup/company");
+    setIsTransferring(true);
+
+    try {
+      // Transfer Quick Advisory data to wizard stores
+      const result = transferQuickDataToWizard();
+
+      if (result.success) {
+        console.log(
+          `[UpgradePrompt] Successfully transferred ${result.fieldsTransferred.length} fields`,
+          result.fieldsTransferred
+        );
+      } else {
+        // Log errors but don't block navigation - graceful degradation
+        console.warn("[UpgradePrompt] Transfer completed with errors:", result.errors);
+      }
+    } catch (error) {
+      // Even if transfer fails completely, allow user to proceed to wizard
+      console.error("[UpgradePrompt] Unexpected error during transfer:", error);
+    } finally {
+      setIsTransferring(false);
+      // Navigate to company setup (first step of wizard) regardless of transfer result
+      navigate("/setup/company");
+    }
   };
 
   return (
@@ -63,8 +85,13 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({ jobTitle, location }) => 
 
           {/* Call to action */}
           <div className="flex items-center gap-4">
-            <Button variant="primary" onClick={handleUpgrade} className="flex-shrink-0">
-              Upgrade to In-Depth Analysis
+            <Button
+              variant="primary"
+              onClick={handleUpgrade}
+              disabled={isTransferring}
+              className="flex-shrink-0"
+            >
+              {isTransferring ? "Transferring data..." : "Upgrade to In-Depth Analysis"}
             </Button>
             <p className="text-xs text-slate-500">
               {jobTitle && location
