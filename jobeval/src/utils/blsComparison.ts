@@ -81,7 +81,13 @@ function calculateExactPercentile(
   }
   if (salary > points[points.length - 1].salary) {
     // Above 90th percentile - cap at reasonable maximum
-    return Math.max(90, 90 + Math.round(((salary - points[points.length - 1].salary) / points[points.length - 1].salary) * 10));
+    return Math.max(
+      90,
+      90 +
+        Math.round(
+          ((salary - points[points.length - 1].salary) / points[points.length - 1].salary) * 10
+        )
+    );
   }
 
   return 50; // Fallback (should rarely happen)
