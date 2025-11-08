@@ -12,10 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Data files
+# Data files - only ignore raw downloaded data
 src/data/onet/raw/*.txt
 src/data/onet/raw/*.zip
-src/data/onet/processed/*.json
+# Note: processed/*.json files are committed as they're part of the integrated dataset
 
 # Editor directories and files
 .vscode/*
