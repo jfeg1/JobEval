@@ -129,10 +129,7 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
             {/* Visual bar with salary marker */}
             <div className="relative h-8 bg-gradient-to-r from-red-200 via-yellow-200 via-green-200 via-yellow-200 to-red-200 rounded-full mb-16">
               {/* Proposed salary indicator */}
-              <div
-                className="absolute -translate-x-1/2"
-                style={{ left: `${clampedPosition}%` }}
-              >
+              <div className="absolute -translate-x-1/2" style={{ left: `${clampedPosition}%` }}>
                 {/* Label above the bar */}
                 <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2">
                   <div className="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-lg whitespace-nowrap">
