@@ -41,35 +41,93 @@ export function matchOccupation(
 }
 
 /**
+ * Calculate the exact percentile rank for a given salary using linear interpolation
+ * between known percentile points
+ */
+function calculateExactPercentile(
+  salary: number,
+  percentileData: {
+    p10: number;
+    p25: number;
+    p50: number;
+    p75: number;
+    p90: number;
+  }
+): number {
+  const points = [
+    { percentile: 10, salary: percentileData.p10 },
+    { percentile: 25, salary: percentileData.p25 },
+    { percentile: 50, salary: percentileData.p50 },
+    { percentile: 75, salary: percentileData.p75 },
+    { percentile: 90, salary: percentileData.p90 },
+  ];
+
+  // Find the two points to interpolate between
+  for (let i = 0; i < points.length - 1; i++) {
+    if (salary >= points[i].salary && salary <= points[i + 1].salary) {
+      // Linear interpolation
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const ratio = (salary - p1.salary) / (p2.salary - p1.salary);
+      const percentile = p1.percentile + ratio * (p2.percentile - p1.percentile);
+      return Math.round(percentile);
+    }
+  }
+
+  // Handle edge cases
+  if (salary < points[0].salary) {
+    // Below 10th percentile - extrapolate linearly
+    return Math.min(10, Math.round((salary / points[0].salary) * 10));
+  }
+  if (salary > points[points.length - 1].salary) {
+    // Above 90th percentile - cap at reasonable maximum
+    return Math.max(90, 90 + Math.round(((salary - points[points.length - 1].salary) / points[points.length - 1].salary) * 10));
+  }
+
+  return 50; // Fallback (should rarely happen)
+}
+
+/**
+ * Get the ordinal suffix for a number (e.g., "st", "nd", "rd", "th")
+ */
+function getOrdinalSuffix(n: number): string {
+  const lastDigit = n % 10;
+  const lastTwoDigits = n % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+    return "th";
+  }
+
+  switch (lastDigit) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+/**
  * Calculate which percentile a given salary falls into
  * based on BLS occupation wage data
  */
 export function calculatePercentile(salary: number, occupation: BLSOccupation): PercentileResult {
   const { wages } = occupation;
 
-  // Determine percentile range
-  let percentile: number;
-  let percentileLabel: string;
+  // Calculate exact percentile using interpolation
+  const percentile = calculateExactPercentile(salary, {
+    p10: wages.percentile10,
+    p25: wages.percentile25,
+    p50: wages.annualMedian,
+    p75: wages.percentile75,
+    p90: wages.percentile90,
+  });
 
-  if (salary < wages.percentile10) {
-    percentile = 5; // Below 10th percentile
-    percentileLabel = "Below 10th percentile";
-  } else if (salary < wages.percentile25) {
-    percentile = 17.5; // Between 10th and 25th
-    percentileLabel = "10th-25th percentile";
-  } else if (salary < wages.annualMedian) {
-    percentile = 37.5; // Between 25th and 50th
-    percentileLabel = "25th-50th percentile";
-  } else if (salary < wages.percentile75) {
-    percentile = 62.5; // Between 50th and 75th
-    percentileLabel = "50th-75th percentile";
-  } else if (salary < wages.percentile90) {
-    percentile = 82.5; // Between 75th and 90th
-    percentileLabel = "75th-90th percentile";
-  } else {
-    percentile = 95; // Above 90th percentile
-    percentileLabel = "Above 90th percentile";
-  }
+  // Create percentile label with ordinal suffix
+  const percentileLabel = `${percentile}${getOrdinalSuffix(percentile)} percentile`;
 
   return {
     percentile,
@@ -147,13 +205,13 @@ export function checkAlignment(
 
   if (isAligned) {
     status = "aligned";
-    message = `Your proposed salary aligns with your goal to ${getPositioningLabel(positioning)}`;
+    message = `Your salary (${result.percentileLabel}) aligns with your goal to ${getPositioningLabel(positioning)}`;
   } else if (result.percentile < targetRange.min) {
     status = "below";
-    message = `Your proposed salary is BELOW your stated goal to ${getPositioningLabel(positioning)}`;
+    message = `Your salary (${result.percentileLabel}) is BELOW your stated goal to ${getPositioningLabel(positioning)}`;
   } else {
     status = "above";
-    message = `Your proposed salary is ABOVE typical rates for your strategy`;
+    message = `Your salary (${result.percentileLabel}) is ABOVE typical rates for your strategy`;
   }
 
   return { aligned: isAligned, message, status };
