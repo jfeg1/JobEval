@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const ONET_VERSION = "30.0";
-const ONET_ZIP_URL = "https://www.onetcenter.org/dl_files/database/db_30_0_text/db_30_0_text.zip";
+const ONET_ZIP_URL = "https://www.onetcenter.org/dl_files/database/db_30_0_text.zip";
 const RAW_DATA_DIR = path.join(__dirname, "..", "src", "data", "onet", "raw");
 const PROCESSED_DATA_DIR = path.join(__dirname, "..", "src", "data", "onet", "processed");
 const LOG_FILE = path.join(__dirname, "..", "src", "data", "onet", "download.log");
