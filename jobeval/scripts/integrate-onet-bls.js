@@ -33,6 +33,23 @@ const OCCUPATIONS_OUTPUT = path.join(OUTPUT_DIR, "occupations.json");
 const STATS_OUTPUT = path.join(OUTPUT_DIR, "occupation-stats.json");
 
 /**
+ * Normalize SOC code to 10-character format
+ * BLS uses 7-char format (e.g., "11-2021")
+ * O*NET uses 10-char format (e.g., "11-2021.00")
+ */
+function normalizeSOC(code) {
+  // Convert 7-char to 10-char format
+  if (code.length === 7 && code.match(/^\d{2}-\d{4}$/)) {
+    return code + '.00';
+  }
+  // Already 10-char format
+  if (code.length === 10 && code.match(/^\d{2}-\d{4}\.\d{2}$/)) {
+    return code;
+  }
+  return code; // Return as-is if unknown format
+}
+
+/**
  * Load JSON file
  */
 function loadJSON(filePath) {
@@ -212,22 +229,17 @@ function main() {
   console.log(`   ✓ Loaded ${Object.keys(onetData).length} O*NET occupations`);
   console.log(`   ✓ Loaded ${blsData.occupations.length} BLS occupations`);
 
-  // Create BLS lookup by SOC code
+  // Create BLS lookup by normalized SOC code
   // BLS uses codes like "11-2021" while O*NET uses "11-2021.00"
-  // Create lookups for both formats
-  const blsLookup = {};
-  const blsLookupWithSuffix = {};
+  // Normalize all BLS codes to 10-character format for matching
+  const blsMap = new Map();
 
   blsData.occupations.forEach((occ) => {
-    // Store with original BLS code (e.g., "11-2021")
-    blsLookup[occ.code] = occ;
-
-    // Also store with .00 suffix for O*NET matching (e.g., "11-2021.00")
-    const codeWithSuffix = occ.code.includes('.') ? occ.code : `${occ.code}.00`;
-    blsLookupWithSuffix[codeWithSuffix] = occ;
+    const normalizedCode = normalizeSOC(occ.code);
+    blsMap.set(normalizedCode, occ);
   });
 
-  console.log(`   ✓ Created BLS lookup with ${Object.keys(blsLookup).length} codes`);
+  console.log(`   ✓ Created BLS lookup with ${blsMap.size} normalized codes`);
 
   // Integrate data
   console.log("\n2. Integrating occupation data...");
@@ -236,25 +248,16 @@ function main() {
   let noMatchCount = 0;
   const matchedCodes = [];
   const unmatchedCodes = [];
+  const debugMatches = [];
 
   Object.entries(onetData).forEach(([socCode, onetOcc]) => {
-    // Try exact match first (handles both "11-2021" and "11-2021.00" formats)
-    let blsOcc = blsLookup[socCode] || blsLookupWithSuffix[socCode];
-
-    // If no match and O*NET code has .00 suffix, try removing it
-    if (!blsOcc && socCode.includes('.')) {
-      const codeWithoutSuffix = socCode.replace(/\.00$/, '');
-      blsOcc = blsLookup[codeWithoutSuffix];
-    }
-
-    // If no match and O*NET code doesn't have .00 suffix, try adding it
-    if (!blsOcc && !socCode.includes('.')) {
-      const codeWithSuffix = `${socCode}.00`;
-      blsOcc = blsLookupWithSuffix[codeWithSuffix];
-    }
+    // Normalize O*NET code and look up in BLS map
+    const normalizedCode = normalizeSOC(socCode);
+    const blsOcc = blsMap.get(normalizedCode);
 
     integrated[socCode] = integrateOccupation(onetOcc, blsOcc);
 
+    // Track match results
     if (blsOcc) {
       matchCount++;
       if (matchedCodes.length < 5) {
@@ -266,13 +269,29 @@ function main() {
         unmatchedCodes.push({ code: socCode, title: onetOcc.title });
       }
     }
+
+    // Collect debug info for first 10 codes
+    if (debugMatches.length < 10) {
+      debugMatches.push({
+        code: normalizedCode,
+        matched: blsOcc !== undefined,
+      });
+    }
   });
 
   const coveragePercent = ((matchCount / Object.keys(onetData).length) * 100).toFixed(1);
 
   console.log(`   ✓ Integrated ${matchCount} occupations with wage data`);
   console.log(`   ✓ ${noMatchCount} occupations without wage data`);
-  console.log(`   ✓ Coverage: ${coveragePercent}%`);
+
+  // Show debug matching details for first 10 codes
+  console.log('\n   Matching Details (first 10):');
+  debugMatches.forEach(({ code, matched }) => {
+    const symbol = matched ? '✓ MATCHED' : '✗ no match';
+    console.log(`     ${code}: ${symbol}`);
+  });
+
+  console.log(`\n   Coverage: ${coveragePercent}%`);
 
   // Show examples of matched codes
   if (matchedCodes.length > 0) {
