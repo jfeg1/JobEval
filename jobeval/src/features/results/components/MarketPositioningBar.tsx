@@ -188,10 +188,10 @@ export default function MarketPositioningBar({
       <div className="mb-8">
         <div className="relative h-16 bg-slate-100 rounded-lg overflow-hidden">
           {/* Segment container */}
-          <div className="absolute inset-0 flex">
+          <div className="absolute inset-0 flex items-stretch">
             {/* Current Salary Segment */}
             <div
-              className={`group relative h-full ${
+              className={`group relative h-full flex-shrink-0 ${
                 isBelowMarketMin ? "bg-red-600" : isAboveOptimal ? "bg-emerald-600" : "bg-blue-600"
               }`}
               style={{ width: `${currentWidth}%` }}
@@ -211,7 +211,7 @@ export default function MarketPositioningBar({
             {/* Gap to Target Segment (if below target) */}
             {!isAtOrAboveTarget && gapToTargetWidth > 0 && (
               <div
-                className="group relative h-full bg-amber-500"
+                className="group relative h-full flex-shrink-0 bg-amber-500"
                 style={{ width: `${gapToTargetWidth}%` }}
               >
                 {/* Tooltip */}
@@ -230,7 +230,7 @@ export default function MarketPositioningBar({
             {/* Gap to Optimal Segment (if below optimal) */}
             {!isAboveOptimal && gapToOptimalWidth > 0 && (
               <div
-                className="group relative h-full bg-green-600"
+                className="group relative h-full flex-shrink-0 bg-green-600"
                 style={{ width: `${gapToOptimalWidth}%` }}
               >
                 {/* Tooltip */}
