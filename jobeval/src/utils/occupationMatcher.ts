@@ -244,7 +244,9 @@ export function getAllOccupations(
 export function getOccupationGroups(): string[] {
   const groups = new Set<string>();
   Object.values(typedDatabase.occupations).forEach((occ) => {
-    groups.add(occ.group);
+    if (occ.group) {
+      groups.add(occ.group);
+    }
   });
   return Array.from(groups).sort();
 }

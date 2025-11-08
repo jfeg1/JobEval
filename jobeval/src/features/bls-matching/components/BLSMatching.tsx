@@ -22,7 +22,7 @@ function convertToBLSOccupation(occupation: Occupation): BLSOccupation | null {
   return {
     code: occupation.code,
     title: occupation.title,
-    group: occupation.group,
+    group: occupation.group || "Uncategorized",
     employment: occupation.wageData.employment || 0,
     wages: {
       hourlyMean: occupation.wageData.hourly.mean,
