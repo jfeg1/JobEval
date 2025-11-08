@@ -103,11 +103,11 @@ export function formatRecommendationText(
   const formattedMax = formatCurrency(data.recommendedMax);
 
   if (data.budgetStatus === "competitive") {
-    return `Your budget of ${formattedBudget} is competitive for this role in ${location}. You should be able to attract qualified candidates at this level.`;
+    return `Your budget of ${formattedBudget} is competitive for this role in ${location}. You should be able to attract qualified candidates at this level. Recommended range: ${formattedMin} - ${formattedMax}.`;
   } else if (data.budgetStatus === "below-median") {
-    return `Your budget of ${formattedBudget} is below market median (${formattedMedian}) but within the competitive range. You can still attract talent with the right approach.`;
+    return `Your budget of ${formattedBudget} is below market median (${formattedMedian}) but within the competitive range. You can still attract talent with the right approach. Recommended range: ${formattedMin} - ${formattedMax}.`;
   } else {
-    return `Your budget of ${formattedBudget} is significantly below market rates for ${occupation}. Market data suggests most candidates expect ${formattedMin} or higher.`;
+    return `Your budget of ${formattedBudget} is significantly below market rates for ${occupation}. Market data suggests most candidates expect ${formattedMin} to ${formattedMax}.`;
   }
 }
 
