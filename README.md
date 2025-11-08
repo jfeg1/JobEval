@@ -4,7 +4,8 @@
 
 JobEval helps SMEs establish fair, defensible, and market-aligned base salaries through a systematic job evaluation process—without requiring expensive consultants or HR specialists.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Commercial License](https://img.shields.io/badge/Commercial-License_Available-green.svg)](COMMERCIAL-LICENSE.md)
 
 ---
 
