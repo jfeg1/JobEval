@@ -143,9 +143,7 @@ function formatPercentage(value: number): string {
  * const blob = await generateQuickAdvisoryPdf(pdfData);
  * // Use blob for download
  */
-export async function generateQuickAdvisoryPdf(
-  data: QuickAdvisoryPdfData
-): Promise<Blob> {
+export async function generateQuickAdvisoryPdf(data: QuickAdvisoryPdfData): Promise<Blob> {
   // Create new PDF document
   const doc = new jsPDF({
     orientation: "portrait",
