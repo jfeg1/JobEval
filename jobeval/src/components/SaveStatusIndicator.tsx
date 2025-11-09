@@ -1,6 +1,10 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
-import { autoSaveManager, type SaveEvent } from "../lib/persistence/autoSaveManager";
+import {
+  subscribeToAutoSave,
+  triggerSave,
+  type AutoSaveStatus,
+} from "../lib/persistence/autoSaveManager";
 
 type DisplayStatus = "saved" | "saving" | "error" | "hidden";
 
@@ -64,23 +68,23 @@ export function SaveStatusIndicator(): ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Subscribe to save events
+  // Subscribe to auto-save status
   useEffect(() => {
-    const unsubscribe = autoSaveManager.subscribe((event: SaveEvent) => {
-      // Map save event status to display status
-      if (event.status === "saving") {
+    const unsubscribe = subscribeToAutoSave((autoSaveStatus: AutoSaveStatus) => {
+      // Map auto-save status to display status
+      if (autoSaveStatus.isSaving) {
         setStatus("saving");
         setIsVisible(true);
-      } else if (event.status === "saved") {
-        setStatus("saved");
-        setTimestamp(event.timestamp);
-        setIsVisible(true);
-      } else if (event.status === "error") {
+      } else if (autoSaveStatus.error) {
         setStatus("error");
-        setError(event.error || "Save failed");
+        setError(autoSaveStatus.error.message);
+        setIsVisible(true);
+      } else if (autoSaveStatus.lastSaved) {
+        setStatus("saved");
+        setTimestamp(autoSaveStatus.lastSaved.getTime());
         setIsVisible(true);
       } else {
-        // idle state
+        // No save yet
         setStatus("hidden");
         setIsVisible(false);
       }
@@ -113,7 +117,7 @@ export function SaveStatusIndicator(): ReactElement {
 
   // Handle retry click
   const handleRetry = async () => {
-    await autoSaveManager.retry();
+    await triggerSave();
   };
 
   // Status configurations
