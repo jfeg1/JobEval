@@ -50,7 +50,7 @@ type StatusCallback = (status: AutoSaveStatus) => void;
 let initialized = false;
 let saveTimeoutId: number | null = null;
 let storeUnsubscribers: Array<() => void> = [];
-let statusCallbacks: Set<StatusCallback> = new Set();
+const statusCallbacks: Set<StatusCallback> = new Set();
 
 // Current status
 const currentStatus: AutoSaveStatus = {
