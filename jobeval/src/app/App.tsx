@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "../features/landing/components/LandingPage";
 import CompanySetup from "../features/company-setup/components/CompanySetup";
@@ -8,9 +9,21 @@ import Calculator from "../features/calculator/components/Calculator";
 import Results from "../features/results/components/Results";
 import QuickAdvisoryForm from "../features/quick-advisory/components/QuickAdvisoryForm";
 import QuickAdvisoryResults from "../features/quick-advisory/components/QuickAdvisoryResults";
+import {
+  StartupModal,
+  shouldShowStartupModal,
+} from "../features/data-management/components/StartupModal";
 import "./App.css";
 
 function App() {
+  const [showStartupModal, setShowStartupModal] = useState(false);
+
+  useEffect(() => {
+    // Check if startup modal should be shown on mount
+    const shouldShow = shouldShowStartupModal();
+    setShowStartupModal(shouldShow);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Routes>
@@ -25,6 +38,9 @@ function App() {
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/results" element={<Results />} />
       </Routes>
+
+      {/* Startup modal for restoring previous work */}
+      <StartupModal isOpen={showStartupModal} onClose={() => setShowStartupModal(false)} />
     </div>
   );
 }
