@@ -13,7 +13,7 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "@/shared/components/ui/Modal";
@@ -155,15 +155,34 @@ function getRedirectPath(data: JobEvalExportData): string {
 }
 
 export interface StartupModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export function StartupModal({ isOpen, onClose }: StartupModalProps) {
+export function StartupModal({ isOpen: isOpenProp, onClose: onCloseProp }: StartupModalProps = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { showToast } = useToast();
   const navigate = useNavigate();
+
+  // Determine if we're controlling state internally or externally
+  const isControlled = isOpenProp !== undefined;
+  const isOpen = isControlled ? isOpenProp : internalIsOpen;
+  const handleClose = () => {
+    if (onCloseProp) {
+      onCloseProp();
+    }
+    setInternalIsOpen(false);
+  };
+
+  // Check if modal should be shown on mount (only if not controlled)
+  useEffect(() => {
+    if (!isControlled) {
+      const shouldShow = shouldShowStartupModal();
+      setInternalIsOpen(shouldShow);
+    }
+  }, [isControlled]);
 
   const backup = getMostRecentBackup();
 
@@ -185,7 +204,7 @@ export function StartupModal({ isOpen, onClose }: StartupModalProps) {
 
       if (result.success) {
         showToast("Previous work restored", "success");
-        onClose();
+        handleClose();
 
         // Redirect to appropriate page
         const redirectPath = getRedirectPath(backup.data);
@@ -206,13 +225,13 @@ export function StartupModal({ isOpen, onClose }: StartupModalProps) {
     // Clear all backups
     clearAllBackups();
     showToast("Starting fresh", "info");
-    onClose();
+    handleClose();
     navigate("/");
   };
 
   const handleImportFromFile = () => {
     // Close modal and trigger file picker
-    onClose();
+    handleClose();
     fileInputRef.current?.click();
   };
 
@@ -264,7 +283,7 @@ export function StartupModal({ isOpen, onClose }: StartupModalProps) {
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         title="Welcome back to JobEval"
         size="md"
         actions={
