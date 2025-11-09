@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useCompanyStore } from "../companyStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
 import { Input, FormField, Button } from "@/shared/components/ui";
+import { getAvailableCountries, getCountryMetadata, type CountryCode } from "@/types/i18n";
 
 interface FormData {
   name: string;
   industry: string;
   size: string;
+  country: CountryCode;
+  region: string;
   location: string;
 }
 
@@ -15,6 +18,8 @@ interface FormErrors {
   name?: string;
   industry?: string;
   size?: string;
+  country?: string;
+  region?: string;
   location?: string;
 }
 
@@ -22,6 +27,8 @@ interface TouchedFields {
   name?: boolean;
   industry?: boolean;
   size?: boolean;
+  country?: boolean;
+  region?: boolean;
   location?: boolean;
 }
 
@@ -33,11 +40,18 @@ const CompanySetup: React.FC = () => {
     name: profile?.name || "",
     industry: profile?.industry || "",
     size: profile?.size || "",
+    country: "US", // Default to US
+    region: profile?.state || "", // Use state as region for now
     location: profile?.location || "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<TouchedFields>({});
+
+  // Get available countries and metadata for selected country
+  const availableCountries = getAvailableCountries();
+  const countryMetadata = getCountryMetadata(formData.country);
+  const requiresRegion = !!countryMetadata?.regionalDivisions;
 
   const validateForm = (data: FormData): FormErrors => {
     const errors: FormErrors = {};
@@ -60,6 +74,12 @@ const CompanySetup: React.FC = () => {
       errors.location = "Location is required";
     }
 
+    // Validate region if required for selected country
+    const metadata = getCountryMetadata(data.country);
+    if (metadata?.regionalDivisions && !data.region.trim()) {
+      errors.region = `${metadata.regionalDivisions.name} is required`;
+    }
+
     return errors;
   };
 
@@ -69,6 +89,14 @@ const CompanySetup: React.FC = () => {
     setErrors((prev) => ({
       ...prev,
       [fieldName]: fieldErrors[fieldName],
+    }));
+  };
+
+  const handleCountryChange = (newCountry: CountryCode) => {
+    setFormData((prev) => ({
+      ...prev,
+      country: newCountry,
+      region: "", // Reset region when country changes
     }));
   };
 
@@ -83,6 +111,8 @@ const CompanySetup: React.FC = () => {
         name: true,
         industry: true,
         size: true,
+        country: true,
+        region: true,
         location: true,
       });
       return;
@@ -93,10 +123,10 @@ const CompanySetup: React.FC = () => {
       industry: formData.industry.trim(),
       size: formData.size.trim(),
       location: formData.location.trim(),
+      state: formData.region, // For backwards compatibility
       // Preserve existing values or use defaults (will be filled in later steps)
       annualRevenue: profile?.annualRevenue ?? 0,
       employeeCount: profile?.employeeCount ?? "",
-      state: profile?.state ?? "",
     });
 
     const { markStepComplete } = useWizardStore.getState();
@@ -130,6 +160,52 @@ const CompanySetup: React.FC = () => {
             placeholder="e.g., Acme Corporation"
           />
         </FormField>
+
+        <FormField
+          label="Country"
+          htmlFor="country"
+          required
+          helpText="Where is your company primarily based?"
+        >
+          <select
+            id="country"
+            value={formData.country}
+            onChange={(e) => handleCountryChange(e.target.value as CountryCode)}
+            className="input"
+          >
+            {availableCountries.map((country) => (
+              <option key={country.code} value={country.code}>
+                {country.name}
+              </option>
+            ))}
+          </select>
+        </FormField>
+
+        {requiresRegion && (
+          <FormField
+            label={countryMetadata?.regionalDivisions?.name || "Region"}
+            htmlFor="region"
+            required
+            error={touched.region ? errors.region : undefined}
+            helpText={`Select your ${(countryMetadata?.regionalDivisions?.name || "region").toLowerCase()}`}
+          >
+            <Input
+              id="region"
+              type="text"
+              value={formData.region}
+              onChange={(e) => setFormData((prev) => ({ ...prev, region: e.target.value }))}
+              onBlur={() => handleBlur("region")}
+              error={touched.region && !!errors.region}
+              placeholder={
+                formData.country === "US"
+                  ? "e.g., CA"
+                  : formData.country === "CA"
+                    ? "e.g., ON"
+                    : "Region code"
+              }
+            />
+          </FormField>
+        )}
 
         <FormField
           label="Industry"
@@ -168,11 +244,11 @@ const CompanySetup: React.FC = () => {
         </FormField>
 
         <FormField
-          label="Location"
+          label="City/Location"
           htmlFor="location"
           required
           error={touched.location ? errors.location : undefined}
-          helpText="Where is your company located?"
+          helpText="Primary city or location"
         >
           <Input
             id="location"
@@ -181,7 +257,13 @@ const CompanySetup: React.FC = () => {
             onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
             onBlur={() => handleBlur("location")}
             error={touched.location && !!errors.location}
-            placeholder="e.g., San Francisco, CA"
+            placeholder={
+              formData.country === "US"
+                ? "e.g., San Francisco"
+                : formData.country === "CA"
+                  ? "e.g., Toronto"
+                  : "City name"
+            }
           />
         </FormField>
 
