@@ -45,7 +45,7 @@ function addWatermark(doc: jsPDF, text: string): void {
   const centerY = pageHeight / 2;
 
   // Set opacity (alpha)
-  doc.setGState(new doc.GState({ opacity: 0.1 }));
+  doc.setGState(doc.GState({ opacity: 0.1 }));
 
   // Rotate 45 degrees and add text
   doc.text(text, centerX, centerY, {
