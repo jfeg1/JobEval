@@ -19,6 +19,7 @@ import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { COUNTRY_CONFIGS } from "@/types/i18n";
 import type { CountryCode } from "@/types/i18n";
+import { generateQuickAdvisoryPdf, type QuickAdvisoryPdfData } from "@/lib/pdf/quickAdvisoryPdfService";
 
 /**
  * Get the data source name for a country
@@ -70,9 +71,12 @@ const QuickAdvisoryResults: React.FC = () => {
   const navigate = useNavigate();
   const { formData, resetQuickAdvisory } = useQuickAdvisoryStore();
   const getCountry = useCompanyStore((state) => state.getCountry);
+  const getCurrency = useCompanyStore((state) => state.getCurrency);
+  const companyProfile = useCompanyStore((state) => state.profile);
   const country = getCountry();
   const [noMatchFound, setNoMatchFound] = useState(false);
   const [matchConfidence, setMatchConfidence] = useState(0);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   // Guard: Redirect if no form data
   useEffect(() => {
@@ -178,6 +182,57 @@ const QuickAdvisoryResults: React.FC = () => {
     navigate("/quick");
   };
 
+  const handleExportPdf = async () => {
+    setIsGeneratingPdf(true);
+
+    try {
+      // Build gap description for PDF
+      const gapDescription = alignment.gap
+        ? `${alignment.gap.percentilePoints} percentile points below your target range`
+        : "Within target range";
+
+      // Map Quick Advisory data to PDF data interface
+      const pdfData: QuickAdvisoryPdfData = {
+        proposedSalary: formData.proposedSalary,
+        percentile: percentileResult.percentile,
+        targetRangeLabel: targetRange.label,
+        gapDescription: gapDescription,
+        recommendedIncrease: alignment.gap?.salaryIncrease || 0,
+        recommendedSalary: alignment.gap?.recommendedSalary || formData.proposedSalary,
+        currentPayrollRatio: affordabilityResult?.currentRatio || 0,
+        newPayrollRatio: affordabilityResult?.newRatio || 0,
+        companyName: companyProfile?.name,
+        generatedDate: new Date(),
+        countryCode: country,
+        currencyCode: getCurrency(),
+        locale: navigator.language || "en-US",
+      };
+
+      const pdfBlob = await generateQuickAdvisoryPdf(pdfData);
+
+      // Generate filename with current date
+      const dateStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+      const filename = `JobEval_QuickAdvisory_${dateStr}.pdf`;
+
+      // Trigger download
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+    } catch (error) {
+      // Use inline alert for error handling (matching project pattern)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      alert(`Failed to generate PDF: ${errorMessage}. Please try again.`);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* Header */}
@@ -250,15 +305,24 @@ const QuickAdvisoryResults: React.FC = () => {
           Start Over
         </Button>
 
-        <div className="flex gap-3">
-          {/* Placeholder for future features */}
-          {/* <Button variant="outline" disabled>
-            Download PDF
-          </Button>
-          <Button variant="outline" disabled>
-            Save Results
-          </Button> */}
-        </div>
+        <button
+          onClick={handleExportPdf}
+          disabled={isGeneratingPdf}
+          className="w-full md:w-auto px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          aria-label="Export salary analysis as PDF"
+        >
+          {isGeneratingPdf ? (
+            <>
+              <span className="inline-block animate-spin mr-2">⏳</span>
+              Generating PDF...
+            </>
+          ) : (
+            <>
+              <span className="mr-2">📥</span>
+              Export as PDF
+            </>
+          )}
+        </button>
       </div>
 
       {/* Match confidence indicator (if below 0.9) */}
