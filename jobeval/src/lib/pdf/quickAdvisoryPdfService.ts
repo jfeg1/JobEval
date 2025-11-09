@@ -3,6 +3,55 @@
  *
  * Generates PDF documents for Quick Advisory salary analysis results
  * with international paper size and currency support
+ *
+ * TESTING CHECKLIST - Quick Advisory PDF Export
+ *
+ * PDF Generation:
+ * - [ ] PDF generates without errors
+ * - [ ] All data fields display correctly
+ * - [ ] Currency formatting is correct (e.g., $85,000 not $85000)
+ * - [ ] Multiple currency formats work (USD, GBP, EUR, CAD, etc.)
+ * - [ ] Percentages format correctly (e.g., 30.0% not 0.3 or 30%)
+ * - [ ] Percentile ordinals are correct (1st, 2nd, 3rd, 4th, 18th, etc.)
+ * - [ ] Watermark is visible but subtle (not overpowering)
+ * - [ ] Disclaimer text is readable in footer
+ * - [ ] File downloads with correct naming: JobEval_QuickAdvisory_YYYY-MM-DD.pdf
+ *
+ * International Support:
+ * - [ ] US users get Letter size (8.5" x 11")
+ * - [ ] Non-US users get A4 size (210mm x 297mm)
+ * - [ ] Currency symbols display correctly for different locales
+ * - [ ] Date formats respect locale settings
+ *
+ * Browser Compatibility:
+ * - [ ] Works on Chrome (latest)
+ * - [ ] Works on Firefox (latest)
+ * - [ ] Works on Safari (latest)
+ * - [ ] Works on mobile browsers (iOS Safari, Chrome Mobile)
+ *
+ * Edge Cases:
+ * - [ ] Layout doesn't break with very long company names (50+ characters)
+ * - [ ] Layout doesn't break with edge case salaries ($10,000 and $1,000,000)
+ * - [ ] Missing optional fields handled gracefully (company name, country)
+ * - [ ] Works when companyName is undefined
+ * - [ ] Works when countryCode/currencyCode/locale are undefined
+ * - [ ] Very long target range labels don't cause overflow
+ * - [ ] Very long gap descriptions don't cause overflow
+ *
+ * UI/UX:
+ * - [ ] Button is keyboard accessible
+ * - [ ] Loading state displays properly
+ * - [ ] Error messages are user-friendly
+ * - [ ] Button is disabled during PDF generation
+ * - [ ] Focus states are visible
+ *
+ * Code Quality:
+ * - [ ] No TypeScript errors
+ * - [ ] No ESLint warnings
+ * - [ ] All functions have JSDoc comments
+ * - [ ] Proper error handling with try-catch
+ * - [ ] No unused imports or variables
+ * - [ ] Follows project code style
  */
 
 import jsPDF from "jspdf";
@@ -178,33 +227,89 @@ function drawFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
 }
 
 /**
- * Generate Quick Advisory PDF
+ * Generates a PDF document for Quick Advisory salary analysis with international support
  *
- * Creates a professional PDF report with salary advisory information,
- * including international paper size and currency support
+ * Creates a professional PDF report containing salary advisory information with the following features:
+ * - Dynamic paper size based on country (Letter for US/CA/MX, A4 for others)
+ * - International currency formatting with proper symbols and localization
+ * - Watermark for advisory disclaimers
+ * - Comprehensive footer with legal disclaimer
+ * - Formatted percentiles with proper ordinal suffixes (1st, 2nd, 3rd, etc.)
  *
- * @param data - Quick Advisory data to include in the PDF
- * @returns Promise resolving to PDF Blob for download
+ * @param data - The Quick Advisory data to include in the PDF
+ * @param data.proposedSalary - The proposed salary amount (numeric value)
+ * @param data.percentile - The percentile ranking (1-100)
+ * @param data.targetRangeLabel - Description of target range (e.g., "40th-60th percentile (Competitive)")
+ * @param data.gapDescription - Description of gap from target range
+ * @param data.recommendedIncrease - Recommended salary increase amount
+ * @param data.recommendedSalary - Recommended final salary amount
+ * @param data.currentPayrollRatio - Current payroll to revenue ratio (as decimal, e.g., 0.30 for 30%)
+ * @param data.newPayrollRatio - New payroll ratio after hire (as decimal, e.g., 0.368 for 36.8%)
+ * @param data.companyName - Optional company name to display in report header
+ * @param data.generatedDate - Date when report was generated
+ * @param data.countryCode - Optional ISO 3166-1 alpha-2 country code for paper size determination
+ * @param data.currencyCode - Optional ISO 4217 currency code for formatting
+ * @param data.locale - Optional locale string for date/number formatting (e.g., 'en-US', 'en-GB', 'fr-CA')
+ *
+ * @returns Promise that resolves to a Blob containing the PDF document
+ * @throws Error if PDF generation fails due to invalid data or rendering issues
  *
  * @example
- * const pdfData = {
- *   proposedSalary: 50000,
+ * ```typescript
+ * // US company example
+ * const pdfBlob = await generateQuickAdvisoryPdf({
+ *   proposedSalary: 85000,
  *   percentile: 18,
  *   targetRangeLabel: "40th-60th percentile (Competitive)",
  *   gapDescription: "-32-42 percentile points below your target range",
- *   recommendedIncrease: 22000,
- *   recommendedSalary: 72000,
- *   currentPayrollRatio: 30.0,
- *   newPayrollRatio: 36.8,
+ *   recommendedIncrease: 38678,
+ *   recommendedSalary: 123678,
+ *   currentPayrollRatio: 0.30,
+ *   newPayrollRatio: 0.368,
  *   companyName: "Acme Corp",
  *   generatedDate: new Date(),
  *   countryCode: "US",
  *   currencyCode: "USD",
  *   locale: "en-US"
- * };
+ * });
+ * ```
  *
- * const blob = await generateQuickAdvisoryPdf(pdfData);
- * // Use blob for download
+ * @example
+ * ```typescript
+ * // UK company example with GBP
+ * const pdfBlob = await generateQuickAdvisoryPdf({
+ *   proposedSalary: 65000,
+ *   percentile: 42,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "+2 percentile points above target range minimum",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 65000,
+ *   currentPayrollRatio: 0.28,
+ *   newPayrollRatio: 0.32,
+ *   companyName: "British Ventures Ltd",
+ *   generatedDate: new Date(),
+ *   countryCode: "GB",
+ *   currencyCode: "GBP",
+ *   locale: "en-GB"
+ * });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Minimal example with optional fields omitted
+ * const pdfBlob = await generateQuickAdvisoryPdf({
+ *   proposedSalary: 75000,
+ *   percentile: 50,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "Within target range",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 75000,
+ *   currentPayrollRatio: 0.25,
+ *   newPayrollRatio: 0.30,
+ *   generatedDate: new Date()
+ *   // companyName, countryCode, currencyCode, locale are optional
+ * });
+ * ```
  */
 export async function generateQuickAdvisoryPdf(data: QuickAdvisoryPdfData): Promise<Blob> {
   try {
@@ -391,3 +496,159 @@ export async function generateQuickAdvisoryPdf(data: QuickAdvisoryPdfData): Prom
     );
   }
 }
+
+/**
+ * EDGE CASE TESTING SCENARIOS
+ *
+ * Use these test cases for manual testing of the PDF export feature.
+ * These are NOT included in production code - they are for reference only.
+ *
+ * Test Case 1: Very Long Company Name
+ * -----------------------------------------
+ * const testData1 = {
+ *   proposedSalary: 85000,
+ *   percentile: 18,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "-32-42 percentile points below your target range",
+ *   recommendedIncrease: 38678,
+ *   recommendedSalary: 123678,
+ *   currentPayrollRatio: 0.30,
+ *   newPayrollRatio: 0.368,
+ *   companyName: "International Business Machines Corporation Global Services Division",
+ *   generatedDate: new Date(),
+ *   countryCode: "US",
+ *   currencyCode: "USD",
+ *   locale: "en-US"
+ * };
+ *
+ * Test Case 2: Very Low Salary (Edge Case)
+ * -----------------------------------------
+ * const testData2 = {
+ *   proposedSalary: 10000,
+ *   percentile: 5,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "-35-55 percentile points below your target range",
+ *   recommendedIncrease: 50000,
+ *   recommendedSalary: 60000,
+ *   currentPayrollRatio: 0.15,
+ *   newPayrollRatio: 0.18,
+ *   companyName: "Startup Inc",
+ *   generatedDate: new Date(),
+ *   countryCode: "US",
+ *   currencyCode: "USD",
+ *   locale: "en-US"
+ * };
+ *
+ * Test Case 3: Very High Salary (Edge Case)
+ * -----------------------------------------
+ * const testData3 = {
+ *   proposedSalary: 1000000,
+ *   percentile: 98,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "+38-58 percentile points above your target range",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 1000000,
+ *   currentPayrollRatio: 0.45,
+ *   newPayrollRatio: 0.55,
+ *   companyName: "Enterprise Corp",
+ *   generatedDate: new Date(),
+ *   countryCode: "US",
+ *   currencyCode: "USD",
+ *   locale: "en-US"
+ * };
+ *
+ * Test Case 4: Missing Optional Fields
+ * -----------------------------------------
+ * const testData4 = {
+ *   proposedSalary: 75000,
+ *   percentile: 50,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "Within target range",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 75000,
+ *   currentPayrollRatio: 0.25,
+ *   newPayrollRatio: 0.30,
+ *   generatedDate: new Date()
+ *   // Note: companyName, countryCode, currencyCode, locale are all undefined
+ * };
+ *
+ * Test Case 5: UK Company with GBP (A4 Paper)
+ * -----------------------------------------
+ * const testData5 = {
+ *   proposedSalary: 65000,
+ *   percentile: 42,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "+2 percentile points above target range minimum",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 65000,
+ *   currentPayrollRatio: 0.28,
+ *   newPayrollRatio: 0.32,
+ *   companyName: "British Ventures Ltd",
+ *   generatedDate: new Date(),
+ *   countryCode: "GB",
+ *   currencyCode: "GBP",
+ *   locale: "en-GB"
+ * };
+ *
+ * Test Case 6: EUR Currency (Germany)
+ * -----------------------------------------
+ * const testData6 = {
+ *   proposedSalary: 70000,
+ *   percentile: 55,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "Within target range",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 70000,
+ *   currentPayrollRatio: 0.32,
+ *   newPayrollRatio: 0.38,
+ *   companyName: "Deutsche Tech GmbH",
+ *   generatedDate: new Date(),
+ *   countryCode: "DE",
+ *   currencyCode: "EUR",
+ *   locale: "de-DE"
+ * };
+ *
+ * Test Case 7: CAD Currency (Canada - Letter Size)
+ * -----------------------------------------
+ * const testData7 = {
+ *   proposedSalary: 90000,
+ *   percentile: 62,
+ *   targetRangeLabel: "40th-60th percentile (Competitive)",
+ *   gapDescription: "+2 percentile points above target range",
+ *   recommendedIncrease: 0,
+ *   recommendedSalary: 90000,
+ *   currentPayrollRatio: 0.35,
+ *   newPayrollRatio: 0.40,
+ *   companyName: "Canadian Enterprises Inc.",
+ *   generatedDate: new Date(),
+ *   countryCode: "CA",
+ *   currencyCode: "CAD",
+ *   locale: "en-CA"
+ * };
+ *
+ * Test Case 8: Very Long Labels and Descriptions
+ * -----------------------------------------
+ * const testData8 = {
+ *   proposedSalary: 85000,
+ *   percentile: 18,
+ *   targetRangeLabel: "40th-60th percentile (Competitive - This is an extremely long label to test overflow and text wrapping in the PDF generation system)",
+ *   gapDescription: "-32-42 percentile points below your target range which is a significant gap that may require substantial salary adjustment to reach competitive positioning in the market",
+ *   recommendedIncrease: 38678,
+ *   recommendedSalary: 123678,
+ *   currentPayrollRatio: 0.30,
+ *   newPayrollRatio: 0.368,
+ *   companyName: "Test Company",
+ *   generatedDate: new Date(),
+ *   countryCode: "US",
+ *   currencyCode: "USD",
+ *   locale: "en-US"
+ * };
+ *
+ * TESTING PROCEDURE:
+ * 1. Copy any test case above
+ * 2. Use in the Quick Advisory Results page to generate PDF
+ * 3. Verify all fields display correctly
+ * 4. Check for layout issues, text overflow, or formatting problems
+ * 5. Test download functionality
+ * 6. Open PDF in multiple viewers (browser, Adobe, Preview, etc.)
+ */

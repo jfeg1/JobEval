@@ -227,9 +227,25 @@ const QuickAdvisoryResults: React.FC = () => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      // Use inline alert for error handling (matching project pattern)
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      alert(`Failed to generate PDF: ${errorMessage}. Please try again.`);
+      // Log error with context for debugging (will be removed in production build)
+      if (import.meta.env.DEV) {
+        console.error("PDF generation failed:", {
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+          data: {
+            proposedSalary: formData.proposedSalary,
+            percentile: percentileResult.percentile,
+            targetRangeLabel: targetRange.label,
+            country: country,
+            currency: getCurrency(),
+          },
+        });
+      }
+
+      // Show user-friendly error message
+      alert(
+        "We encountered an error generating your PDF. Please try again. If the problem persists, try refreshing the page."
+      );
     } finally {
       setIsGeneratingPdf(false);
     }
