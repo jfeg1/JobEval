@@ -19,7 +19,10 @@ import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { COUNTRY_CONFIGS } from "@/types/i18n";
 import type { CountryCode } from "@/types/i18n";
-import { generateQuickAdvisoryPdf, type QuickAdvisoryPdfData } from "@/lib/pdf/quickAdvisoryPdfService";
+import {
+  generateQuickAdvisoryPdf,
+  type QuickAdvisoryPdfData,
+} from "@/lib/pdf/quickAdvisoryPdfService";
 
 /**
  * Get the data source name for a country
@@ -223,7 +226,6 @@ const QuickAdvisoryResults: React.FC = () => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-
     } catch (error) {
       // Use inline alert for error handling (matching project pattern)
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
