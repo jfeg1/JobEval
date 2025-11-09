@@ -1,4 +1,4 @@
-import { formatSalary } from "@/shared/utils/formatSalary";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 import { getBudgetPositionPercentage } from "@/shared/utils/resultsCalculator";
 
 interface SalaryRangeBarProps {
@@ -118,23 +118,33 @@ export default function SalaryRangeBar({
           <div className="flex justify-between items-start text-xs text-gray-600">
             <div className="text-center" style={{ width: "20%" }}>
               <div className="font-medium">10th</div>
-              <div className="text-gray-900 font-semibold mt-1">{formatSalary(p10, true)}</div>
+              <div className="text-gray-900 font-semibold mt-1">
+                <CurrencyDisplay value={p10} abbreviate />
+              </div>
             </div>
             <div className="text-center" style={{ width: "20%" }}>
               <div className="font-medium">25th</div>
-              <div className="text-gray-900 font-semibold mt-1">{formatSalary(p25, true)}</div>
+              <div className="text-gray-900 font-semibold mt-1">
+                <CurrencyDisplay value={p25} abbreviate />
+              </div>
             </div>
             <div className="text-center" style={{ width: "20%" }}>
               <div className="font-medium text-green-700">Median</div>
-              <div className="text-gray-900 font-bold mt-1">{formatSalary(p50, true)}</div>
+              <div className="text-gray-900 font-bold mt-1">
+                <CurrencyDisplay value={p50} abbreviate />
+              </div>
             </div>
             <div className="text-center" style={{ width: "20%" }}>
               <div className="font-medium">75th</div>
-              <div className="text-gray-900 font-semibold mt-1">{formatSalary(p75, true)}</div>
+              <div className="text-gray-900 font-semibold mt-1">
+                <CurrencyDisplay value={p75} abbreviate />
+              </div>
             </div>
             <div className="text-center" style={{ width: "20%" }}>
               <div className="font-medium">90th</div>
-              <div className="text-gray-900 font-semibold mt-1">{formatSalary(p90, true)}</div>
+              <div className="text-gray-900 font-semibold mt-1">
+                <CurrencyDisplay value={p90} abbreviate />
+              </div>
             </div>
           </div>
         </div>
@@ -142,8 +152,8 @@ export default function SalaryRangeBar({
 
       {/* Screen reader text */}
       <div className="sr-only">
-        Salary range from {formatSalary(p10)} at 10th percentile to {formatSalary(p90)} at 90th
-        percentile. Median is {formatSalary(p50)}. Your budget of {formatSalary(userBudget)} is{" "}
+        Market salary range visualization showing percentiles from 10th to 90th. Your budget
+        position is{" "}
         {userBudget >= p50
           ? "at or above median"
           : userBudget >= p25

@@ -4,7 +4,7 @@ import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
 import { useCalculatorStore } from "@/features/calculator/calculatorStore";
-import { formatSalary, formatSalaryRange } from "@/shared/utils/formatSalary";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 import {
   calculateRecommendation,
   formatRecommendationText,
@@ -13,11 +13,40 @@ import {
 import SalaryRangeBar from "./SalaryRangeBar";
 import RecommendationCard from "./RecommendationCard";
 
+// Helper function to get data source name based on country
+function getDataSourceName(countryCode: string): string {
+  const sources: Record<string, string> = {
+    US: "U.S. Bureau of Labor Statistics",
+    CA: "Statistics Canada",
+    GB: "UK Office for National Statistics",
+    AU: "Australian Bureau of Statistics",
+    DE: "Statistisches Bundesamt (Destatis)",
+    FR: "Institut national de la statistique et des études économiques (INSEE)",
+    // Add more as needed
+  };
+  return sources[countryCode] || "public statistical agencies";
+}
+
+// Helper function to get currency full name
+function getCurrencyName(currencyCode: string): string {
+  const names: Record<string, string> = {
+    USD: "U.S. Dollars",
+    CAD: "Canadian Dollars",
+    EUR: "Euros",
+    GBP: "British Pounds",
+    AUD: "Australian Dollars",
+    JPY: "Japanese Yen",
+    SGD: "Singapore Dollars",
+    // Add more as needed
+  };
+  return names[currencyCode] || currencyCode;
+}
+
 export default function Results() {
   const navigate = useNavigate();
 
   // Get data from all stores
-  const { profile: company, clearProfile } = useCompanyStore();
+  const { profile: company, clearProfile, getCountry, getCurrency } = useCompanyStore();
   const { basicInfo: position, clearPosition } = usePositionStore();
   const { selectedOccupation, clearMatching } = useMatchingStore();
   const { affordableRange, reset: resetCalculator } = useCalculatorStore();
@@ -51,6 +80,10 @@ export default function Results() {
   if (!company || !position || !selectedOccupation || !affordableRange) {
     return null;
   }
+
+  // Get country and currency for internationalization
+  const country = getCountry();
+  const currency = getCurrency();
 
   // Extract data for calculations
   const userBudget = affordableRange.target;
@@ -108,35 +141,30 @@ export default function Results() {
           {/* Market Median */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <p className="text-sm text-gray-600 mb-2">Market Median</p>
-            <p
-              className="text-3xl font-semibold text-gray-900"
-              aria-label={`Market median salary: ${formatSalary(blsData.median)}`}
-            >
-              {formatSalary(blsData.median)}
-            </p>
+            <CurrencyDisplay
+              value={blsData.median}
+              className="text-3xl font-semibold text-gray-900 block"
+            />
           </div>
 
           {/* Market Range */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <p className="text-sm text-gray-600 mb-2">Market Range</p>
-            <p
-              className="text-3xl font-semibold text-gray-900"
-              aria-label={`Market range: ${formatSalaryRange(blsData.percentile25, blsData.percentile75, false)}`}
-            >
-              {formatSalaryRange(blsData.percentile25, blsData.percentile75)}
-            </p>
+            <div className="text-3xl font-semibold text-gray-900">
+              <CurrencyDisplay value={blsData.percentile25} abbreviate />
+              <span className="mx-2">-</span>
+              <CurrencyDisplay value={blsData.percentile75} abbreviate />
+            </div>
             <p className="text-xs text-gray-500 mt-1">25th - 75th percentile</p>
           </div>
 
           {/* Your Budget */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <p className="text-sm text-gray-600 mb-2">Your Budget</p>
-            <p
-              className="text-3xl font-semibold text-green-700"
-              aria-label={`Your budget: ${formatSalary(userBudget)}`}
-            >
-              {formatSalary(userBudget)}
-            </p>
+            <CurrencyDisplay
+              value={userBudget}
+              className="text-3xl font-semibold text-green-700 block"
+            />
             <p className="text-xs text-gray-500 mt-1">Target salary</p>
           </div>
         </div>
@@ -206,12 +234,14 @@ export default function Results() {
         {/* Data Attribution Footer */}
         <div className="mt-8 pt-6 border-t border-gray-200 text-xs text-gray-500 text-center">
           <p>
-            BLS occupation data from U.S. Bureau of Labor Statistics • Occupational Employment and
-            Wage Statistics (OEWS) Survey
+            Occupation data from O*NET 30.0 • Wage data from {getDataSourceName(country)}
+            {selectedOccupation.dataDate && ` • ${selectedOccupation.dataDate}`}
+            {country !== "US" && <> • All amounts displayed in {getCurrencyName(currency)}</>}
           </p>
-          <p className="mt-1">
-            This tool provides guidance only. Consult with HR professionals and legal counsel for
-            specific hiring decisions.
+          <p className="mt-2 text-gray-600">
+            <strong>Disclaimer:</strong> JobEval provides guidance based on public market data and
+            your company's financial profile. Final compensation decisions should consider local
+            labor laws, cost of living adjustments, and professional counsel.
           </p>
         </div>
       </div>

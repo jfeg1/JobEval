@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { formatSalary } from "@/shared/utils/formatSalary";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 
 /**
  * MarketPositioningBar - Visualizes salary positioning against market data
@@ -170,7 +170,7 @@ export default function MarketPositioningBar({
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-800">
             <span className="font-semibold">✓ At Target:</span> You're already at target by{" "}
-            {formatSalary(targetDifference)}
+            <CurrencyDisplay value={targetDifference} />
           </p>
         </div>
       )}
@@ -200,7 +200,9 @@ export default function MarketPositioningBar({
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <div className="bg-slate-900 text-white text-xs font-medium px-3 py-2 rounded shadow-lg whitespace-nowrap">
                   <div className="font-semibold">Current Salary</div>
-                  <div>{formatSalary(currentSalary)}</div>
+                  <div>
+                    <CurrencyDisplay value={currentSalary} />
+                  </div>
                   <div className="text-slate-300">{currentPercentile.toFixed(1)}th percentile</div>
                 </div>
                 {/* Tooltip arrow */}
@@ -218,7 +220,9 @@ export default function MarketPositioningBar({
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                   <div className="bg-slate-900 text-white text-xs font-medium px-3 py-2 rounded shadow-lg whitespace-nowrap">
                     <div className="font-semibold">Gap to Target</div>
-                    <div>{formatSalary(gapToTargetAmount)}</div>
+                    <div>
+                      <CurrencyDisplay value={gapToTargetAmount} />
+                    </div>
                     <div className="text-slate-300">To reach {targetPercentile}th percentile</div>
                   </div>
                   {/* Tooltip arrow */}
@@ -237,7 +241,9 @@ export default function MarketPositioningBar({
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                   <div className="bg-slate-900 text-white text-xs font-medium px-3 py-2 rounded shadow-lg whitespace-nowrap">
                     <div className="font-semibold">Gap to Optimal</div>
-                    <div>{formatSalary(gapToOptimalAmount)}</div>
+                    <div>
+                      <CurrencyDisplay value={gapToOptimalAmount} />
+                    </div>
                     <div className="text-slate-300">To reach market median (50th)</div>
                   </div>
                   {/* Tooltip arrow */}
@@ -264,7 +270,7 @@ export default function MarketPositioningBar({
                   {marker.label}
                 </div>
                 <div className="text-xs text-slate-900 font-semibold whitespace-nowrap">
-                  {formatSalary(marker.salary, true)}
+                  <CurrencyDisplay value={marker.salary} abbreviate />
                 </div>
               </div>
             </div>
@@ -298,11 +304,9 @@ export default function MarketPositioningBar({
 
       {/* Screen reader text */}
       <div className="sr-only">
-        Market positioning visualization. Current salary is {formatSalary(currentSalary)} at the{" "}
-        {currentPercentile.toFixed(1)}th percentile. Target salary is {formatSalary(targetSalary)}{" "}
-        at the {targetPercentile}th percentile. Optimal market salary is{" "}
-        {formatSalary(optimalSalary)} at the 50th percentile. Market range is from{" "}
-        {formatSalary(blsMin)} at 10th percentile to {formatSalary(blsMax)} at 90th percentile.
+        Market positioning visualization. Current salary is at the {currentPercentile.toFixed(1)}th
+        percentile. Target is at the {targetPercentile}th percentile. Market median is at the 50th
+        percentile. Market range spans from 10th to 90th percentile.
         {isBelowMarketMin &&
           ` Warning: Current salary is ${belowMinPercentage}% below market minimum.`}
         {isAboveMarketMax && ` Current salary is ${aboveMaxPercentage}% above market maximum.`}
