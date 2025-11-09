@@ -10,11 +10,7 @@ import { useMatchingStore } from "@/features/bls-matching/matchingStore";
 import { useQuickAdvisoryStore } from "@/features/quick-advisory/quickAdvisoryStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
-import type {
-  JobEvalExportData,
-  SaveError,
-  WizardState,
-} from "./dataStructure";
+import type { JobEvalExportData, SaveError, WizardState } from "./dataStructure";
 
 /**
  * Determines the type of evaluation based on available data
@@ -83,10 +79,7 @@ export function gatherAllData(): JobEvalExportData {
   // Determine evaluation type
   const hasQuickAdvisory = !!quickAdvisoryState.formData.jobTitle;
   const hasFullPosition = hasPositionData(position);
-  const evaluationType = determineEvaluationType(
-    hasQuickAdvisory,
-    hasFullPosition
-  );
+  const evaluationType = determineEvaluationType(hasQuickAdvisory, hasFullPosition);
 
   // Get app version from environment or fallback
   const appVersion = import.meta.env.VITE_APP_VERSION || "0.0.0";
@@ -128,9 +121,7 @@ export function generateFilename(companyName?: string): string {
 
   if (companyName) {
     // Sanitize company name for filename (remove special chars, limit length)
-    const sanitized = companyName
-      .replace(/[^a-zA-Z0-9-_]/g, "_")
-      .substring(0, 50);
+    const sanitized = companyName.replace(/[^a-zA-Z0-9-_]/g, "_").substring(0, 50);
     return `JobEval_Data_${sanitized}_${dateStr}.json`;
   }
 
@@ -146,10 +137,7 @@ export function generateFilename(companyName?: string): string {
  * @param data - Export data to download
  * @param filename - Name for the downloaded file
  */
-export function downloadJsonFile(
-  data: JobEvalExportData,
-  filename: string
-): void {
+export function downloadJsonFile(data: JobEvalExportData, filename: string): void {
   try {
     // Convert data to JSON string with formatting
     const jsonString = JSON.stringify(data, null, 2);
@@ -205,8 +193,7 @@ export async function exportAllData(): Promise<{
     const saveError: SaveError = {
       timestamp: new Date(),
       errorType: "export_failed",
-      message:
-        error instanceof Error ? error.message : "Unknown export error",
+      message: error instanceof Error ? error.message : "Unknown export error",
       stack: error instanceof Error ? error.stack : undefined,
       userAction: "export_all_data",
     };

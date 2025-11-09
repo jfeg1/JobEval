@@ -105,11 +105,7 @@ export interface SaveError {
   timestamp: Date;
 
   /** Category of error */
-  errorType:
-    | "export_failed"
-    | "import_failed"
-    | "validation_failed"
-    | "storage_full";
+  errorType: "export_failed" | "import_failed" | "validation_failed" | "storage_full";
 
   /** Human-readable error message */
   message: string;
