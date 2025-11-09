@@ -1,5 +1,5 @@
 import type { RecommendationData } from "@/shared/utils/resultsCalculator";
-import { formatSalaryRange } from "@/shared/utils/formatSalary";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 
 interface RecommendationCardProps {
   recommendation: RecommendationData;
@@ -71,9 +71,11 @@ export default function RecommendationCard({
       {/* Recommended range */}
       <div className="mb-4 p-4 bg-white rounded-lg border border-gray-200">
         <p className="text-sm text-gray-600 mb-1">Recommended salary range:</p>
-        <p className="text-2xl font-semibold text-gray-900">
-          {formatSalaryRange(recommendedMin, recommendedMax, false)}
-        </p>
+        <div className="text-2xl font-semibold text-gray-900">
+          <CurrencyDisplay value={recommendedMin} />
+          <span className="mx-2">-</span>
+          <CurrencyDisplay value={recommendedMax} />
+        </div>
         <p className="text-xs text-gray-500 mt-1">
           {budgetStatus === "competitive" && "(Targeting the 50th-75th percentile)"}
           {budgetStatus === "below-median" && "(Targeting the 25th-50th percentile)"}
