@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuickAdvisoryStore } from "../quickAdvisoryStore";
 import { MarketPositioning, MARKET_POSITIONING_LABELS } from "../types";
 import { Input, FormField, Button } from "@/shared/components/ui";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { COUNTRY_CONFIGS, CURRENCY_CONFIGS } from "@/types/i18n";
+import type { CountryCode } from "@/types/i18n";
 
 interface FormErrors {
   jobTitle?: string;
@@ -24,6 +27,38 @@ interface TouchedFields {
   annualPayroll?: boolean;
 }
 
+/**
+ * Get location placeholder based on country
+ */
+function getLocationPlaceholder(country: CountryCode): string {
+  const placeholders: Record<CountryCode, string> = {
+    US: "e.g., Austin, TX",
+    CA: "e.g., Toronto, ON",
+    GB: "e.g., London",
+    AU: "e.g., Sydney, NSW",
+    DE: "e.g., Berlin",
+    FR: "e.g., Paris",
+    IT: "e.g., Milan",
+    ES: "e.g., Madrid",
+    NL: "e.g., Amsterdam",
+    SE: "e.g., Stockholm",
+    JP: "e.g., Tokyo",
+    SG: "e.g., Singapore",
+  };
+  return placeholders[country] || "e.g., Your city";
+}
+
+/**
+ * Get location help text based on country
+ */
+function getLocationHelpText(country: CountryCode): string {
+  const countryConfig = COUNTRY_CONFIGS[country];
+  if (!countryConfig) return "City and state/province where the work will be performed";
+
+  const divisionType = countryConfig.regionalDivisions.name;
+  return `City and ${divisionType.toLowerCase()} where the work will be performed`;
+}
+
 const QuickAdvisoryForm: React.FC = () => {
   const navigate = useNavigate();
   const {
@@ -36,6 +71,12 @@ const QuickAdvisoryForm: React.FC = () => {
     setRevenue,
     setPayroll,
   } = useQuickAdvisoryStore();
+
+  const getCountry = useCompanyStore((state) => state.getCountry);
+  const getCurrency = useCompanyStore((state) => state.getCurrency);
+  const country = getCountry();
+  const currency = getCurrency();
+  const currencySymbol = CURRENCY_CONFIGS[currency]?.symbol || "$";
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<TouchedFields>({});
@@ -154,7 +195,7 @@ const QuickAdvisoryForm: React.FC = () => {
             htmlFor="location"
             required
             error={touched.location ? errors.location : undefined}
-            helpText="City and state where the work will be performed"
+            helpText={getLocationHelpText(country)}
           >
             <Input
               id="location"
@@ -163,7 +204,7 @@ const QuickAdvisoryForm: React.FC = () => {
               onChange={(e) => setLocation(e.target.value)}
               onBlur={() => handleBlur("location")}
               error={touched.location && !!errors.location}
-              placeholder="e.g., Austin, TX"
+              placeholder={getLocationPlaceholder(country)}
             />
           </FormField>
 
@@ -194,7 +235,9 @@ const QuickAdvisoryForm: React.FC = () => {
             helpText="Enter the base salary you're considering (excluding benefits)"
           >
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                {currencySymbol}
+              </span>
               <Input
                 id="proposed-salary"
                 type="text"
@@ -251,7 +294,9 @@ const QuickAdvisoryForm: React.FC = () => {
               helpText="Helps assess if the salary is sustainable for your business"
             >
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  {currencySymbol}
+                </span>
                 <Input
                   id="annual-revenue"
                   type="text"
@@ -272,7 +317,9 @@ const QuickAdvisoryForm: React.FC = () => {
               helpText="Total payroll costs help determine affordability"
             >
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  {currencySymbol}
+                </span>
                 <Input
                   id="annual-payroll"
                   type="text"

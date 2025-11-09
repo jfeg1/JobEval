@@ -1,5 +1,6 @@
 import React from "react";
 import type { PayrollRatioResult } from "@/utils/affordabilityCalculator";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 
 interface AffordabilityAnalysisProps {
   result: PayrollRatioResult;
@@ -14,15 +15,6 @@ const AffordabilityAnalysis: React.FC<AffordabilityAnalysisProps> = ({
   currentPayroll,
   newPayroll,
 }) => {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
   const formatPercentage = (value: number) => {
     return value.toFixed(1) + "%";
   };
@@ -78,7 +70,7 @@ const AffordabilityAnalysis: React.FC<AffordabilityAnalysisProps> = ({
             {formatPercentage(result.currentRatio)}
           </div>
           <div className="text-xs text-slate-600">
-            {formatCurrency(currentPayroll)} / {formatCurrency(revenue)}
+            <CurrencyDisplay value={currentPayroll} /> / <CurrencyDisplay value={revenue} />
           </div>
         </div>
 
@@ -91,7 +83,7 @@ const AffordabilityAnalysis: React.FC<AffordabilityAnalysisProps> = ({
             {formatPercentage(result.newRatio)}
           </div>
           <div className="text-xs text-slate-600">
-            {formatCurrency(newPayroll)} / {formatCurrency(revenue)}
+            <CurrencyDisplay value={newPayroll} /> / <CurrencyDisplay value={revenue} />
           </div>
         </div>
       </div>

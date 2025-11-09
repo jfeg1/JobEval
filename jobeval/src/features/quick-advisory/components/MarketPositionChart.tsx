@@ -1,6 +1,7 @@
 import React from "react";
 import type { BLSOccupation } from "@/features/bls-matching/hooks/useBLSData";
 import type { PercentileResult, MarketPositionRange } from "@/utils/blsComparison";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 
 interface MarketPositionChartProps {
   occupation: BLSOccupation;
@@ -29,15 +30,6 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
   alignment,
 }) => {
   const { wages } = occupation;
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
 
   // Calculate position of proposed salary in the chart (0-100%)
   const minSalary = wages.percentile10;
@@ -104,31 +96,31 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
               <div className="text-center">
                 <div className="text-xs font-medium text-slate-600 mb-1">10th</div>
                 <div className="text-sm font-semibold text-slate-900">
-                  {formatCurrency(wages.percentile10)}
+                  <CurrencyDisplay value={wages.percentile10} />
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-xs font-medium text-slate-600 mb-1">25th</div>
                 <div className="text-sm font-semibold text-slate-900">
-                  {formatCurrency(wages.percentile25)}
+                  <CurrencyDisplay value={wages.percentile25} />
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-xs font-medium text-sage-600 mb-1">Median</div>
                 <div className="text-sm font-semibold text-sage-700">
-                  {formatCurrency(wages.annualMedian)}
+                  <CurrencyDisplay value={wages.annualMedian} />
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-xs font-medium text-slate-600 mb-1">75th</div>
                 <div className="text-sm font-semibold text-slate-900">
-                  {formatCurrency(wages.percentile75)}
+                  <CurrencyDisplay value={wages.percentile75} />
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-xs font-medium text-slate-600 mb-1">90th</div>
                 <div className="text-sm font-semibold text-slate-900">
-                  {formatCurrency(wages.percentile90)}
+                  <CurrencyDisplay value={wages.percentile90} />
                 </div>
               </div>
             </div>
@@ -140,7 +132,7 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
                 {/* Label above the bar */}
                 <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2">
                   <div className="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-lg whitespace-nowrap">
-                    You: {formatCurrency(proposedSalary)}
+                    You: <CurrencyDisplay value={proposedSalary} />
                   </div>
                   {/* Arrow pointing down */}
                   <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
@@ -164,7 +156,10 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
         <div className="bg-slate-50 rounded-lg p-4 mb-4">
           <p className="text-sm text-slate-700">
             Your proposed salary of{" "}
-            <span className="font-semibold">{formatCurrency(proposedSalary)}</span> is at the{" "}
+            <span className="font-semibold">
+              <CurrencyDisplay value={proposedSalary} />
+            </span>{" "}
+            is at the{" "}
             <span className="font-semibold text-sage-700">{percentileResult.percentileLabel}</span>
           </p>
         </div>
@@ -182,7 +177,8 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="font-medium">Your proposed salary:</span>{" "}
-                      {formatCurrency(proposedSalary)} ({percentileResult.percentileLabel})
+                      <CurrencyDisplay value={proposedSalary} /> ({percentileResult.percentileLabel}
+                      )
                     </div>
                     <div>
                       <span className="font-medium">You selected:</span> {targetRange.label}
@@ -212,7 +208,7 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
                       <div className="text-amber-700">
                         ← Gap: Consider increasing by{" "}
                         <span className="font-semibold">
-                          {formatCurrency(alignment.gap.salaryIncrease)}
+                          <CurrencyDisplay value={alignment.gap.salaryIncrease} />
                         </span>
                       </div>
                     </div>
@@ -225,7 +221,7 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
                       To reach the lower end of your target range ({targetRange.min}th percentile),
                       consider increasing the salary to{" "}
                       <span className="font-semibold">
-                        {formatCurrency(alignment.gap.recommendedSalary)}
+                        <CurrencyDisplay value={alignment.gap.recommendedSalary} />
                       </span>
                     </p>
                   </div>

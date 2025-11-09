@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/ui";
 import { transferQuickDataToWizard } from "@/utils/dataTransfer";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { CURRENCY_CONFIGS } from "@/types/i18n";
 
 interface UpgradePromptProps {
   jobTitle?: string;
@@ -10,6 +12,9 @@ interface UpgradePromptProps {
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({ jobTitle, location }) => {
   const navigate = useNavigate();
+  const getCurrency = useCompanyStore((state) => state.getCurrency);
+  const currency = getCurrency();
+  const currencyName = CURRENCY_CONFIGS[currency]?.name || currency;
   const [isTransferring, setIsTransferring] = useState(false);
 
   const handleUpgrade = () => {
@@ -93,11 +98,14 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({ jobTitle, location }) => 
             >
               {isTransferring ? "Transferring data..." : "Upgrade to In-Depth Analysis"}
             </Button>
-            <p className="text-xs text-slate-500">
-              {jobTitle && location
-                ? `We'll pre-fill your details for ${jobTitle} in ${location}`
-                : "Your Quick Advisory data will be carried over"}
-            </p>
+            <div className="text-xs text-slate-500">
+              <p>
+                {jobTitle && location
+                  ? `We'll pre-fill your details for ${jobTitle} in ${location}`
+                  : "Your Quick Advisory data will be carried over"}
+              </p>
+              {currency !== "USD" && <p className="mt-1">Supports {currencyName}</p>}
+            </div>
           </div>
         </div>
       </div>
