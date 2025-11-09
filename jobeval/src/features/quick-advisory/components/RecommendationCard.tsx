@@ -3,6 +3,7 @@ import type { BLSOccupation } from "@/features/bls-matching/hooks/useBLSData";
 import type { MarketPositioningType } from "@/utils/blsComparison";
 import { getRecommendedSalaryRange } from "@/utils/blsComparison";
 import type { AffordabilityStatus } from "@/utils/affordabilityCalculator";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
 
 interface RecommendationCardProps {
   proposedSalary: number;
@@ -19,15 +20,6 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
   occupation,
   positioning,
 }) => {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
   const recommendedRange = getRecommendedSalaryRange(positioning, occupation);
 
   // Generate recommendations based on alignment and affordability
@@ -43,7 +35,8 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
       recommendations.push({
         type: "action",
         title: "Consider Increasing Salary",
-        message: `To meet your hiring strategy goal, consider increasing the salary to ${formatCurrency(recommendedRange.min)}-${formatCurrency(recommendedRange.max)} range. This aligns with market expectations for your strategy.`,
+        message:
+          "To meet your hiring strategy goal, consider increasing the salary to the recommended range shown below. This aligns with market expectations for your strategy.",
       });
       recommendations.push({
         type: "risk",
@@ -174,25 +167,26 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           <div>
             <span className="text-slate-600">Your proposed salary:</span>
             <span className="ml-2 font-semibold text-slate-900">
-              {formatCurrency(proposedSalary)}
+              <CurrencyDisplay value={proposedSalary} />
             </span>
           </div>
           <div>
             <span className="text-slate-600">Market median:</span>
             <span className="ml-2 font-semibold text-slate-900">
-              {formatCurrency(occupation.wages.annualMedian)}
+              <CurrencyDisplay value={occupation.wages.annualMedian} />
             </span>
           </div>
           <div>
             <span className="text-slate-600">Recommended range:</span>
             <span className="ml-2 font-semibold text-sage-700">
-              {formatCurrency(recommendedRange.min)} - {formatCurrency(recommendedRange.max)}
+              <CurrencyDisplay value={recommendedRange.min} /> -{" "}
+              <CurrencyDisplay value={recommendedRange.max} />
             </span>
           </div>
           <div>
             <span className="text-slate-600">Top 10% earn:</span>
             <span className="ml-2 font-semibold text-slate-900">
-              {formatCurrency(occupation.wages.percentile90)}+
+              <CurrencyDisplay value={occupation.wages.percentile90} />+
             </span>
           </div>
         </div>

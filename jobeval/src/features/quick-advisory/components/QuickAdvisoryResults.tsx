@@ -15,6 +15,31 @@ import {
 import { analyzeAffordability, projectNewPayroll } from "@/utils/affordabilityCalculator";
 import type { MarketPositioningType } from "@/utils/blsComparison";
 import type { Occupation, BLSOccupation } from "@/types/occupation";
+import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
+import { useCompanyStore } from "@/features/company-setup/companyStore";
+import { COUNTRY_CONFIGS } from "@/types/i18n";
+import type { CountryCode } from "@/types/i18n";
+
+/**
+ * Get the data source name for a country
+ */
+function getDataSourceName(country: CountryCode): string {
+  const config = COUNTRY_CONFIGS[country];
+  if (!config) return "public statistical agencies";
+
+  switch (config.wageDataSource) {
+    case "BLS":
+      return "U.S. Bureau of Labor Statistics (BLS)";
+    case "STATISTICS_CANADA":
+      return "Statistics Canada";
+    case "ONS":
+      return "UK Office for National Statistics (ONS)";
+    case "ABS":
+      return "Australian Bureau of Statistics (ABS)";
+    default:
+      return "public statistical agencies";
+  }
+}
 
 /**
  * Convert Occupation to BLSOccupation for compatibility with existing components
@@ -44,6 +69,8 @@ function convertToBLSOccupation(occupation: Occupation): BLSOccupation | null {
 const QuickAdvisoryResults: React.FC = () => {
   const navigate = useNavigate();
   const { formData, resetQuickAdvisory } = useQuickAdvisoryStore();
+  const getCountry = useCompanyStore((state) => state.getCountry);
+  const country = getCountry();
   const [noMatchFound, setNoMatchFound] = useState(false);
   const [matchConfidence, setMatchConfidence] = useState(0);
 
@@ -167,11 +194,7 @@ const QuickAdvisoryResults: React.FC = () => {
           <div>
             <div className="text-sm text-sage-700 font-medium mb-1">Proposed Salary</div>
             <div className="text-2xl font-bold text-sage-900">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 0,
-              }).format(formData.proposedSalary)}
+              <CurrencyDisplay value={formData.proposedSalary} />
             </div>
           </div>
           <div>
@@ -257,7 +280,7 @@ const QuickAdvisoryResults: React.FC = () => {
       {/* Data source note */}
       <div className="mt-8 text-center">
         <p className="text-xs text-slate-500">
-          Occupation data from O*NET 30.0 • Wage data from U.S. Bureau of Labor Statistics (BLS) •{" "}
+          Occupation data from O*NET 30.0 • Wage data from {getDataSourceName(country)} •{" "}
           {matchedOccupation.dataDate}
         </p>
       </div>
