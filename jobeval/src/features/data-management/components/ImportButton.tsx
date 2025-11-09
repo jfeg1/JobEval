@@ -19,10 +19,7 @@ interface ErrorModalData {
   errors: string[];
 }
 
-export function ImportButton({
-  variant = "primary",
-  size = "md",
-}: ImportButtonProps) {
+export function ImportButton({ variant = "primary", size = "md" }: ImportButtonProps) {
   const [isImporting, setIsImporting] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);

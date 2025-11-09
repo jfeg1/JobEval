@@ -14,10 +14,7 @@ export interface ExportButtonProps {
   size?: "sm" | "md" | "lg";
 }
 
-export function ExportButton({
-  variant = "primary",
-  size = "md",
-}: ExportButtonProps) {
+export function ExportButton({ variant = "primary", size = "md" }: ExportButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
   const { showToast } = useToast();
 
