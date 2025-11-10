@@ -1,15 +1,13 @@
 name: CI
 
-# Run on pull requests to main and pushes to main
 on:
-  pull_request:
-    branches: [ main ]
   push:
-    branches: [ main ]
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,49 +19,45 @@ jobs:
         working-directory: jobeval
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: jobeval/package-lock.json
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: jobeval/package-lock.json
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Run TypeScript type checking
-      run: npm run type-check
+      - name: Run Prettier check
+        run: npm run format:check
 
-    - name: Run ESLint
-      run: npm run lint
+      - name: Run ESLint
+        run: npm run lint
 
-    - name: Build project
-      run: npm run build
+      - name: Type check
+        run: npm run type-check
 
-  format-check:
-    name: Code Formatting
-    runs-on: ubuntu-latest
+      - name: Build application
+        run: npm run build
 
-    defaults:
-      run:
-        working-directory: jobeval
+      - name: Verify build artifacts
+        run: |
+          test -d dist
+          test -f dist/index.html
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Check bundle size
+        run: |
+          SIZE=$(du -sh dist | cut -f1)
+          echo "Build size: $SIZE"
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-        cache-dependency-path: jobeval/package-lock.json
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Check code formatting
-      run: npm run format:check
+      # Verify persistence features
+      - name: Verify persistence files exist
+        run: |
+          test -f src/lib/persistence/dataStructure.ts
+          test -f src/lib/persistence/exportService.ts
+          test -f src/lib/persistence/importService.ts
+          test -f src/lib/persistence/autoSaveManager.ts
+          test -f src/lib/errorReporting.ts
