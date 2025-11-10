@@ -207,13 +207,18 @@ function filterOccupations(occupations) {
       code: occ.code,
       title: occ.title,
       group: groupNames[majorGroup] || "Other",
-      median: occ.wages.annualMedian || 0,
-      mean: occ.wages.annualMean || 0,
-      percentile10: occ.wages.percentile10 || 0,
-      percentile25: occ.wages.percentile25 || 0,
-      percentile75: occ.wages.percentile75 || 0,
-      percentile90: occ.wages.percentile90 || 0,
-      date: "May 2024",
+      employment: occ.employment || 0,
+      wages: {
+        hourlyMean: occ.wages.hourlyMean || 0,
+        hourlyMedian: occ.wages.hourlyMedian || 0,
+        annualMean: occ.wages.annualMean || 0,
+        annualMedian: occ.wages.annualMedian || 0,
+        percentile10: occ.wages.percentile10 || 0,
+        percentile25: occ.wages.percentile25 || 0,
+        percentile75: occ.wages.percentile75 || 0,
+        percentile90: occ.wages.percentile90 || 0,
+      },
+      dataDate: "2024-05",
     });
   }
 
@@ -281,12 +286,12 @@ async function main() {
 
   // Save processed data
   const outputData = {
+    version: "1.0",
+    dataDate: "2024-05",
+    source: "U.S. Bureau of Labor Statistics - Occupational Employment and Wage Statistics",
     occupations: filtered,
     index,
     metadata: {
-      source: "U.S. Bureau of Labor Statistics",
-      dataset: "Occupational Employment and Wage Statistics",
-      date: "May 2024",
       totalOccupations: filtered.length,
       lastUpdated: new Date().toISOString(),
     },
@@ -303,7 +308,12 @@ async function main() {
   console.log(`File size: ${fileSizeInMB} MB`);
 
   console.log("\n✓ Data processing complete!");
-  console.log("\nYou can now run the app with: npm run dev");
+  console.log(`\nProcessed ${filtered.length} occupations with wage data`);
+  console.log("\nNext steps:");
+  console.log("  1. Run: npm run onet:download");
+  console.log("  2. Then: node scripts/process-onet-data.js");
+  console.log("  3. Finally: node scripts/integrate-onet-bls.js");
+  console.log("\nOr run the app with: npm run dev");
 }
 
 main().catch((error) => {
