@@ -157,7 +157,7 @@ export function ImportButton({ variant = "primary", size = "md" }: ImportButtonP
           document.body.removeChild(textArea);
         }
       }
-    } catch (error) {
+    } catch {
       showToast("Failed to copy error report", "error");
     }
   };
