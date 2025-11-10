@@ -146,6 +146,11 @@ JobEval is built as a client-side web application with no backend required:
 npm run data:setup
 ```
 
+**Data Source**
+- BLS OEWS Special Requests (Excel format)
+- Simple, reliable XLSX-based data pipeline
+- Public access, no authentication required
+
 **Data Updates**
 - BLS releases new data each May
 - Run `npm run data:setup` annually to stay current
@@ -350,7 +355,8 @@ JobEval helps document your pay decisions, but you remain responsible for:
 ### Data Sources
 
 Bureau of Labor Statistics data is **public domain** (U.S. Government work).
-- Source: [BLS Occupational Employment and Wage Statistics](https://www.bls.gov/oes/)
+- Source: [BLS OES Special Requests](https://www.bls.gov/oes/special.requests/)
+- Format: XLSX (Excel) files with complete national occupation data
 - Updated annually each May
 - No attribution required (but we appreciate it!)
 
