@@ -11,6 +11,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import readline from "readline";
+import zlib from "zlib";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,43 +33,68 @@ const DATATYPES = {
 };
 
 /**
- * Parse a tab-delimited file line by line
+ * Parse a tab-delimited file line by line (handles gzip compression)
  */
 async function parseTabDelimitedFile(filePath, processLine) {
   return new Promise((resolve, reject) => {
+    // Create read stream
     const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
+
+    // Try to decompress with gunzip (will pass through if not gzipped)
+    const gunzipStream = zlib.createGunzip();
+
+    // Pipe file through gunzip
+    const stream = fileStream.pipe(gunzipStream);
+
+    // Handle gunzip errors (means file isn't gzipped)
+    gunzipStream.on('error', (err) => {
+      console.log('  Note: File is not gzipped, reading as plain text');
+      // If not gzipped, read the file directly
+      fileStream.destroy();
+      const plainStream = fs.createReadStream(filePath);
+      parseStream(plainStream, processLine, resolve, reject);
     });
 
-    let headers = null;
-    let lineCount = 0;
-
-    rl.on("line", (line) => {
-      lineCount++;
-      const parts = line.split("\t");
-
-      if (!headers) {
-        headers = parts;
-        return;
-      }
-
-      const row = {};
-      for (let i = 0; i < headers.length; i++) {
-        row[headers[i]] = parts[i] || "";
-      }
-
-      processLine(row);
-    });
-
-    rl.on("close", () => {
-      console.log(`  Processed ${lineCount - 1} rows`);
-      resolve();
-    });
-
-    rl.on("error", reject);
+    // Parse the decompressed stream
+    parseStream(stream, processLine, resolve, reject);
   });
+}
+
+/**
+ * Parse a stream of tab-delimited data
+ */
+function parseStream(stream, processLine, resolve, reject) {
+  const rl = readline.createInterface({
+    input: stream,
+    crlfDelay: Infinity,
+  });
+
+  let headers = null;
+  let lineCount = 0;
+
+  rl.on("line", (line) => {
+    lineCount++;
+    const parts = line.split("\t");
+
+    if (!headers) {
+      headers = parts;
+      return;
+    }
+
+    const row = {};
+    for (let i = 0; i < headers.length; i++) {
+      row[headers[i]] = parts[i] || "";
+    }
+
+    processLine(row);
+  });
+
+  rl.on("close", () => {
+    console.log(`  Processed ${lineCount - 1} rows`);
+    resolve();
+  });
+
+  rl.on("error", reject);
 }
 
 /**
@@ -274,9 +300,31 @@ async function main() {
 
   // Process data
   const occupations = await loadOccupations();
+
+  if (occupations.size === 0) {
+    console.error("\n✗ No occupations loaded. Check if files are properly formatted.");
+    process.exit(1);
+  }
+
   const seriesIndex = await buildSeriesIndex();
+
+  if (seriesIndex.size === 0) {
+    console.error("\n✗ No series found. Check series file format.");
+    process.exit(1);
+  }
+
   await loadWageData(occupations, seriesIndex);
   const filtered = filterOccupations(occupations);
+
+  if (filtered.length === 0) {
+    console.error("\n✗ No occupations with wage data found.");
+    console.error("This might mean:");
+    console.error("  - Series IDs don't match occupation codes");
+    console.error("  - Wage data is in unexpected format");
+    console.error("  - Filtering criteria are too strict");
+    process.exit(1);
+  }
+
   const index = buildSearchIndex(filtered);
 
   // Create output directory
