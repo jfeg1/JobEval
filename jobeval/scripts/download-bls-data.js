@@ -2,8 +2,10 @@
 /**
  * BLS Data Download Script
  *
- * Downloads the latest Occupational Employment and Wage Statistics (OEWS) data
+ * Downloads the latest Occupational Employment and Wage Statistics (OES) data
  * from the Bureau of Labor Statistics.
+ *
+ * Note: BLS servers require a User-Agent header to prevent 403 Forbidden errors.
  *
  * Usage: node scripts/download-bls-data.js
  */
@@ -56,7 +58,8 @@ const FILES_TO_DOWNLOAD = [
 ];
 
 /**
- * Download a file from a URL
+ * Download a file from a URL with proper headers
+ * BLS requires User-Agent header to prevent 403 errors
  */
 function downloadFile(url, destPath) {
   return new Promise((resolve, reject) => {
@@ -64,10 +67,26 @@ function downloadFile(url, destPath) {
 
     const file = createWriteStream(destPath);
 
+    // Parse URL to get hostname and path
+    const urlObj = new URL(url);
+
+    const options = {
+      hostname: urlObj.hostname,
+      port: 443,
+      path: urlObj.pathname,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive'
+      }
+    };
+
     https
-      .get(url, (response) => {
+      .get(options, (response) => {
+        // Handle redirects
         if (response.statusCode === 302 || response.statusCode === 301) {
-          // Handle redirects
           const redirectUrl = response.headers.location;
           console.log(`Redirected to: ${redirectUrl}`);
           file.close();
@@ -76,6 +95,8 @@ function downloadFile(url, destPath) {
         }
 
         if (response.statusCode !== 200) {
+          file.close();
+          fs.unlinkSync(destPath);
           reject(new Error(`Failed to download: ${response.statusCode} ${response.statusMessage}`));
           return;
         }
@@ -99,7 +120,9 @@ function downloadFile(url, destPath) {
         });
       })
       .on("error", (err) => {
-        fs.unlinkSync(destPath);
+        if (fs.existsSync(destPath)) {
+          fs.unlinkSync(destPath);
+        }
         reject(err);
       });
   });
@@ -111,6 +134,7 @@ function downloadFile(url, destPath) {
 async function main() {
   console.log("BLS Data Download Script");
   console.log("========================\n");
+  console.log("Note: This will download ~1.5GB of data. Please be patient.\n");
 
   // Create output directory if it doesn't exist
   if (!fs.existsSync(OUTPUT_DIR)) {
@@ -121,6 +145,8 @@ async function main() {
   // Download each file
   for (const file of FILES_TO_DOWNLOAD) {
     const destPath = path.join(OUTPUT_DIR, file.filename);
+    console.log(`\nDownloading: ${file.name}`);
+    console.log(`Description: ${file.description}`);
 
     try {
       await downloadFile(file.url, destPath);
@@ -130,7 +156,9 @@ async function main() {
     }
   }
 
-  console.log("\n✓ All BLS tab-delimited files downloaded successfully!");
+  console.log("\n" + "=".repeat(50));
+  console.log("✓ All BLS tab-delimited files downloaded successfully!");
+  console.log("=".repeat(50));
   console.log("\nFiles downloaded:");
   console.log("  - oe.occupation (occupation codes)");
   console.log("  - oe.data.0.Current (wage data)");
@@ -138,8 +166,8 @@ async function main() {
   console.log("  - oe.datatype (data types)");
   console.log("  - oe.series (series metadata)");
   console.log("\nNext steps:");
-  console.log("  1. Run: node scripts/process-bls-data.js");
-  console.log("  2. This will parse and transform the tab-delimited data");
+  console.log("  1. Run: npm run data:process");
+  console.log("  2. This will parse and transform the tab-delimited data\n");
 }
 
 main().catch((error) => {
