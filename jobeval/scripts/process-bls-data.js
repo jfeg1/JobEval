@@ -21,15 +21,15 @@ const RAW_DATA_DIR = path.join(__dirname, "..", "data", "raw");
 const PUBLIC_DATA_DIR = path.join(__dirname, "..", "public", "data");
 
 // Datatype codes we care about
+// Based on BLS oe.datatype definitions
 const DATATYPES = {
-  "03": "hourlyMean",
-  "04": "annualMean",
-  "11": "hourlyMedian",
-  "12": "annualMedian",
-  "13": "percentile10",
-  "14": "percentile25",
-  "15": "percentile75",
-  "16": "percentile90",
+  "03": "hourlyMean",      // Hourly mean wage
+  "04": "annualMean",      // Annual mean wage
+  "11": "percentile10",    // Annual 10th percentile wage
+  "12": "percentile25",    // Annual 25th percentile wage
+  "13": "annualMedian",    // Annual median wage
+  "14": "percentile75",    // Annual 75th percentile wage
+  "15": "percentile90",    // Annual 90th percentile wage
 };
 
 /**
