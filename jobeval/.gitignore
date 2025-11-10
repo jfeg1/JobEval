@@ -12,10 +12,17 @@ dist
 dist-ssr
 *.local
 
-# Data files - only ignore raw downloaded data
+# BLS data files
+data/
+data/raw/
+data/raw/*.zip
+data/raw/extracted/
+
+# O*NET data files - only ignore raw downloaded data
 src/data/onet/raw/*.txt
 src/data/onet/raw/*.zip
 # Note: processed/*.json files are committed as they're part of the integrated dataset
+# Note: public/data/bls-data.json may be committed for easier user onboarding
 
 # Editor directories and files
 .vscode/*
