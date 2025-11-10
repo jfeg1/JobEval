@@ -142,8 +142,12 @@ JobEval is built as a client-side web application with no backend required:
 
 **Full Dataset**
 ```bash
-# Download and process ~830 BLS occupations
+# Download and process ~830 BLS occupations (auto-detects latest year)
 npm run data:setup
+
+# Or download a specific year
+npm run data:download -- --year=24
+npm run data:process
 ```
 
 **Data Source**
@@ -153,6 +157,9 @@ npm run data:setup
 
 **Data Updates**
 - BLS releases new data each May
+- Scripts automatically detect and download the latest available year
+- No code changes needed - works indefinitely
+- Falls back to previous year if current year not yet released
 - Run `npm run data:setup` annually to stay current
 
 ### Project Structure
@@ -355,7 +362,7 @@ JobEval helps document your pay decisions, but you remain responsible for:
 ### Data Sources
 
 Bureau of Labor Statistics data is **public domain** (U.S. Government work).
-- Source: [BLS OES Special Requests](https://www.bls.gov/oes/special.requests/)
+- Source: [BLS OES Special Requests](https://www.bls.gov/oes/special-requests/)
 - Format: XLSX (Excel) files with complete national occupation data
 - Updated annually each May
 - No attribution required (but we appreciate it!)
@@ -366,10 +373,11 @@ Bureau of Labor Statistics data is **public domain** (U.S. Government work).
 
 ### Current Limitations
 
-- **Sample data only**: Full BLS dataset requires manual setup
 - **Single location**: Multi-location support coming in Phase 3
 - **U.S. focus**: BLS data covers U.S. labor markets only
 - **Browser storage**: Data not synced across devices
+
+**Note**: Full BLS dataset (~830 occupations) available via `npm run data:setup`. Scripts automatically detect and download the latest available year.
 
 ### Reporting Issues
 
