@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 /**
- * BLS Data Processing Script (XLSX Version)
+ * BLS Data Processing Script (Auto-Updating XLSX Version)
  *
  * Extracts and processes BLS OES Excel files into optimized JSON format.
  *
- * This version reads XLSX files from the Special Requests ZIP archive
- * instead of parsing tab-delimited text files.
+ * Features:
+ * - Automatically detects any BLS ZIP file in data/raw/
+ * - Uses the most recent file if multiple exist
+ * - Extracts year from filename (no hard-coding)
+ * - Flexible column name matching (handles BLS format changes)
  *
  * Usage: node scripts/process-bls-data.js
  */
@@ -20,10 +23,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const RAW_DATA_DIR = path.join(__dirname, "..", "data", "raw");
-const EXTRACTED_DIR = path.join(RAW_DATA_DIR, "extracted");
+const RAW_DIR = path.join(__dirname, "..", "data", "raw");
+const EXTRACTED_DIR = path.join(RAW_DIR, "extracted");
 const PUBLIC_DATA_DIR = path.join(__dirname, "..", "public", "data");
-const ZIP_FILE = path.join(RAW_DATA_DIR, "oesm24nat.zip");
 
 // Occupational group names by SOC major group code
 const GROUP_NAMES = {
@@ -52,23 +54,76 @@ const GROUP_NAMES = {
 };
 
 /**
+ * Find the most recent BLS ZIP file in the raw directory
+ * Returns: { filename, path, year, fullYear }
+ */
+function findMostRecentZip() {
+  console.log('Looking for BLS data files...\n');
+
+  if (!fs.existsSync(RAW_DIR)) {
+    throw new Error(
+      `Data directory not found: ${RAW_DIR}\n` +
+      `Run 'npm run data:download' first.`
+    );
+  }
+
+  const files = fs.readdirSync(RAW_DIR);
+
+  // Find all OEWS ZIP files (pattern: oesmXXnat.zip where XX is 2-digit year)
+  const zipFiles = files.filter(f => /^oesm\d{2}nat\.zip$/i.test(f));
+
+  if (zipFiles.length === 0) {
+    throw new Error(
+      `No BLS data files found in ${RAW_DIR}\n` +
+      `Expected filename pattern: oesmXXnat.zip (e.g., oesm24nat.zip)\n` +
+      `Run 'npm run data:download' to download BLS data.`
+    );
+  }
+
+  console.log('Available BLS data files:');
+  zipFiles.forEach(f => {
+    const stats = fs.statSync(path.join(RAW_DIR, f));
+    const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
+    const year = f.match(/oesm(\d{2})nat/i)[1];
+    console.log(`  - ${f} (20${year}, ${sizeMB} MB)`);
+  });
+
+  // Sort by year (newest first)
+  zipFiles.sort().reverse();
+
+  const selectedFile = zipFiles[0];
+  const year = selectedFile.match(/oesm(\d{2})nat/i)[1];
+  const fullYear = `20${year}`;
+
+  console.log(`\nUsing: ${selectedFile} (May ${fullYear} data)\n`);
+
+  return {
+    filename: selectedFile,
+    path: path.join(RAW_DIR, selectedFile),
+    year: year,
+    fullYear: fullYear
+  };
+}
+
+/**
  * Extract ZIP file
  */
-function extractZipFile() {
+function extractZipFile(zipPath) {
   console.log("Extracting ZIP file...");
 
-  if (!fs.existsSync(ZIP_FILE)) {
-    throw new Error(`ZIP file not found: ${ZIP_FILE}`);
+  if (!fs.existsSync(zipPath)) {
+    throw new Error(`ZIP file not found: ${zipPath}`);
   }
 
-  // Create extraction directory
-  if (!fs.existsSync(EXTRACTED_DIR)) {
-    fs.mkdirSync(EXTRACTED_DIR, { recursive: true });
+  // Clean and create extraction directory
+  if (fs.existsSync(EXTRACTED_DIR)) {
+    fs.rmSync(EXTRACTED_DIR, { recursive: true });
   }
+  fs.mkdirSync(EXTRACTED_DIR, { recursive: true });
 
   try {
     // Use unzip command (should be available on most systems)
-    execSync(`unzip -o "${ZIP_FILE}" -d "${EXTRACTED_DIR}"`, {
+    execSync(`unzip -o "${zipPath}" -d "${EXTRACTED_DIR}"`, {
       stdio: "pipe",
     });
     console.log(`✓ Extracted to: ${EXTRACTED_DIR}\n`);
@@ -84,12 +139,19 @@ function findExcelFile() {
   console.log("Looking for Excel file...");
 
   const files = fs.readdirSync(EXTRACTED_DIR);
+
+  // Look for Excel files with "nat" (national) in the name
   const xlsxFiles = files.filter(
-    (f) => f.endsWith(".xlsx") && f.includes("nat")
+    (f) => f.endsWith(".xlsx") && f.toLowerCase().includes("nat")
   );
 
   if (xlsxFiles.length === 0) {
-    throw new Error("No Excel file found in extracted directory");
+    console.log('Files in extracted directory:');
+    files.forEach(f => console.log(`  - ${f}`));
+    throw new Error(
+      'No Excel file found in extracted directory.\n' +
+      'Expected a file with "nat" (national) in the name and .xlsx extension.'
+    );
   }
 
   const excelFile = path.join(EXTRACTED_DIR, xlsxFiles[0]);
@@ -106,7 +168,7 @@ function parseExcelFile(filePath) {
   // Read the workbook
   const workbook = XLSX.readFile(filePath);
 
-  // Get the first worksheet (usually "All May 2024 Data")
+  // Get the first worksheet (usually "All May 20XX Data")
   const sheetName = workbook.SheetNames[0];
   console.log(`  Sheet: ${sheetName}`);
 
@@ -242,20 +304,23 @@ function buildSearchIndex(occupations) {
  * Main execution
  */
 async function main() {
-  console.log("BLS Data Processing Script (XLSX Version)");
-  console.log("==========================================\n");
+  console.log("BLS Data Processing Script (Auto-Updating XLSX Version)");
+  console.log("========================================================\n");
 
   try {
-    // Step 1: Extract ZIP file
-    extractZipFile();
+    // Step 1: Find most recent ZIP file
+    const zipInfo = findMostRecentZip();
 
-    // Step 2: Find Excel file
+    // Step 2: Extract ZIP file
+    extractZipFile(zipInfo.path);
+
+    // Step 3: Find Excel file
     const excelFile = findExcelFile();
 
-    // Step 3: Parse Excel file
+    // Step 4: Parse Excel file
     const rawData = parseExcelFile(excelFile);
 
-    // Step 4: Process occupations
+    // Step 5: Process occupations
     const occupations = processOccupations(rawData);
 
     if (occupations.length === 0) {
@@ -264,10 +329,10 @@ async function main() {
       process.exit(1);
     }
 
-    // Step 5: Build search index
+    // Step 6: Build search index
     const index = buildSearchIndex(occupations);
 
-    // Step 6: Save processed data
+    // Step 7: Save processed data
     if (!fs.existsSync(PUBLIC_DATA_DIR)) {
       fs.mkdirSync(PUBLIC_DATA_DIR, { recursive: true });
     }
@@ -275,12 +340,14 @@ async function main() {
     const outputData = {
       version: "2.0",
       source: "U.S. Bureau of Labor Statistics - OES Special Requests",
-      sourceUrl: "https://www.bls.gov/oes/special.requests/",
-      dataDate: "2024-05",
+      sourceUrl: "https://www.bls.gov/oes/special-requests/",
+      dataDate: `${zipInfo.fullYear}-05`,  // May of the extracted year
       metadata: {
         totalOccupations: occupations.length,
         lastUpdated: new Date().toISOString(),
         dataFormat: "xlsx",
+        dataPeriod: `May ${zipInfo.fullYear}`,
+        sourceFile: zipInfo.filename
       },
       occupations,
       index,
@@ -300,13 +367,17 @@ async function main() {
     console.log("✓ Data processing complete!");
     console.log("=".repeat(50));
     console.log(`\nProcessed ${occupations.length} occupations with wage data`);
+    console.log(`Data period: May ${zipInfo.fullYear}`);
     console.log(`Search index contains ${Object.keys(index).length} terms`);
     console.log("\nNext steps:");
     console.log("  Run the app with: npm run dev");
     console.log("  Or explore the data at: public/data/bls-data.json\n");
   } catch (error) {
     console.error(`\n✗ Error: ${error.message}`);
-    console.error(error.stack);
+    if (error.stack) {
+      console.error('\nStack trace:');
+      console.error(error.stack);
+    }
     process.exit(1);
   }
 }
