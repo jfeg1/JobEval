@@ -35,8 +35,8 @@ export function SettingsPage() {
               <span className="text-lg mr-2" role="img" aria-label="lightbulb">
                 💡
               </span>
-              <strong>Tip:</strong> Export your data regularly to prevent loss if browser cache
-              is cleared.
+              <strong>Tip:</strong> Export your data regularly to prevent loss if browser cache is
+              cleared.
             </p>
             <p className="text-blue-800">
               Your data is stored locally and never sent to our servers.
