@@ -140,8 +140,8 @@ async function buildSeriesIndex() {
       const areaCode = row.area_code;
       const industryCode = row.industry_code;
 
-      // We only want national-level (area 00), all-industry (000000) data
-      if (areaCode === "00" && industryCode === "000000" && DATATYPES[datatypeCode]) {
+      // We only want national-level (area 0000000), all-industry (000000) data
+      if (areaCode === "0000000" && industryCode === "000000" && DATATYPES[datatypeCode]) {
         seriesIndex.set(seriesId, {
           occupation: occCode,
           datatype: DATATYPES[datatypeCode],
