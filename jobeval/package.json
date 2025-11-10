@@ -53,6 +53,14 @@
     "xlsx": "^0.18.5"
   },
   "lint-staged": {
+    "src/lib/persistence/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "src/features/data-management/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
     "src/**/*.{ts,tsx,css,json}": [
       "prettier --write"
     ]
