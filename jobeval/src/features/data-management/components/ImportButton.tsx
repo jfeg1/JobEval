@@ -9,6 +9,12 @@ import { useState, useRef } from "react";
 import type { ChangeEvent } from "react";
 import { useToast, Modal } from "@/shared/components/ui";
 import { importAllData } from "@/lib/persistence/importService";
+import {
+  generateErrorReport,
+  createGitHubIssueUrl,
+  formatErrorReportMarkdown,
+} from "@/lib/errorReporting";
+import type { ErrorReport } from "@/lib/errorReporting";
 
 export interface ImportButtonProps {
   variant?: "primary" | "secondary";
@@ -17,6 +23,9 @@ export interface ImportButtonProps {
 
 interface ErrorModalData {
   errors: string[];
+  errorReport: ErrorReport;
+  githubUrl: string;
+  markdown: string;
 }
 
 export function ImportButton({ variant = "primary", size = "md" }: ImportButtonProps) {
@@ -65,15 +74,48 @@ export function ImportButton({ variant = "primary", size = "md" }: ImportButtonP
         // Count items restored (simplified - just show success)
         showToast("Data imported successfully", "success");
       } else {
+        // Generate error report for validation failures
+        const errorReport = generateErrorReport({
+          type: "import_validation_error",
+          message: result.errors?.join("\n") || "Unknown validation error occurred",
+          userAction: "Attempted to import data file",
+        });
+
+        const githubUrl = createGitHubIssueUrl(errorReport);
+        const markdown = formatErrorReportMarkdown(errorReport);
+
         // Show error modal with detailed errors
         setErrorModalData({
           errors: result.errors || ["Unknown error occurred"],
+          errorReport,
+          githubUrl,
+          markdown,
         });
         setShowErrorModal(true);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      showToast(`Import failed - ${errorMessage}`, "error");
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      // Generate error report for unexpected errors
+      const errorReport = generateErrorReport({
+        type: "import_error",
+        message: errorMessage,
+        stack: errorStack,
+        userAction: "Attempted to import data file",
+      });
+
+      const githubUrl = createGitHubIssueUrl(errorReport);
+      const markdown = formatErrorReportMarkdown(errorReport);
+
+      // Show error modal with error details
+      setErrorModalData({
+        errors: [errorMessage],
+        errorReport,
+        githubUrl,
+        markdown,
+      });
+      setShowErrorModal(true);
     } finally {
       setIsImporting(false);
       setPendingFile(null);
@@ -85,27 +127,46 @@ export function ImportButton({ variant = "primary", size = "md" }: ImportButtonP
     setPendingFile(null);
   };
 
-  const handleCopyErrorReport = () => {
+  const handleCopyErrorReport = async () => {
     if (!errorModalData) return;
 
-    const report = [
-      "JobEval Import Error Report",
-      "=========================",
-      "",
-      "Errors:",
-      ...errorModalData.errors.map((err, idx) => `${idx + 1}. ${err}`),
-      "",
-      "Please report this issue at: https://github.com/jfeg1/JobEval/issues",
-    ].join("\n");
-
-    navigator.clipboard
-      .writeText(report)
-      .then(() => {
+    try {
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(errorModalData.markdown);
         showToast("Error report copied to clipboard", "success");
-      })
-      .catch(() => {
-        showToast("Failed to copy error report", "error");
-      });
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = errorModalData.markdown;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          const successful = document.execCommand("copy");
+          if (successful) {
+            showToast("Error report copied to clipboard", "success");
+          } else {
+            showToast("Failed to copy error report", "error");
+          }
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+    } catch {
+      showToast("Failed to copy error report", "error");
+    }
+  };
+
+  const handleReportOnGitHub = () => {
+    if (!errorModalData) return;
+
+    // Open GitHub issue in new tab
+    window.open(errorModalData.githubUrl, "_blank", "noopener,noreferrer");
   };
 
   // Size classes
@@ -223,22 +284,28 @@ export function ImportButton({ variant = "primary", size = "md" }: ImportButtonP
         title="Import Failed"
         size="lg"
         actions={
-          <>
+          <div className="flex gap-3 flex-wrap">
             <button onClick={handleCopyErrorReport} className="btn btn-secondary">
               Copy Error Report
+            </button>
+            <button onClick={handleReportOnGitHub} className="btn btn-secondary">
+              Report on GitHub
             </button>
             <button onClick={() => setShowErrorModal(false)} className="btn btn-primary">
               Close
             </button>
-          </>
+          </div>
         }
       >
         <div className="space-y-4">
           <p className="text-gray-700">
-            The following errors were found while validating the import file:
+            Unable to import data file. The file may be corrupted or from an incompatible version.
           </p>
 
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-h-[300px] overflow-y-auto">
+            <p className="text-sm font-semibold text-red-900 mb-2">
+              Error{errorModalData && errorModalData.errors.length > 1 ? "s" : ""}:
+            </p>
             <ul className="space-y-2">
               {errorModalData?.errors.map((error, idx) => (
                 <li key={idx} className="text-sm text-red-800 flex gap-2">
@@ -250,15 +317,7 @@ export function ImportButton({ variant = "primary", size = "md" }: ImportButtonP
           </div>
 
           <p className="text-sm text-gray-600">
-            Need help? Report this issue at{" "}
-            <a
-              href="https://github.com/jfeg1/JobEval/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline"
-            >
-              GitHub Issues
-            </a>
+            You can copy the error report to your clipboard or report this issue directly on GitHub.
           </p>
         </div>
       </Modal>
