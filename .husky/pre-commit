@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Change to the jobeval directory
+cd jobeval
+
+# Run lint-staged
+npx lint-staged
+
+# Additional checks for persistence files
+if git diff --cached --name-only | grep -q "jobeval/src/lib/persistence/"; then
+  echo "📁 Persistence files changed, running additional checks..."
+
+  # Type check persistence files
+  npm run type-check
+
+  # Ensure no console.logs in persistence code
+  # Strip "jobeval/" prefix from paths since we're already in that directory
+  if git diff --cached --name-only | grep "jobeval/src/lib/persistence/" | sed 's|^jobeval/||' | xargs -r grep -n "console.log" 2>/dev/null; then
+    echo "❌ Error: console.log found in persistence files"
+    echo "   Remove console.log statements before committing"
+    exit 1
+  fi
+
+  echo "✅ Persistence checks passed"
+fi
