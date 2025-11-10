@@ -2,7 +2,7 @@
 /**
  * BLS Data Processing Script
  *
- * Extracts and transforms BLS OEWS data from Excel files into optimized JSON format.
+ * Parses BLS OES tab-delimited files and transforms into optimized JSON format.
  *
  * Usage: node scripts/process-bls-data.js
  */
@@ -10,143 +10,243 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import XLSX from "xlsx";
-import { execSync } from "child_process";
+import readline from "readline";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
 const RAW_DATA_DIR = path.join(__dirname, "..", "data", "raw");
-const PROCESSED_DATA_DIR = path.join(__dirname, "..", "data", "processed");
 const PUBLIC_DATA_DIR = path.join(__dirname, "..", "public", "data");
-const CURRENT_YEAR = "24";
-const ZIP_FILE = `oesm${CURRENT_YEAR}nat.zip`;
+
+// Datatype codes we care about
+const DATATYPES = {
+  "03": "hourlyMean",
+  "04": "annualMean",
+  "11": "hourlyMedian",
+  "12": "annualMedian",
+  "13": "percentile10",
+  "14": "percentile25",
+  "15": "percentile75",
+  "16": "percentile90",
+};
 
 /**
- * Extract ZIP file
+ * Parse a tab-delimited file line by line
  */
-function extractZip(zipPath, outputDir) {
-  console.log(`Extracting: ${path.basename(zipPath)}`);
+async function parseTabDelimitedFile(filePath, processLine) {
+  return new Promise((resolve, reject) => {
+    const fileStream = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity,
+    });
 
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
+    let headers = null;
+    let lineCount = 0;
 
-  try {
-    execSync(`unzip -o "${zipPath}" -d "${outputDir}"`, { stdio: "pipe" });
-    console.log(`✓ Extracted to: ${outputDir}\n`);
-  } catch (error) {
-    console.error("Error extracting ZIP:", error.message);
-    throw error;
-  }
+    rl.on("line", (line) => {
+      lineCount++;
+      const parts = line.split("\t");
+
+      if (!headers) {
+        headers = parts;
+        return;
+      }
+
+      const row = {};
+      for (let i = 0; i < headers.length; i++) {
+        row[headers[i]] = parts[i] || "";
+      }
+
+      processLine(row);
+    });
+
+    rl.on("close", () => {
+      console.log(`  Processed ${lineCount - 1} rows`);
+      resolve();
+    });
+
+    rl.on("error", reject);
+  });
 }
 
 /**
- * Find the main national data Excel file
+ * Load occupation definitions
  */
-function findNationalDataFile(dir) {
-  const files = fs.readdirSync(dir);
+async function loadOccupations() {
+  console.log("Loading occupations...");
+  const occupations = new Map();
 
-  // Look for files with patterns like: national_M2024_dl.xlsx, nat_may_2024.xlsx, etc.
-  const patterns = [/national.*\.xlsx?$/i, /nat.*\.xlsx?$/i, /all_data.*\.xlsx?$/i];
+  await parseTabDelimitedFile(
+    path.join(RAW_DATA_DIR, "oe.occupation"),
+    (row) => {
+      const code = row.occupation_code;
+      const name = row.occupation_name;
 
-  for (const pattern of patterns) {
-    const match = files.find((f) => pattern.test(f));
-    if (match) {
-      console.log(`Found data file: ${match}`);
-      return path.join(dir, match);
+      if (code && name) {
+        occupations.set(code, {
+          code,
+          title: name,
+          wages: {},
+        });
+      }
     }
-  }
+  );
 
-  // If no match, list all Excel files for debugging
-  const excelFiles = files.filter((f) => /\.xlsx?$/i.test(f));
-  if (excelFiles.length > 0) {
-    console.log("Available Excel files:", excelFiles);
-    return path.join(dir, excelFiles[0]);
-  }
-
-  throw new Error("Could not find national data Excel file");
+  console.log(`✓ Loaded ${occupations.size} occupations\n`);
+  return occupations;
 }
 
 /**
- * Parse Excel file and extract occupation data
+ * Build series index (maps series_id to occupation_code and datatype)
  */
-function parseExcelData(filePath) {
-  console.log("Parsing Excel data...");
+async function buildSeriesIndex() {
+  console.log("Building series index (this may take a while - 1.2GB file)...");
+  const seriesIndex = new Map();
 
-  const workbook = XLSX.readFile(filePath);
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  const data = XLSX.utils.sheet_to_json(worksheet);
+  await parseTabDelimitedFile(
+    path.join(RAW_DATA_DIR, "oe.series"),
+    (row) => {
+      const seriesId = row.series_id;
+      const occCode = row.occupation_code;
+      const datatypeCode = row.datatype_code;
+      const areaCode = row.area_code;
+      const industryCode = row.industry_code;
 
-  console.log(`Parsed ${data.length} rows\n`);
+      // We only want national-level (area 00), all-industry (000000) data
+      if (areaCode === "00" && industryCode === "000000" && DATATYPES[datatypeCode]) {
+        seriesIndex.set(seriesId, {
+          occupation: occCode,
+          datatype: DATATYPES[datatypeCode],
+        });
+      }
+    }
+  );
 
-  // Transform into our format
-  const occupations = [];
-  const occupationIndex = {};
+  console.log(`✓ Built series index with ${seriesIndex.size} relevant series\n`);
+  return seriesIndex;
+}
 
-  for (const row of data) {
-    // BLS column names vary by year, so we need to be flexible
-    // Common column names:
-    // - OCC_CODE, PRIM_STATE, O_GROUP, OCC_TITLE, TOT_EMP
-    // - H_MEAN, A_MEAN, H_MEDIAN, A_MEDIAN
-    // - H_PCT10, H_PCT25, H_PCT75, H_PCT90
-    // - A_PCT10, A_PCT25, A_PCT75, A_PCT90
+/**
+ * Load wage data and join with occupations
+ */
+async function loadWageData(occupations, seriesIndex) {
+  console.log("Loading wage data (this may take a while - 332MB file)...");
+  let matchCount = 0;
 
-    const occCode = row["OCC_CODE"] || row["occ_code"] || row["code"];
-    const occTitle = row["OCC_TITLE"] || row["occ_title"] || row["title"];
+  await parseTabDelimitedFile(
+    path.join(RAW_DATA_DIR, "oe.data.0.Current"),
+    (row) => {
+      const seriesId = row.series_id;
+      const value = parseFloat(row.value);
 
-    if (!occCode || !occTitle) continue;
-    if (occCode === "OCC_CODE") continue; // Skip header rows
+      if (!seriesIndex.has(seriesId) || isNaN(value)) {
+        return;
+      }
 
-    // Skip summary codes (e.g., "00-0000")
-    if (occCode.startsWith("00-")) continue;
+      const { occupation: occCode, datatype } = seriesIndex.get(seriesId);
+      const occ = occupations.get(occCode);
 
-    const occupation = {
-      code: occCode,
-      title: occTitle,
-      group: row["O_GROUP"] || row["o_group"] || "Other",
-      employment: parseFloat(row["TOT_EMP"] || row["tot_emp"] || 0),
-      wages: {
-        hourlyMean: parseFloat(row["H_MEAN"] || row["h_mean"] || 0),
-        hourlyMedian: parseFloat(row["H_MEDIAN"] || row["h_median"] || 0),
-        annualMean: parseFloat(row["A_MEAN"] || row["a_mean"] || 0),
-        annualMedian: parseFloat(row["A_MEDIAN"] || row["a_median"] || 0),
-        percentile10: parseFloat(row["A_PCT10"] || row["a_pct10"] || 0),
-        percentile25: parseFloat(row["A_PCT25"] || row["a_pct25"] || 0),
-        percentile75: parseFloat(row["A_PCT75"] || row["a_pct75"] || 0),
-        percentile90: parseFloat(row["A_PCT90"] || row["a_pct90"] || 0),
-      },
-      dataDate: "2024-05",
+      if (occ) {
+        occ.wages[datatype] = value;
+        matchCount++;
+      }
+    }
+  );
+
+  console.log(`✓ Matched ${matchCount} wage data points\n`);
+}
+
+/**
+ * Filter to detailed occupations with complete data
+ */
+function filterOccupations(occupations) {
+  console.log("Filtering occupations...");
+  const filtered = [];
+
+  for (const occ of occupations.values()) {
+    // Skip if it's a summary code (major groups end in 0000, minor groups end in X000)
+    if (occ.code.endsWith("0000") || /^\d{2}-\d000$/.test(occ.code)) {
+      continue;
+    }
+
+    // Must have at least median annual wage
+    if (!occ.wages.annualMedian || occ.wages.annualMedian === 0) {
+      continue;
+    }
+
+    // Determine occupational group from code
+    const majorGroup = occ.code.substring(0, 2);
+    const groupNames = {
+      "11": "Management",
+      "13": "Business and Financial Operations",
+      "15": "Computer and Mathematical",
+      "17": "Architecture and Engineering",
+      "19": "Life, Physical, and Social Science",
+      "21": "Community and Social Service",
+      "23": "Legal",
+      "25": "Educational Instruction and Library",
+      "27": "Arts, Design, Entertainment, Sports, and Media",
+      "29": "Healthcare Practitioners and Technical",
+      "31": "Healthcare Support",
+      "33": "Protective Service",
+      "35": "Food Preparation and Serving",
+      "37": "Building and Grounds Cleaning and Maintenance",
+      "39": "Personal Care and Service",
+      "41": "Sales and Related",
+      "43": "Office and Administrative Support",
+      "45": "Farming, Fishing, and Forestry",
+      "47": "Construction and Extraction",
+      "49": "Installation, Maintenance, and Repair",
+      "51": "Production",
+      "53": "Transportation and Material Moving",
     };
 
-    // Skip if no wage data
-    if (occupation.wages.annualMedian === 0) continue;
+    filtered.push({
+      code: occ.code,
+      title: occ.title,
+      group: groupNames[majorGroup] || "Other",
+      median: occ.wages.annualMedian || 0,
+      mean: occ.wages.annualMean || 0,
+      percentile10: occ.wages.percentile10 || 0,
+      percentile25: occ.wages.percentile25 || 0,
+      percentile75: occ.wages.percentile75 || 0,
+      percentile90: occ.wages.percentile90 || 0,
+      date: "May 2024",
+    });
+  }
 
-    occupations.push(occupation);
+  console.log(`✓ Filtered to ${filtered.length} detailed occupations\n`);
+  return filtered;
+}
 
-    // Build search index (lowercase title words → occupation codes)
-    const titleWords = occTitle
+/**
+ * Build search index
+ */
+function buildSearchIndex(occupations) {
+  console.log("Building search index...");
+  const index = {};
+
+  for (const occ of occupations) {
+    const titleWords = occ.title
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .filter((word) => word.length > 2); // Skip very short words
+      .filter((word) => word.length > 2);
 
     for (const word of titleWords) {
-      if (!occupationIndex[word]) {
-        occupationIndex[word] = [];
+      if (!index[word]) {
+        index[word] = [];
       }
-      if (!occupationIndex[word].includes(occCode)) {
-        occupationIndex[word].push(occCode);
+      if (!index[word].includes(occ.code)) {
+        index[word].push(occ.code);
       }
     }
   }
 
-  console.log(`✓ Processed ${occupations.length} occupations`);
-  console.log(`✓ Built search index with ${Object.keys(occupationIndex).length} terms\n`);
-
-  return { occupations, occupationIndex };
+  console.log(`✓ Built search index with ${Object.keys(index).length} terms\n`);
+  return index;
 }
 
 /**
@@ -156,37 +256,38 @@ async function main() {
   console.log("BLS Data Processing Script");
   console.log("==========================\n");
 
-  const zipPath = path.join(RAW_DATA_DIR, ZIP_FILE);
-
-  // Check if ZIP file exists
-  if (!fs.existsSync(zipPath)) {
-    console.error(`Error: ZIP file not found: ${zipPath}`);
-    console.error("Please run: node scripts/download-bls-data.js first");
-    process.exit(1);
+  // Check if required files exist
+  const requiredFiles = ["oe.occupation", "oe.series", "oe.data.0.Current"];
+  for (const file of requiredFiles) {
+    const filePath = path.join(RAW_DATA_DIR, file);
+    if (!fs.existsSync(filePath)) {
+      console.error(`Error: Required file not found: ${filePath}`);
+      console.error("Please run: npm run data:download first");
+      process.exit(1);
+    }
   }
 
-  // Extract ZIP
-  const extractDir = path.join(PROCESSED_DATA_DIR, "extracted");
-  extractZip(zipPath, extractDir);
+  // Process data
+  const occupations = await loadOccupations();
+  const seriesIndex = await buildSeriesIndex();
+  await loadWageData(occupations, seriesIndex);
+  const filtered = filterOccupations(occupations);
+  const index = buildSearchIndex(filtered);
 
-  // Find and parse Excel file
-  const excelFile = findNationalDataFile(extractDir);
-  const { occupations, occupationIndex } = parseExcelData(excelFile);
-
-  // Create output directories
+  // Create output directory
   if (!fs.existsSync(PUBLIC_DATA_DIR)) {
     fs.mkdirSync(PUBLIC_DATA_DIR, { recursive: true });
   }
 
   // Save processed data
   const outputData = {
-    version: "1.0",
-    dataDate: "2024-05",
-    source: "U.S. Bureau of Labor Statistics - Occupational Employment and Wage Statistics",
-    occupations,
-    index: occupationIndex,
+    occupations: filtered,
+    index,
     metadata: {
-      totalOccupations: occupations.length,
+      source: "U.S. Bureau of Labor Statistics",
+      dataset: "Occupational Employment and Wage Statistics",
+      date: "May 2024",
+      totalOccupations: filtered.length,
       lastUpdated: new Date().toISOString(),
     },
   };
@@ -200,13 +301,6 @@ async function main() {
   const stats = fs.statSync(outputPath);
   const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(2);
   console.log(`File size: ${fileSizeInMB} MB`);
-
-  // Create compressed version
-  const compressedPath = path.join(PUBLIC_DATA_DIR, "bls-data.min.json");
-  fs.writeFileSync(compressedPath, JSON.stringify(outputData));
-  const compressedStats = fs.statSync(compressedPath);
-  const compressedSizeInMB = (compressedStats.size / (1024 * 1024)).toFixed(2);
-  console.log(`Compressed size: ${compressedSizeInMB} MB`);
 
   console.log("\n✓ Data processing complete!");
   console.log("\nYou can now run the app with: npm run dev");
