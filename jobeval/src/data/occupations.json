@@ -1,12 +1,12 @@
 {
   "version": "1.0",
-  "dataDate": "2025-11-08",
+  "dataDate": "2025-11-10",
   "metadata": {
     "totalOccupations": 20,
     "occupationsWithWages": 20,
     "onetVersion": "30.0 (sample)",
     "blsVersion": "1.0",
-    "lastUpdated": "2025-11-08T19:38:49.678Z",
+    "lastUpdated": "2025-11-10T10:54:29.446Z",
     "coveragePercentage": "100.0%"
   },
   "occupations": {
@@ -1187,7 +1187,13 @@
       "title": "Registered Nurses",
       "description": "Registered Nurses provide medical care and support to patients.",
       "group": "Healthcare Practitioners and Technical",
-      "alternateTitles": ["RN", "Nurse", "Staff Nurse", "Clinical Nurse", "Registered Nurse"],
+      "alternateTitles": [
+        "RN",
+        "Nurse",
+        "Staff Nurse",
+        "Clinical Nurse",
+        "Registered Nurse"
+      ],
       "skills": [
         {
           "name": "Critical Thinking",
