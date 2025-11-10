@@ -9,8 +9,9 @@ import Calculator from "../features/calculator/components/Calculator";
 import Results from "../features/results/components/Results";
 import QuickAdvisoryForm from "../features/quick-advisory/components/QuickAdvisoryForm";
 import QuickAdvisoryResults from "../features/quick-advisory/components/QuickAdvisoryResults";
+import SettingsPage from "../features/settings/components/SettingsPage";
 import { StartupModal } from "../features/data-management/components/StartupModal";
-import { SaveStatusIndicator } from "../components/SaveStatusIndicator";
+import { Navigation } from "../components/Navigation";
 import { initializeAutoSave } from "../lib/persistence/autoSaveManager";
 import "./App.css";
 
@@ -28,12 +29,8 @@ function App() {
       <StartupModal />
 
       <div className="min-h-screen bg-gray-50">
-        {/* Header with save status indicator */}
-        <header className="sticky top-0 z-50 bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-end">
-            <SaveStatusIndicator />
-          </div>
-        </header>
+        {/* Navigation with data controls */}
+        <Navigation />
 
         {/* Main content */}
         <Routes>
@@ -47,6 +44,7 @@ function App() {
           <Route path="/position/match" element={<BLSMatching />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </div>
     </>
