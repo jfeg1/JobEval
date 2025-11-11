@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci --legacy-peer-deps
-          npm install @rollup/rollup-linux-x64-gnu --legacy-peer-deps
+          npm install @rollup/rollup-linux-x64-gnu lightningcss-linux-x64-gnu --legacy-peer-deps
 
       - name: Run Prettier check
         run: npm run format:check
