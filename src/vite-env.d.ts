@@ -10,14 +10,14 @@ interface ImportMeta {
 
 // JSON module declarations
 declare module "*.json" {
-  const value: any;
+  const value: unknown;
   export default value;
 }
 
 // Specific declarations for data files
 declare module "@/data/occupations.json" {
   const value: {
-    occupations: { [socCode: string]: any };
+    occupations: { [socCode: string]: unknown };
   };
   export default value;
 }
