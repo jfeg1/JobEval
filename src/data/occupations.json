@@ -1,0 +1,1808 @@
+{
+  "version": "1.0",
+  "dataDate": "2025-11-10",
+  "metadata": {
+    "totalOccupations": 20,
+    "occupationsWithWages": 20,
+    "onetVersion": "30.0 (sample)",
+    "blsVersion": "1.0",
+    "lastUpdated": "2025-11-10T10:54:29.446Z",
+    "coveragePercentage": "100.0%"
+  },
+  "occupations": {
+    "11-1021": {
+      "code": "11-1021",
+      "title": "General and Operations Managers",
+      "description": "General and Operations Managers plan, direct, or coordinate activities in companies or organizations.",
+      "group": "Management",
+      "alternateTitles": [
+        "Operations Manager",
+        "General Manager",
+        "Business Operations Manager",
+        "Operations Director",
+        "GM"
+      ],
+      "skills": [
+        {
+          "name": "Management of Personnel Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Time Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Judgment and Decision Making",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Administration and Management",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Personnel and Human Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Economics and Accounting",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 2984920,
+        "hourly": {
+          "mean": 59.16,
+          "median": 50.99
+        },
+        "annual": {
+          "mean": 123050,
+          "median": 106070
+        },
+        "percentiles": {
+          "p10": 50750,
+          "p25": 72100,
+          "p50": 106070,
+          "p75": 152450,
+          "p90": 208000
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "13-1111": {
+      "code": "13-1111",
+      "title": "Management Analysts",
+      "description": "Management Analysts conduct analyses and provide insights to improve business operations.",
+      "group": "Business and Financial Operations",
+      "alternateTitles": [
+        "Business Analyst",
+        "Management Consultant",
+        "Business Consultant",
+        "Strategy Consultant",
+        "Process Improvement Analyst"
+      ],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 966100,
+        "hourly": {
+          "mean": 49.45,
+          "median": 46.49
+        },
+        "annual": {
+          "mean": 102850,
+          "median": 96710
+        },
+        "percentiles": {
+          "p10": 54250,
+          "p25": 67570,
+          "p50": 96710,
+          "p75": 126880,
+          "p90": 166560
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "11-2021": {
+      "code": "11-2021",
+      "title": "Marketing Managers",
+      "description": "Marketing Managers plan, direct, or coordinate activities in companies or organizations.",
+      "group": "Management",
+      "alternateTitles": [
+        "Marketing Director",
+        "Head of Marketing",
+        "Marketing Lead",
+        "Chief Marketing Officer",
+        "CMO"
+      ],
+      "skills": [
+        {
+          "name": "Management of Personnel Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Time Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Judgment and Decision Making",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Administration and Management",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Personnel and Human Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Economics and Accounting",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 353870,
+        "hourly": {
+          "mean": 77.76,
+          "median": 68.08
+        },
+        "annual": {
+          "mean": 161740,
+          "median": 141630
+        },
+        "percentiles": {
+          "p10": 72800,
+          "p25": 96750,
+          "p50": 141630,
+          "p75": 195470,
+          "p90": 239200
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "11-2022": {
+      "code": "11-2022",
+      "title": "Sales Managers",
+      "description": "Sales Managers plan, direct, or coordinate activities in companies or organizations.",
+      "group": "Management",
+      "alternateTitles": [
+        "Sales Director",
+        "Head of Sales",
+        "Sales Lead",
+        "VP of Sales",
+        "Chief Sales Officer"
+      ],
+      "skills": [
+        {
+          "name": "Management of Personnel Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Time Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Judgment and Decision Making",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Administration and Management",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Personnel and Human Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Economics and Accounting",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 481260,
+        "hourly": {
+          "mean": 71.07,
+          "median": 63.43
+        },
+        "annual": {
+          "mean": 147840,
+          "median": 131910
+        },
+        "percentiles": {
+          "p10": 62070,
+          "p25": 89840,
+          "p50": 131910,
+          "p75": 185200,
+          "p90": 239200
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "15-1252": {
+      "code": "15-1252",
+      "title": "Software Developers",
+      "description": "Software Developers design, develop, test, and maintain computer systems and applications.",
+      "group": "Computer and Mathematical",
+      "alternateTitles": [
+        "Software Engineer",
+        "Developer",
+        "Programmer",
+        "Software Developer",
+        "Application Developer",
+        "Full Stack Developer",
+        "Backend Developer",
+        "Frontend Developer"
+      ],
+      "skills": [
+        {
+          "name": "Programming",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Systems Analysis",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Quality Control Analysis",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Technology Design",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Troubleshooting",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Computers and Electronics",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Engineering and Technology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Design",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 1795300,
+        "hourly": {
+          "mean": 65.46,
+          "median": 61.23
+        },
+        "annual": {
+          "mean": 136160,
+          "median": 127370
+        },
+        "percentiles": {
+          "p10": 77310,
+          "p25": 98350,
+          "p50": 127370,
+          "p75": 163340,
+          "p90": 195430
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "15-1244": {
+      "code": "15-1244",
+      "title": "Network and Computer Systems Administrators",
+      "description": "Network and Computer Systems Administrators design, develop, test, and maintain computer systems and applications.",
+      "group": "Computer and Mathematical",
+      "alternateTitles": [
+        "System Administrator",
+        "Systems Admin",
+        "Sysadmin",
+        "Network Administrator",
+        "IT Administrator"
+      ],
+      "skills": [
+        {
+          "name": "Programming",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Systems Analysis",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Quality Control Analysis",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Technology Design",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Troubleshooting",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Computers and Electronics",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Engineering and Technology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Design",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 353620,
+        "hourly": {
+          "mean": 46.98,
+          "median": 44.63
+        },
+        "annual": {
+          "mean": 97710,
+          "median": 92830
+        },
+        "percentiles": {
+          "p10": 56730,
+          "p25": 70800,
+          "p50": 92830,
+          "p75": 116750,
+          "p90": 144380
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "13-2011": {
+      "code": "13-2011",
+      "title": "Accountants and Auditors",
+      "description": "Accountants and Auditors conduct analyses and provide insights to improve business operations.",
+      "group": "Business and Financial Operations",
+      "alternateTitles": [
+        "Accountant",
+        "Auditor",
+        "CPA",
+        "Certified Public Accountant",
+        "Staff Accountant"
+      ],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 1452840,
+        "hourly": {
+          "mean": 42.62,
+          "median": 39.29
+        },
+        "annual": {
+          "mean": 88650,
+          "median": 81740
+        },
+        "percentiles": {
+          "p10": 49820,
+          "p25": 61250,
+          "p50": 81740,
+          "p75": 105150,
+          "p90": 133230
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "27-3031": {
+      "code": "27-3031",
+      "title": "Public Relations Specialists",
+      "description": "Public Relations Specialists create and distribute information to the public through various media channels.",
+      "group": "Media and Communication",
+      "alternateTitles": [
+        "PR Specialist",
+        "Public Relations Manager",
+        "Communications Specialist",
+        "Media Relations Specialist",
+        "PR Manager"
+      ],
+      "skills": [
+        {
+          "name": "Active Listening",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Speaking",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Writing",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Persuasion",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Negotiation",
+          "importance": 70,
+          "level": 60
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Design",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Communications and Media",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Computers and Electronics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Fine Arts",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 264260,
+        "hourly": {
+          "mean": 36.34,
+          "median": 32.6
+        },
+        "annual": {
+          "mean": 75580,
+          "median": 67810
+        },
+        "percentiles": {
+          "p10": 38980,
+          "p25": 49220,
+          "p50": 67810,
+          "p75": 91300,
+          "p90": 124520
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "43-6014": {
+      "code": "43-6014",
+      "title": "Secretaries and Administrative Assistants",
+      "description": "Secretaries and Administrative Assistants perform routine clerical and administrative functions.",
+      "group": "Office and Administrative Support",
+      "alternateTitles": [
+        "Administrative Assistant",
+        "Secretary",
+        "Executive Assistant",
+        "Office Administrator",
+        "Admin Assistant"
+      ],
+      "skills": [
+        {
+          "name": "Service Orientation",
+          "importance": 85,
+          "level": 70
+        },
+        {
+          "name": "Active Listening",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Speaking",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Social Perceptiveness",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Persuasion",
+          "importance": 70,
+          "level": 60
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 1753200,
+        "hourly": {
+          "mean": 21.67,
+          "median": 20.05
+        },
+        "annual": {
+          "mean": 45070,
+          "median": 41700
+        },
+        "percentiles": {
+          "p10": 28550,
+          "p25": 33700,
+          "p50": 41700,
+          "p75": 52230,
+          "p90": 64880
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "41-3099": {
+      "code": "41-3099",
+      "title": "Sales Representatives, Services",
+      "description": "Sales Representatives, Services sell goods and services to customers and clients.",
+      "group": "Sales and Related",
+      "alternateTitles": [
+        "Sales Representative",
+        "Sales Rep",
+        "Account Executive",
+        "Sales Associate",
+        "Business Development Representative"
+      ],
+      "skills": [
+        {
+          "name": "Active Listening",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Speaking",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Writing",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Persuasion",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Negotiation",
+          "importance": 70,
+          "level": 60
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 983560,
+        "hourly": {
+          "mean": 34.77,
+          "median": 29.04
+        },
+        "annual": {
+          "mean": 72310,
+          "median": 60400
+        },
+        "percentiles": {
+          "p10": 31540,
+          "p25": 40620,
+          "p50": 60400,
+          "p75": 87680,
+          "p90": 128980
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "11-3121": {
+      "code": "11-3121",
+      "title": "Human Resources Managers",
+      "description": "Human Resources Managers plan, direct, or coordinate activities in companies or organizations.",
+      "group": "Management",
+      "alternateTitles": [
+        "HR Manager",
+        "Human Resources Director",
+        "Head of HR",
+        "People Manager",
+        "Talent Manager"
+      ],
+      "skills": [
+        {
+          "name": "Management of Personnel Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Time Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Judgment and Decision Making",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Administration and Management",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Personnel and Human Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Economics and Accounting",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 173040,
+        "hourly": {
+          "mean": 68.58,
+          "median": 62.25
+        },
+        "annual": {
+          "mean": 142640,
+          "median": 129470
+        },
+        "percentiles": {
+          "p10": 75810,
+          "p25": 95130,
+          "p50": 129470,
+          "p75": 171960,
+          "p90": 218920
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "13-1071": {
+      "code": "13-1071",
+      "title": "Human Resources Specialists",
+      "description": "Human Resources Specialists conduct analyses and provide insights to improve business operations.",
+      "group": "Business and Financial Operations",
+      "alternateTitles": [
+        "HR Specialist",
+        "HR Generalist",
+        "Recruiter",
+        "Talent Acquisition Specialist",
+        "HR Coordinator"
+      ],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 663880,
+        "hourly": {
+          "mean": 34.71,
+          "median": 32.02
+        },
+        "annual": {
+          "mean": 72190,
+          "median": 66600
+        },
+        "percentiles": {
+          "p10": 40150,
+          "p25": 49900,
+          "p50": 66600,
+          "p75": 85260,
+          "p90": 109790
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "25-1194": {
+      "code": "25-1194",
+      "title": "Career/Technical Education Teachers, Postsecondary",
+      "description": "Career/Technical Education Teachers, Postsecondary teach and train students in academic and vocational subjects.",
+      "group": "Educational Instruction and Library",
+      "alternateTitles": [
+        "Technical Instructor",
+        "Vocational Teacher",
+        "Career Counselor",
+        "Training Specialist"
+      ],
+      "skills": [
+        {
+          "name": "Active Listening",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Speaking",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Writing",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Persuasion",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Negotiation",
+          "importance": 70,
+          "level": 60
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Administration and Management",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Personnel and Human Resources",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Economics and Accounting",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 128090,
+        "hourly": {
+          "mean": 33.5,
+          "median": 29.41
+        },
+        "annual": {
+          "mean": 69680,
+          "median": 61180
+        },
+        "percentiles": {
+          "p10": 36030,
+          "p25": 44720,
+          "p50": 61180,
+          "p75": 84720,
+          "p90": 113590
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "29-1141": {
+      "code": "29-1141",
+      "title": "Registered Nurses",
+      "description": "Registered Nurses provide medical care and support to patients.",
+      "group": "Healthcare Practitioners and Technical",
+      "alternateTitles": ["RN", "Nurse", "Staff Nurse", "Clinical Nurse", "Registered Nurse"],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Medicine and Dentistry",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Biology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Psychology",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Bachelor's degree or higher",
+      "wageData": {
+        "employment": 3255300,
+        "hourly": {
+          "mean": 43.58,
+          "median": 40.31
+        },
+        "annual": {
+          "mean": 90640,
+          "median": 83850
+        },
+        "percentiles": {
+          "p10": 62030,
+          "p25": 70530,
+          "p50": 83850,
+          "p75": 105380,
+          "p90": 128840
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "43-4051": {
+      "code": "43-4051",
+      "title": "Customer Service Representatives",
+      "description": "Customer Service Representatives perform routine clerical and administrative functions.",
+      "group": "Office and Administrative Support",
+      "alternateTitles": [
+        "Customer Service Rep",
+        "Customer Support Representative",
+        "Support Specialist",
+        "Client Services Representative",
+        "CSR"
+      ],
+      "skills": [
+        {
+          "name": "Service Orientation",
+          "importance": 85,
+          "level": 70
+        },
+        {
+          "name": "Active Listening",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Speaking",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Social Perceptiveness",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Persuasion",
+          "importance": 70,
+          "level": 60
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 2970420,
+        "hourly": {
+          "mean": 20.84,
+          "median": 18.62
+        },
+        "annual": {
+          "mean": 43350,
+          "median": 38730
+        },
+        "percentiles": {
+          "p10": 26930,
+          "p25": 31640,
+          "p50": 38730,
+          "p75": 49310,
+          "p90": 61940
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "17-2051": {
+      "code": "17-2051",
+      "title": "Civil Engineers",
+      "description": "Civil Engineers design, develop, and oversee construction and engineering projects.",
+      "group": "Architecture and Engineering",
+      "alternateTitles": [
+        "Civil Engineer",
+        "Structural Engineer",
+        "Project Engineer",
+        "Site Engineer"
+      ],
+      "skills": [
+        {
+          "name": "Programming",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Systems Analysis",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Quality Control Analysis",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Technology Design",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Troubleshooting",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Computers and Electronics",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Engineering and Technology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Design",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 322590,
+        "hourly": {
+          "mean": 48.74,
+          "median": 45.54
+        },
+        "annual": {
+          "mean": 101380,
+          "median": 94740
+        },
+        "percentiles": {
+          "p10": 60420,
+          "p25": 73280,
+          "p50": 94740,
+          "p75": 120610,
+          "p90": 149280
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "17-2112": {
+      "code": "17-2112",
+      "title": "Industrial Engineers",
+      "description": "Industrial Engineers design, develop, and oversee construction and engineering projects.",
+      "group": "Architecture and Engineering",
+      "alternateTitles": [
+        "Industrial Engineer",
+        "Process Engineer",
+        "Manufacturing Engineer",
+        "Production Engineer"
+      ],
+      "skills": [
+        {
+          "name": "Programming",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Systems Analysis",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Quality Control Analysis",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Technology Design",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Troubleshooting",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Computers and Electronics",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Engineering and Technology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Design",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 305810,
+        "hourly": {
+          "mean": 50.08,
+          "median": 46.89
+        },
+        "annual": {
+          "mean": 104160,
+          "median": 97530
+        },
+        "percentiles": {
+          "p10": 61850,
+          "p25": 73530,
+          "p50": 97530,
+          "p75": 124850,
+          "p90": 154590
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "27-1024": {
+      "code": "27-1024",
+      "title": "Graphic Designers",
+      "description": "Graphic Designers create visual concepts and designs for various media.",
+      "group": "Arts, Design, Entertainment, Sports, and Media",
+      "alternateTitles": [
+        "Graphic Designer",
+        "Visual Designer",
+        "UI Designer",
+        "Creative Designer",
+        "Brand Designer"
+      ],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Design",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Communications and Media",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Computers and Electronics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Fine Arts",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 239690,
+        "hourly": {
+          "mean": 29.95,
+          "median": 27.02
+        },
+        "annual": {
+          "mean": 62290,
+          "median": 56200
+        },
+        "percentiles": {
+          "p10": 33580,
+          "p25": 41910,
+          "p50": 56200,
+          "p75": 75450,
+          "p90": 100450
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "15-1256": {
+      "code": "15-1256",
+      "title": "Software Quality Assurance Analysts and Testers",
+      "description": "Software Quality Assurance Analysts and Testers design, develop, test, and maintain computer systems and applications.",
+      "group": "Computer and Mathematical",
+      "alternateTitles": [
+        "QA Analyst",
+        "Quality Assurance Engineer",
+        "Test Engineer",
+        "QA Tester",
+        "Software Tester"
+      ],
+      "skills": [
+        {
+          "name": "Programming",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Systems Analysis",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Quality Control Analysis",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Technology Design",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Troubleshooting",
+          "importance": 85,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Computers and Electronics",
+          "importance": 95,
+          "level": 85
+        },
+        {
+          "name": "Engineering and Technology",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 75
+        },
+        {
+          "name": "Design",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 4,
+      "educationLevel": "Bachelor's degree",
+      "wageData": {
+        "employment": 202440,
+        "hourly": {
+          "mean": 51.75,
+          "median": 48.87
+        },
+        "annual": {
+          "mean": 107640,
+          "median": 101650
+        },
+        "percentiles": {
+          "p10": 59840,
+          "p25": 75590,
+          "p50": 101650,
+          "p75": 130840,
+          "p90": 162270
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    },
+    "13-1161": {
+      "code": "13-1161",
+      "title": "Market Research Analysts and Marketing Specialists",
+      "description": "Market Research Analysts and Marketing Specialists conduct analyses and provide insights to improve business operations.",
+      "group": "Business and Financial Operations",
+      "alternateTitles": [
+        "Market Research Analyst",
+        "Marketing Analyst",
+        "Market Researcher",
+        "Business Intelligence Analyst",
+        "Marketing Specialist"
+      ],
+      "skills": [
+        {
+          "name": "Critical Thinking",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Mathematics",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "Reading Comprehension",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Active Learning",
+          "importance": 75,
+          "level": 65
+        },
+        {
+          "name": "Complex Problem Solving",
+          "importance": 80,
+          "level": 75
+        }
+      ],
+      "knowledge": [
+        {
+          "name": "Economics and Accounting",
+          "importance": 90,
+          "level": 80
+        },
+        {
+          "name": "Mathematics",
+          "importance": 85,
+          "level": 75
+        },
+        {
+          "name": "Administration and Management",
+          "importance": 80,
+          "level": 70
+        },
+        {
+          "name": "English Language",
+          "importance": 75,
+          "level": 70
+        },
+        {
+          "name": "Customer and Personal Service",
+          "importance": 70,
+          "level": 65
+        }
+      ],
+      "jobZone": 3,
+      "educationLevel": "Some college, no degree",
+      "wageData": {
+        "employment": 790030,
+        "hourly": {
+          "mean": 38.13,
+          "median": 33.37
+        },
+        "annual": {
+          "mean": 79310,
+          "median": 69410
+        },
+        "percentiles": {
+          "p10": 39520,
+          "p25": 49980,
+          "p50": 69410,
+          "p75": 93690,
+          "p90": 130820
+        },
+        "dataDate": "2024-05"
+      },
+      "hasWageData": true,
+      "dataSource": "integrated"
+    }
+  }
+}
