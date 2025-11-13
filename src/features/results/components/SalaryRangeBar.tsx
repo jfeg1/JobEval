@@ -88,6 +88,66 @@ export default function SalaryRangeBar({
 
   return (
     <div className="w-full" style={{ width: "100%", minWidth: "0", maxWidth: "100%" }}>
+      {/* Percentile labels above the bar */}
+      {showLabels && (
+        <div className="relative w-full mb-3" style={{ minHeight: "45px" }}>
+          {/* 10th Percentile */}
+          <div
+            className="absolute"
+            style={{ left: "10%", transform: "translateX(-50%)", width: "70px" }}
+          >
+            <div className="text-sm font-semibold text-gray-700 text-center">10th</div>
+            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+              <CurrencyDisplay value={p10} abbreviate />
+            </div>
+          </div>
+
+          {/* 25th Percentile */}
+          <div
+            className="absolute"
+            style={{ left: "25%", transform: "translateX(-50%)", width: "70px" }}
+          >
+            <div className="text-sm font-semibold text-gray-700 text-center">25th</div>
+            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+              <CurrencyDisplay value={p25} abbreviate />
+            </div>
+          </div>
+
+          {/* 50th Percentile (Median) */}
+          <div
+            className="absolute"
+            style={{ left: "50%", transform: "translateX(-50%)", width: "70px" }}
+          >
+            <div className="text-sm font-bold text-green-700 text-center">Median</div>
+            <div className="text-gray-900 font-extrabold mt-1 text-center text-sm">
+              <CurrencyDisplay value={p50} abbreviate />
+            </div>
+          </div>
+
+          {/* 75th Percentile */}
+          <div
+            className="absolute"
+            style={{ left: "75%", transform: "translateX(-50%)", width: "70px" }}
+          >
+            <div className="text-sm font-semibold text-gray-700 text-center">75th</div>
+            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+              <CurrencyDisplay value={p75} abbreviate />
+            </div>
+          </div>
+
+          {/* 90th Percentile */}
+          <div
+            className="absolute"
+            style={{ left: "90%", transform: "translateX(-50%)", width: "70px" }}
+          >
+            <div className="text-sm font-semibold text-gray-700 text-center">90th</div>
+            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+              <CurrencyDisplay value={p90} abbreviate />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Horizontal Bar Chart */}
       <div className="relative mb-20">
         {/* Main gradient bar representing the full salary range */}
@@ -183,66 +243,6 @@ export default function SalaryRangeBar({
           </div>
         </div>
       </div>
-
-      {/* Labels */}
-      {showLabels && (
-        <div className="relative w-full mt-8" style={{ minHeight: "45px" }}>
-          {/* 10th Percentile */}
-          <div
-            className="absolute"
-            style={{ left: "10%", transform: "translateX(-50%)", width: "70px" }}
-          >
-            <div className="text-sm font-semibold text-gray-700 text-center">10th</div>
-            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
-              <CurrencyDisplay value={p10} abbreviate />
-            </div>
-          </div>
-
-          {/* 25th Percentile */}
-          <div
-            className="absolute"
-            style={{ left: "25%", transform: "translateX(-50%)", width: "70px" }}
-          >
-            <div className="text-sm font-semibold text-gray-700 text-center">25th</div>
-            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
-              <CurrencyDisplay value={p25} abbreviate />
-            </div>
-          </div>
-
-          {/* 50th Percentile (Median) */}
-          <div
-            className="absolute"
-            style={{ left: "50%", transform: "translateX(-50%)", width: "70px" }}
-          >
-            <div className="text-sm font-bold text-green-700 text-center">Median</div>
-            <div className="text-gray-900 font-extrabold mt-1 text-center text-sm">
-              <CurrencyDisplay value={p50} abbreviate />
-            </div>
-          </div>
-
-          {/* 75th Percentile */}
-          <div
-            className="absolute"
-            style={{ left: "75%", transform: "translateX(-50%)", width: "70px" }}
-          >
-            <div className="text-sm font-semibold text-gray-700 text-center">75th</div>
-            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
-              <CurrencyDisplay value={p75} abbreviate />
-            </div>
-          </div>
-
-          {/* 90th Percentile */}
-          <div
-            className="absolute"
-            style={{ left: "90%", transform: "translateX(-50%)", width: "70px" }}
-          >
-            <div className="text-sm font-semibold text-gray-700 text-center">90th</div>
-            <div className="text-gray-900 font-bold mt-1 text-center text-sm">
-              <CurrencyDisplay value={p90} abbreviate />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Screen reader text */}
       <div className="sr-only">

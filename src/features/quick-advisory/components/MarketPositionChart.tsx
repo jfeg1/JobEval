@@ -31,14 +31,47 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
 }) => {
   const { wages } = occupation;
 
-  // Calculate position of proposed salary in the chart (0-100%)
-  const minSalary = wages.percentile10;
-  const maxSalary = wages.percentile90;
-  const salaryRange = maxSalary - minSalary;
-  const proposedPosition = ((proposedSalary - minSalary) / salaryRange) * 100;
+  // Calculate percentile position for the proposed salary
+  // We need to interpolate between known percentiles
+  const getUserPercentile = (salary: number): number => {
+    const p10 = wages.percentile10;
+    const p25 = wages.percentile25;
+    const p50 = wages.annualMedian;
+    const p75 = wages.percentile75;
+    const p90 = wages.percentile90;
 
-  // Clamp position between 0 and 100
-  const clampedPosition = Math.max(0, Math.min(100, proposedPosition));
+    // Below P10
+    if (salary <= p10) return 10;
+    // Between P10 and P25
+    if (salary <= p25) {
+      const range = p25 - p10;
+      const position = salary - p10;
+      return 10 + (position / range) * 15; // Interpolate between 10 and 25
+    }
+    // Between P25 and P50
+    if (salary <= p50) {
+      const range = p50 - p25;
+      const position = salary - p25;
+      return 25 + (position / range) * 25; // Interpolate between 25 and 50
+    }
+    // Between P50 and P75
+    if (salary <= p75) {
+      const range = p75 - p50;
+      const position = salary - p50;
+      return 50 + (position / range) * 25; // Interpolate between 50 and 75
+    }
+    // Between P75 and P90
+    if (salary <= p90) {
+      const range = p90 - p75;
+      const position = salary - p75;
+      return 75 + (position / range) * 15; // Interpolate between 75 and 90
+    }
+    // Above P90
+    return 90;
+  };
+
+  const proposedPercentile = getUserPercentile(proposedSalary);
+  const clampedPosition = Math.max(0, Math.min(100, proposedPercentile));
 
   const getStatusColor = () => {
     switch (alignment.status) {
@@ -90,62 +123,151 @@ const MarketPositionChart: React.FC<MarketPositionChartProps> = ({
           </div>
 
           {/* Chart bars */}
-          <div className="relative bg-slate-100 rounded-lg p-4">
-            {/* Percentile markers */}
-            <div className="grid grid-cols-5 gap-2 mb-4">
-              <div className="text-center">
-                <div className="text-xs font-medium text-slate-600 mb-1">10th</div>
-                <div className="text-sm font-semibold text-slate-900">
-                  <CurrencyDisplay value={wages.percentile10} />
+          <div className="relative rounded-lg p-4">
+            {/* Percentile labels above the bar */}
+            <div className="relative w-full mb-3" style={{ minHeight: "45px" }}>
+              {/* 10th Percentile */}
+              <div
+                className="absolute"
+                style={{ left: "10%", transform: "translateX(-50%)", width: "70px" }}
+              >
+                <div className="text-sm font-semibold text-gray-700 text-center">10th</div>
+                <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+                  <CurrencyDisplay value={wages.percentile10} abbreviate />
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-xs font-medium text-slate-600 mb-1">25th</div>
-                <div className="text-sm font-semibold text-slate-900">
-                  <CurrencyDisplay value={wages.percentile25} />
+
+              {/* 25th Percentile */}
+              <div
+                className="absolute"
+                style={{ left: "25%", transform: "translateX(-50%)", width: "70px" }}
+              >
+                <div className="text-sm font-semibold text-gray-700 text-center">25th</div>
+                <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+                  <CurrencyDisplay value={wages.percentile25} abbreviate />
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-xs font-medium text-sage-600 mb-1">Median</div>
-                <div className="text-sm font-semibold text-sage-700">
-                  <CurrencyDisplay value={wages.annualMedian} />
+
+              {/* 50th Percentile (Median) */}
+              <div
+                className="absolute"
+                style={{ left: "50%", transform: "translateX(-50%)", width: "70px" }}
+              >
+                <div className="text-sm font-bold text-green-700 text-center">Median</div>
+                <div className="text-gray-900 font-extrabold mt-1 text-center text-sm">
+                  <CurrencyDisplay value={wages.annualMedian} abbreviate />
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-xs font-medium text-slate-600 mb-1">75th</div>
-                <div className="text-sm font-semibold text-slate-900">
-                  <CurrencyDisplay value={wages.percentile75} />
+
+              {/* 75th Percentile */}
+              <div
+                className="absolute"
+                style={{ left: "75%", transform: "translateX(-50%)", width: "70px" }}
+              >
+                <div className="text-sm font-semibold text-gray-700 text-center">75th</div>
+                <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+                  <CurrencyDisplay value={wages.percentile75} abbreviate />
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-xs font-medium text-slate-600 mb-1">90th</div>
-                <div className="text-sm font-semibold text-slate-900">
-                  <CurrencyDisplay value={wages.percentile90} />
+
+              {/* 90th Percentile */}
+              <div
+                className="absolute"
+                style={{ left: "90%", transform: "translateX(-50%)", width: "70px" }}
+              >
+                <div className="text-sm font-semibold text-gray-700 text-center">90th</div>
+                <div className="text-gray-900 font-bold mt-1 text-center text-sm">
+                  <CurrencyDisplay value={wages.percentile90} abbreviate />
                 </div>
               </div>
             </div>
 
             {/* Visual bar with salary marker */}
-            <div className="relative h-8 bg-gradient-to-r from-red-200 via-yellow-200 via-green-200 via-yellow-200 to-red-200 rounded-full mb-16">
-              {/* Proposed salary indicator */}
-              <div className="absolute -translate-x-1/2" style={{ left: `${clampedPosition}%` }}>
-                {/* Label above the bar */}
-                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2">
-                  <div className="bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-lg whitespace-nowrap">
-                    You: <CurrencyDisplay value={proposedSalary} />
-                  </div>
-                  {/* Arrow pointing down */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-blue-600"></div>
-                  </div>
+            <div className="relative mb-20">
+              {/* Main gradient bar representing the full salary range */}
+              <div className="relative h-8 bg-gradient-to-r from-orange-200 via-blue-200 to-green-200 rounded-lg overflow-visible">
+                {/* Percentile markers */}
+                <div className="absolute inset-0">
+                  {/* 10th percentile line */}
+                  <div
+                    className="absolute top-0 bottom-0 w-0.5 bg-gray-600 opacity-70"
+                    style={{ left: "10%" }}
+                  />
+                  {/* 25th percentile line */}
+                  <div
+                    className="absolute top-0 bottom-0 w-0.5 bg-gray-700 opacity-80"
+                    style={{ left: "25%" }}
+                  />
+                  {/* 50th percentile (median) line - more prominent */}
+                  <div
+                    className="absolute top-0 bottom-0 w-1.5 bg-green-700 opacity-90"
+                    style={{ left: "50%" }}
+                  />
+                  {/* 75th percentile line */}
+                  <div
+                    className="absolute top-0 bottom-0 w-0.5 bg-gray-700 opacity-80"
+                    style={{ left: "75%" }}
+                  />
+                  {/* 90th percentile line */}
+                  <div
+                    className="absolute top-0 bottom-0 w-0.5 bg-gray-600 opacity-70"
+                    style={{ left: "90%" }}
+                  />
                 </div>
 
-                {/* Vertical line indicator */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-8 bg-blue-600"></div>
+                {/* User salary marker - Diamond shape */}
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
+                  style={{ left: `${clampedPosition}%` }}
+                >
+                  {/* Diamond/marker */}
+                  <div
+                    className="relative flex items-center justify-center"
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                    }}
+                  >
+                    {/* Diamond background */}
+                    <div
+                      className="absolute"
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: "#3b82f6", // Blue for Quick Advisory
+                        transform: "rotate(45deg)",
+                        border: "3px solid white",
+                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                      }}
+                    />
+                    {/* Pulse animation */}
+                    <div
+                      className="absolute animate-ping"
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: "#3b82f6",
+                        opacity: 0.3,
+                        transform: "rotate(45deg)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
 
-                {/* Marker dot on the bar */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-4 h-4 bg-blue-600 border-3 border-white rounded-full shadow-lg ring-2 ring-blue-200"></div>
+              {/* Status label below marker */}
+              <div
+                className="absolute top-10 -translate-x-1/2 z-10"
+                style={{ left: `${clampedPosition}%` }}
+              >
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap shadow-sm"
+                  style={{
+                    backgroundColor: "#3b82f6",
+                    color: "white",
+                  }}
+                >
+                  You: <CurrencyDisplay value={proposedSalary} />
                 </div>
               </div>
             </div>
