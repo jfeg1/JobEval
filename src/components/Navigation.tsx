@@ -5,7 +5,7 @@
  * Includes visual workflow indicators and prominent auto-save status.
  */
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ExportButton } from "@/features/data-management/components/ExportButton";
 import { ImportButton } from "@/features/data-management/components/ImportButton";
 import { SaveStatusIndicator } from "./SaveStatusIndicator";
@@ -39,7 +39,6 @@ const hideBreadcrumbRoutes = ["/", "/settings"];
 
 export function Navigation() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const currentLabel = routeLabels[location.pathname] || "JobEval";
   const isInWorkflow = workflowRoutes.includes(location.pathname);

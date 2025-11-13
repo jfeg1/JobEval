@@ -123,7 +123,7 @@ export default function Results() {
         localStorage.setItem("jobeval_position_history", JSON.stringify(history));
       }
     }
-  }, [company, position, selectedOccupation, affordableRange]);
+  }, [location.state, company, position, selectedOccupation, affordableRange]);
 
   // Return null while redirecting
   if (!company || !position || !selectedOccupation || !affordableRange) {
