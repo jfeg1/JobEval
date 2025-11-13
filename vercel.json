@@ -8,5 +8,13 @@
   "env": {
     "GITHUB_REPO_OWNER": "jfeg1",
     "GITHUB_REPO_NAME": "JobEval"
+  },
+  "deploymentProtection": {
+    "skipProtection": [
+      {
+        "path": "/api/*",
+        "target": "all"
+      }
+    ]
   }
 }
