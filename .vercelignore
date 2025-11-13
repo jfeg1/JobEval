@@ -1,0 +1,6 @@
+# Vercel Configuration (.vercel directory)
+.vercel
+
+# Environment files
+.env.local
+.env*.local

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question or Start a Discussion
+    url: https://github.com/jfeg1/JobEval/discussions
+    about: Ask questions, share ideas, or discuss JobEval with the community
+  - name: 📧 Direct Contact
+    url: mailto:johnathen.evans-guilbault@proton.me
+    about: For private inquiries or commercial licensing questions

@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/feedback.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "GITHUB_REPO_OWNER": "jfeg1",
+    "GITHUB_REPO_NAME": "JobEval"
+  }
+}

@@ -130,4 +130,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[0.9.0]: https://github.com/yourusername/jobeval/releases/tag/v0.9.0
+[0.9.0]: https://github.com/jfeg1/JobEval/releases/tag/v0.9.0

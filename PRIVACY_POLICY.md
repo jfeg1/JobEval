@@ -85,8 +85,8 @@ JobEval works the same way globally:
 ## Contact
 
 For privacy questions or concerns:
-- **GitHub Issues:** https://github.com/[your-username]/jobeval/issues
-- **Email:** [your email]
+- **GitHub Issues:** https://github.com/jfeg1/JobEval/issues
+- **Email:** johnathen.evans-guilbault@proton.me
 
 ## Legal Basis (GDPR Compliance)
 
