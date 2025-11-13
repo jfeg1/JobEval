@@ -12,6 +12,9 @@ interface FormData {
   country: CountryCode;
   region: string;
   location: string;
+  annualRevenue: number;
+  currentPayroll: number;
+  employeeCount: string;
 }
 
 interface FormErrors {
@@ -21,6 +24,9 @@ interface FormErrors {
   country?: string;
   region?: string;
   location?: string;
+  annualRevenue?: string;
+  currentPayroll?: string;
+  employeeCount?: string;
 }
 
 interface TouchedFields {
@@ -30,6 +36,9 @@ interface TouchedFields {
   country?: boolean;
   region?: boolean;
   location?: boolean;
+  annualRevenue?: boolean;
+  currentPayroll?: boolean;
+  employeeCount?: boolean;
 }
 
 const CompanySetup: React.FC = () => {
@@ -43,6 +52,9 @@ const CompanySetup: React.FC = () => {
     country: "US", // Default to US
     region: profile?.state || "", // Use state as region for now
     location: profile?.location || "",
+    annualRevenue: profile?.annualRevenue || 0,
+    currentPayroll: profile?.currentPayroll || 0,
+    employeeCount: profile?.employeeCount || "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -72,6 +84,18 @@ const CompanySetup: React.FC = () => {
 
     if (!data.location.trim()) {
       errors.location = "Location is required";
+    }
+
+    if (!data.annualRevenue || data.annualRevenue <= 0) {
+      errors.annualRevenue = "Annual revenue must be greater than 0";
+    }
+
+    if (data.currentPayroll < 0) {
+      errors.currentPayroll = "Current payroll cannot be negative";
+    }
+
+    if (!data.employeeCount.trim()) {
+      errors.employeeCount = "Number of employees is required";
     }
 
     // Validate region if required for selected country
@@ -114,6 +138,9 @@ const CompanySetup: React.FC = () => {
         country: true,
         region: true,
         location: true,
+        annualRevenue: true,
+        currentPayroll: true,
+        employeeCount: true,
       });
       return;
     }
@@ -124,9 +151,9 @@ const CompanySetup: React.FC = () => {
       size: formData.size.trim(),
       location: formData.location.trim(),
       state: formData.region, // For backwards compatibility
-      // Preserve existing values or use defaults (will be filled in later steps)
-      annualRevenue: profile?.annualRevenue ?? 0,
-      employeeCount: profile?.employeeCount ?? "",
+      annualRevenue: formData.annualRevenue,
+      currentPayroll: formData.currentPayroll,
+      employeeCount: formData.employeeCount.trim(),
     });
 
     const { markStepComplete } = useWizardStore.getState();
@@ -264,6 +291,79 @@ const CompanySetup: React.FC = () => {
                   ? "e.g., Toronto"
                   : "City name"
             }
+          />
+        </FormField>
+
+        <FormField
+          label="Annual Revenue"
+          htmlFor="annual-revenue"
+          required
+          error={touched.annualRevenue ? errors.annualRevenue : undefined}
+          helpText="Your company's total annual revenue (used for budget calculations)"
+        >
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+            <Input
+              id="annual-revenue"
+              type="number"
+              min="1"
+              value={formData.annualRevenue || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  annualRevenue: parseInt(e.target.value, 10) || 0,
+                }))
+              }
+              onBlur={() => handleBlur("annualRevenue")}
+              error={touched.annualRevenue && !!errors.annualRevenue}
+              placeholder="0"
+              className="pl-8"
+            />
+          </div>
+        </FormField>
+
+        <FormField
+          label="Current Annual Payroll"
+          htmlFor="current-payroll"
+          error={touched.currentPayroll ? errors.currentPayroll : undefined}
+          helpText="Total annual payroll expenses for all current employees (leave 0 if startup with no employees). If evaluating multiple positions, update this after each evaluation to track cumulative impact."
+        >
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+            <Input
+              id="current-payroll"
+              type="number"
+              min="0"
+              value={formData.currentPayroll || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  currentPayroll: parseInt(e.target.value, 10) || 0,
+                }))
+              }
+              onBlur={() => handleBlur("currentPayroll")}
+              error={touched.currentPayroll && !!errors.currentPayroll}
+              placeholder="0"
+              className="pl-8"
+            />
+          </div>
+        </FormField>
+
+        <FormField
+          label="Number of Employees"
+          htmlFor="employee-count"
+          required
+          error={touched.employeeCount ? errors.employeeCount : undefined}
+          helpText="Total number of people currently employed"
+        >
+          <Input
+            id="employee-count"
+            type="text"
+            value={formData.employeeCount}
+            onChange={(e) => setFormData((prev) => ({ ...prev, employeeCount: e.target.value }))}
+            onBlur={() => handleBlur("employeeCount")}
+            error={touched.employeeCount && !!errors.employeeCount}
+            placeholder="e.g., 15"
           />
         </FormField>
 

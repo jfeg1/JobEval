@@ -32,6 +32,11 @@ interface AffordabilityResult {
   minimumWageAmount: number;
   minimumWageAdjusted: boolean;
   recommendations: string[];
+  payrollRatio?: {
+    currentRatio: number;
+    newRatio: number;
+    status: "sustainable" | "warning" | "exceed";
+  };
 }
 
 /**
@@ -111,6 +116,29 @@ export function calculateAffordability(inputs: AffordabilityInputs): Affordabili
   // Step 7: Calculate gap (positive = above market, negative = below market)
   const gap = affordableRange.target - marketRange.median;
 
+  // Step 7.5: Calculate payroll ratio if current payroll is provided
+  let payrollRatio: AffordabilityResult["payrollRatio"] | undefined;
+  if (company.currentPayroll !== undefined && company.currentPayroll >= 0) {
+    const currentRatio = (company.currentPayroll / company.annualRevenue) * 100;
+    const newPayroll = company.currentPayroll + affordableRange.target;
+    const newRatio = (newPayroll / company.annualRevenue) * 100;
+
+    let status: "sustainable" | "warning" | "exceed";
+    if (newRatio < 35) {
+      status = "sustainable";
+    } else if (newRatio >= 35 && newRatio <= 45) {
+      status = "warning";
+    } else {
+      status = "exceed";
+    }
+
+    payrollRatio = {
+      currentRatio,
+      newRatio,
+      status,
+    };
+  }
+
   // Step 8: Generate recommendations
   const recommendations = generateRecommendations({
     marketAlignment,
@@ -132,6 +160,7 @@ export function calculateAffordability(inputs: AffordabilityInputs): Affordabili
     minimumWageAmount: annualMinimumWage,
     minimumWageAdjusted,
     recommendations,
+    payrollRatio,
   };
 }
 

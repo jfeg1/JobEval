@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
@@ -12,6 +12,7 @@ import {
 } from "@/shared/utils/resultsCalculator";
 import SalaryRangeBar from "./SalaryRangeBar";
 import RecommendationCard from "./RecommendationCard";
+import { generateResultsPdf, type ResultsPdfData } from "@/lib/pdf/resultsPdfService";
 
 // Helper function to get data source name based on country
 function getDataSourceName(countryCode: string): string {
@@ -44,14 +45,16 @@ function getCurrencyName(currencyCode: string): string {
 
 export default function Results() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Get data from all stores
-  const { profile: company, clearProfile, getCountry, getCurrency } = useCompanyStore();
+  const { profile: company, getCountry, getCurrency } = useCompanyStore();
   const { basicInfo: position, clearPosition } = usePositionStore();
   const { selectedOccupation, clearMatching } = useMatchingStore();
   const { affordableRange, reset: resetCalculator } = useCalculatorStore();
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   // Validate all required data is present
   useEffect(() => {
@@ -75,6 +78,52 @@ export default function Results() {
       return;
     }
   }, [company, position, selectedOccupation, affordableRange, navigate]);
+
+  // Save to position history ONLY when completing evaluation (coming from Calculator)
+  useEffect(() => {
+    // Only save if coming from calculator (completing evaluation), not when returning from Settings
+    const fromCalculator = location.state?.fromCalculator === true;
+
+    if (fromCalculator && company && position && selectedOccupation && affordableRange) {
+      // Load existing history
+      const stored = localStorage.getItem("jobeval_position_history");
+      let history = [];
+      if (stored) {
+        try {
+          history = JSON.parse(stored);
+        } catch (e) {
+          console.error("Failed to load position history:", e);
+        }
+      }
+
+      // Add current position
+      const newEntry = {
+        title: position.title,
+        department: position.department || "Not specified",
+        occupationTitle: selectedOccupation.title,
+        targetSalary: affordableRange.target,
+        evaluatedAt: new Date().toISOString(),
+      };
+
+      // Check if this position was already saved (avoid duplicates)
+      const isDuplicate = history.some(
+        (p: typeof newEntry) =>
+          p.title === newEntry.title &&
+          p.department === newEntry.department &&
+          Math.abs(new Date(p.evaluatedAt).getTime() - new Date(newEntry.evaluatedAt).getTime()) <
+            60000 // Within 1 minute
+      );
+
+      if (!isDuplicate) {
+        history.unshift(newEntry); // Add to beginning
+        // Keep only last 10 positions
+        if (history.length > 10) {
+          history = history.slice(0, 10);
+        }
+        localStorage.setItem("jobeval_position_history", JSON.stringify(history));
+      }
+    }
+  }, [company, position, selectedOccupation, affordableRange]);
 
   // Return null while redirecting
   if (!company || !position || !selectedOccupation || !affordableRange) {
@@ -111,18 +160,101 @@ export default function Results() {
   };
 
   const handleConfirmNewEvaluation = () => {
-    // Clear all stores
-    clearProfile();
+    // Clear position-related stores only (keep company profile)
     clearPosition();
     clearMatching();
     resetCalculator();
 
-    // Navigate to start
-    navigate("/setup/company");
+    // Navigate to position wizard (skip company setup)
+    navigate("/position/basic");
   };
 
   const handleAdjustBudget = () => {
     navigate("/calculator");
+  };
+
+  const handleExportPdf = async () => {
+    setIsGeneratingPdf(true);
+
+    try {
+      // Calculate current payroll ratio if payroll is provided
+      const currentPayrollRatio =
+        company.currentPayroll > 0 ? (company.currentPayroll / company.annualRevenue) * 100 : 0;
+
+      // Calculate new payroll ratio
+      const newPayroll = company.currentPayroll + affordableRange.target;
+      const newPayrollRatio = (newPayroll / company.annualRevenue) * 100;
+
+      // Determine payroll status
+      let payrollStatus: "sustainable" | "warning" | "exceed" | undefined;
+      if (company.currentPayroll >= 0) {
+        if (newPayrollRatio < 35) {
+          payrollStatus = "sustainable";
+        } else if (newPayrollRatio >= 35 && newPayrollRatio <= 45) {
+          payrollStatus = "warning";
+        } else {
+          payrollStatus = "exceed";
+        }
+      }
+
+      // Map data to PDF format
+      const pdfData: ResultsPdfData = {
+        companyName: company.name,
+        companyLocation: company.location,
+        annualRevenue: company.annualRevenue,
+        currentPayroll: company.currentPayroll || 0,
+        employeeCount: company.employeeCount,
+        positionTitle: position.title,
+        department: position.department || "Not specified",
+        reportsTo: position.reportsTo || "Not specified",
+        occupationTitle: selectedOccupation.title,
+        marketMedian: blsData.median,
+        marketP25: blsData.percentile25,
+        marketP75: blsData.percentile75,
+        marketP10: blsData.percentile10,
+        marketP90: blsData.percentile90,
+        dataDate: selectedOccupation.dataDate || "Unknown",
+        affordableRangeMin: affordableRange.minimum,
+        affordableRangeTarget: affordableRange.target,
+        affordableRangeMax: affordableRange.maximum,
+        marketAlignment: recommendation,
+        gap: affordableRange.target - blsData.median,
+        currentPayrollRatio: company.currentPayroll > 0 ? currentPayrollRatio : undefined,
+        newPayrollRatio: company.currentPayroll > 0 ? newPayrollRatio : undefined,
+        payrollStatus: payrollStatus,
+        generatedDate: new Date(),
+        countryCode: country,
+        currencyCode: currency,
+        locale: navigator.language || "en-US",
+      };
+
+      const pdfBlob = await generateResultsPdf(pdfData);
+
+      // Generate filename with current date
+      const dateStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const filename = `JobEval_Analysis_${company.name.replace(/\s+/g, "_")}_${dateStr}.pdf`;
+
+      // Trigger download
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      // Log error for debugging
+      if (import.meta.env.DEV) {
+        console.error("PDF generation failed:", error);
+      }
+
+      alert(
+        "We encountered an error generating your PDF. Please try again. If the problem persists, try refreshing the page."
+      );
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   return (
@@ -204,13 +336,23 @@ export default function Results() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Next Steps</h2>
           <div className="space-y-4">
-            {/* Download PDF - disabled for MVP */}
+            {/* Export PDF */}
             <button
-              disabled
-              className="w-full bg-gray-200 text-gray-400 py-3 px-6 rounded-lg font-medium cursor-not-allowed"
-              title="Coming soon"
+              onClick={handleExportPdf}
+              disabled={isGeneratingPdf}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              📄 Download PDF Report (Coming Soon)
+              {isGeneratingPdf ? (
+                <>
+                  <span className="inline-block animate-spin mr-2">⌛</span>
+                  Generating PDF...
+                </>
+              ) : (
+                <>
+                  <span className="mr-2">📄</span>
+                  Download PDF Report
+                </>
+              )}
             </button>
 
             {/* Adjust Budget */}
@@ -221,13 +363,30 @@ export default function Results() {
               ⚙️ Adjust Budget
             </button>
 
-            {/* Start New Evaluation */}
+            {/* Go to Settings */}
+            <button
+              onClick={() => navigate("/settings", { state: { from: "/results" } })}
+              className="w-full bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 transition-colors font-medium"
+            >
+              ⚙️ Update Company Info / View History
+            </button>
+
+            {/* Evaluate Another Position */}
             <button
               onClick={handleStartNewEvaluation}
               className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors font-medium"
             >
-              ✨ Start New Evaluation
+              ✨ Evaluate Another Position
             </button>
+          </div>
+
+          {/* Helper text for multi-position evaluations */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <p className="text-xs text-gray-600">
+              <span className="font-semibold">💡 Tip:</span> Evaluating multiple positions? After
+              completing each evaluation, update your company's current payroll in Settings to track
+              the cumulative impact on your budget.
+            </p>
           </div>
         </div>
 
@@ -256,10 +415,10 @@ export default function Results() {
             className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">Start New Evaluation?</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">Evaluate Another Position?</h3>
             <p className="text-gray-600 mb-6">
-              This will clear all current data including company profile, position details, and
-              calculations. This action cannot be undone.
+              This will clear your current position evaluation but keep your company profile. You
+              can evaluate another position for the same company.
             </p>
             <div className="flex gap-3">
               <button
@@ -270,9 +429,9 @@ export default function Results() {
               </button>
               <button
                 onClick={handleConfirmNewEvaluation}
-                className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                Clear & Start Over
+                Continue
               </button>
             </div>
           </div>

@@ -20,6 +20,7 @@ export interface CompanyProfile {
   size: string;
   location: string;
   annualRevenue: number;
+  currentPayroll: number;
   employeeCount: string;
   state: string;
 }
