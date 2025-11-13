@@ -4,6 +4,11 @@
 
 These scripts download and process Bureau of Labor Statistics (BLS) Occupational Employment and Wage Statistics (OES) data.
 
+There are two approaches to fetching BLS data:
+
+1. **XLSX Method** (`download-bls-data.js` + `process-bls-data.js`) - Downloads pre-compiled Excel files
+2. **API Method** (`fetch-bls-data.js`) - Fetches data directly from BLS Public API v2
+
 ## Data Source
 
 **URL:** https://download.bls.gov/pub/time.series/oe/
@@ -50,6 +55,8 @@ Example series ID: `OEUM004600000000113003`
 
 ## Usage
 
+### XLSX Method (Default)
+
 ```bash
 # Download data
 npm run data:download
@@ -59,6 +66,82 @@ npm run data:process
 
 # Or do both
 npm run data:setup
+```
+
+### API Method (New)
+
+The API fetcher provides more comprehensive data including state-level breakdowns.
+
+```bash
+# Fetch all data (resumable)
+node scripts/fetch-bls-data.js
+
+# Start fresh (reset progress)
+node scripts/fetch-bls-data.js --reset
+
+# Test mode: National data only, first 10 occupations
+node scripts/fetch-bls-data.js --geography=national --limit=10
+
+# Resume after hitting daily rate limit
+node scripts/fetch-bls-data.js --resume
+```
+
+**API Features:**
+- Fetches national + 15 state geographies per occupation
+- Resumable progress tracking (saves after each occupation)
+- Rate limit handling (500 requests/day with 10-request buffer)
+- Comprehensive wage data (9 data types per occupation)
+- Retry logic with exponential backoff
+- Detailed error logging
+
+**API Rate Limits:**
+- 500 requests per day (uses ~490 to leave buffer)
+- ~830 occupations × 16 geographies = ~13,280 total requests
+- Estimated time: ~27 days of automated fetching
+- The script automatically stops at daily limit and can resume the next day
+
+**Progress Tracking:**
+- Progress saved to: `data/progress.json`
+- Output saved to: `public/data/bls-api-data.json`
+- Errors logged to: `data/errors.log`
+
+**API Output Format:**
+```json
+{
+  "version": "1.0",
+  "dataDate": "2024-11-11",
+  "source": "BLS OEWS API",
+  "metadata": {
+    "fetchStarted": "2024-11-11T00:00:00Z",
+    "lastUpdated": "2024-11-11T10:30:00Z",
+    "totalOccupations": 830,
+    "completedOccupations": 427,
+    "geographies": ["National", "CA", "TX", ...]
+  },
+  "occupations": [
+    {
+      "code": "11-2021",
+      "title": "Marketing Managers",
+      "employment": 345200,
+      "wages": {
+        "hourlyMean": 85.45,
+        "hourlyMedian": 78.32,
+        "annualMean": 177750,
+        "annualMedian": 162910,
+        "percentile10": 71380,
+        "percentile25": 102310,
+        "percentile75": 208000,
+        "percentile90": 208000
+      },
+      "geography": "National",
+      "dataDate": "2024-05",
+      "stateData": {
+        "CA": { employment: 45600, wages: {...} },
+        "TX": { employment: 28900, wages: {...} }
+      }
+    }
+  ]
+}
 ```
 
 ## Output
