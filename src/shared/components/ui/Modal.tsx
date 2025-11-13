@@ -47,7 +47,8 @@ export const Modal: React.FC<ModalProps> = ({
         previousActiveElement.current.focus();
       }
     };
-  }, [isOpen, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
