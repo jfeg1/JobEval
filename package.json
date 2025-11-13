@@ -21,9 +21,13 @@
     "onet:download": "node scripts/download-onet-data.js",
     "onet:download:force": "node scripts/download-onet-data.js --force",
     "onet:verify": "node scripts/download-onet-data.js --verify",
-    "prepare": "husky"
+    "devextreme:setup": "node scripts/setup-devextreme-license.js",
+    "prepare": "husky",
+    "postinstall": "node scripts/setup-devextreme-license.js"
   },
   "dependencies": {
+    "devextreme": "^25.1.6",
+    "devextreme-react": "^25.1.6",
     "dexie": "^4.2.1",
     "dexie-react-hooks": "^4.2.0",
     "flowbite": "^3.1.2",

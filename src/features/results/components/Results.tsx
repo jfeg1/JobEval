@@ -144,6 +144,12 @@ export default function Results() {
     percentile90: selectedOccupation.wages.percentile90,
   };
 
+  // DEBUG: Log source data
+  console.log("📊 Results Page - BLS Data:");
+  console.log("  Occupation:", selectedOccupation.title);
+  console.log("  User Budget (target):", userBudget);
+  console.log("  BLS Percentiles:", blsData);
+
   // Calculate recommendation
   const recommendation = calculateRecommendation(userBudget, blsData);
   const recommendationText = formatRecommendationText(
@@ -153,6 +159,14 @@ export default function Results() {
     selectedOccupation.title,
     company.location
   );
+
+  // Map recommendation to market alignment for PDF
+  const marketAlignment: "below" | "within" | "above" =
+    recommendation.budgetStatus === "competitive"
+      ? "above"
+      : recommendation.budgetStatus === "below-median"
+        ? "within"
+        : "below";
 
   // Handle navigation
   const handleStartNewEvaluation = () => {
@@ -217,7 +231,7 @@ export default function Results() {
         affordableRangeMin: affordableRange.minimum,
         affordableRangeTarget: affordableRange.target,
         affordableRangeMax: affordableRange.maximum,
-        marketAlignment: recommendation,
+        marketAlignment: marketAlignment, // Use the mapped value
         gap: affordableRange.target - blsData.median,
         currentPayrollRatio: company.currentPayroll > 0 ? currentPayrollRatio : undefined,
         newPayrollRatio: company.currentPayroll > 0 ? newPayrollRatio : undefined,
@@ -309,18 +323,23 @@ export default function Results() {
             updated {selectedOccupation.dataDate})
           </p>
 
-          {/* Salary Range Bar */}
-          <SalaryRangeBar
-            percentiles={{
-              p10: blsData.percentile10,
-              p25: blsData.percentile25,
-              p50: blsData.median,
-              p75: blsData.percentile75,
-              p90: blsData.percentile90,
-            }}
-            userBudget={userBudget}
-            showLabels={true}
-          />
+          {/* Salary Range Bar - ensure full width container */}
+          <div
+            className="w-full"
+            style={{ width: "100%", minWidth: "0", maxWidth: "100%", display: "block" }}
+          >
+            <SalaryRangeBar
+              percentiles={{
+                p10: blsData.percentile10,
+                p25: blsData.percentile25,
+                p50: blsData.median,
+                p75: blsData.percentile75,
+                p90: blsData.percentile90,
+              }}
+              userBudget={userBudget}
+              showLabels={true}
+            />
+          </div>
         </div>
 
         {/* Recommendation Section */}

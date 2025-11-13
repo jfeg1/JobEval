@@ -410,7 +410,7 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
     yPosition = drawSectionHeader(doc, "Market Alignment", yPosition, margin);
 
     // Alignment status with color coding
-    const alignmentColor =
+    const alignmentColor: [number, number, number] =
       data.marketAlignment === "within"
         ? [34, 197, 94]
         : data.marketAlignment === "above"
@@ -485,7 +485,7 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
 
     const maxWidth = contentWidth - 10;
     recommendations.forEach((rec) => {
-      const lines = doc.splitTextToSize(rec, maxWidth);
+      const lines = doc.splitTextToSize(rec, maxWidth) as string[];
       lines.forEach((line: string) => {
         if (yPosition > pageHeight - 30) {
           doc.addPage();

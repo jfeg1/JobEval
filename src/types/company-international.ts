@@ -17,6 +17,7 @@ export interface CompanyProfile {
   size: string;
   location: string;
   annualRevenue: number;
+  currentPayroll: number;
   employeeCount: string;
   state: string;
 }
@@ -102,7 +103,8 @@ export function convertLegacyCompanyProfile(legacy: CompanyProfile): Internation
  * Convert international profile back to legacy format (for backwards compatibility)
  */
 export function convertToLegacyCompanyProfile(
-  international: InternationalCompanyProfile
+  international: InternationalCompanyProfile,
+  currentPayroll: number = 0
 ): CompanyProfile {
   return {
     name: international.name,
@@ -110,6 +112,7 @@ export function convertToLegacyCompanyProfile(
     size: international.size,
     location: international.location,
     annualRevenue: international.annualRevenue,
+    currentPayroll: currentPayroll, // Accept as parameter with default
     employeeCount: international.employeeCount,
     state: international.state || international.geography.region || "",
   };

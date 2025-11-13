@@ -154,7 +154,7 @@ export function SettingsPage() {
                     Target Salary: ${affordableRange.target.toLocaleString()}
                   </p>
                 </div>
-                <Button variant="primary" size="sm" onClick={() => navigate("/results")}>
+                <Button variant="primary" onClick={() => navigate("/results")}>
                   View Results
                 </Button>
               </div>
