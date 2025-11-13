@@ -306,10 +306,6 @@ export function initializeAutoSave(options?: AutoSaveOptions): void {
 
   // Mark as initialized
   initialized = true;
-
-  console.log(
-    `Auto-save initialized (interval: ${config.intervalMs}ms, key: ${config.storageKey})`
-  );
 }
 
 /**

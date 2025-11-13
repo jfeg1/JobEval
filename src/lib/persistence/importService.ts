@@ -351,12 +351,6 @@ export async function importAllData(
     }
 
     // Success!
-    console.log("Data import successful:", {
-      version: data.version,
-      exportDate: data.exportDate,
-      evaluationType: data.metadata.evaluationType,
-    });
-
     return {
       success: true,
       warnings: warnings.length > 0 ? warnings : undefined,

@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "dataSource": "O*NET 30.0",
+  "processedDate": "2025-11-10T16:42:48.167Z",
+  "processingTimeSeconds": 1.43,
+  "summary": {
+    "totalOccupations": 1016,
+    "totalAlternateTitles": 56495,
+    "totalSkills": 31290,
+    "totalKnowledge": 29502,
+    "totalAbilities": 46488,
+    "totalWorkActivities": 36654,
+    "totalWorkContext": 240448,
+    "uniqueTitlesInIndex": 46982
+  },
+  "averages": {
+    "skillsPerOccupation": 30.8,
+    "knowledgePerOccupation": 29,
+    "abilitiesPerOccupation": 45.8
+  },
+  "fileSizes": {
+    "occupationsJson": "40.46 MB",
+    "titlesIndexJson": "2.51 MB",
+    "totalSize": "42.97 MB"
+  },
+  "warnings": [],
+  "errors": []
+}
