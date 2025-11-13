@@ -4,7 +4,7 @@
 
 **Version:** 1.0  
 **Effective Date:** November 13, 2025  
-**Licensor:** [Your Name/Company]
+**Licensor:** Johnathen Evans-Guilbault
 
 ---
 
@@ -296,9 +296,9 @@ Waiver of one breach doesn't waive future breaches.
 
 To purchase a commercial license:
 
-**Email:** [your email]  
-**Website:** [your website]  
-**GitHub:** https://github.com/[your-username]/jobeval
+**Email:** johnathen.evans-guilbault@proton.me  
+**Website:** https://www.open-hr.work  
+**GitHub:** https://github.com/jfeg1/JobEval
 
 We'll discuss:
 - Your organization's needs
@@ -352,4 +352,4 @@ AGPL-3.0 is free for SMEs/nonprofits. Commercial license removes AGPL-3.0 obliga
 
 **This is a legally binding agreement. Have your legal counsel review before signing.**
 
-For questions or to purchase: [your email]
+For questions or to purchase: johnathen.evans-guilbault@proton.me

@@ -42,8 +42,8 @@ Under the conditions that:
 ### For Large Enterprises
 
 Organizations with more than 25 employees require a **commercial license**. Contact us for licensing terms:
-- Email: [your email]
-- GitHub: [your repo URL]
+- Email: johnathen.evans-guilbault@proton.me
+- GitHub: https://github.com/jfeg1/JobEval
 
 ## 4. User Responsibilities
 
@@ -202,7 +202,7 @@ See [LICENSE](LICENSE) for complete AGPL-3.0 terms.
 ## 15. Dispute Resolution
 
 ### Governing Law
-These Terms are governed by [Your Jurisdiction] law, without regard to conflict of law principles.
+These Terms are governed by French law, without regard to conflict of law principles.
 
 ### Disputes
 For disputes:
@@ -244,9 +244,9 @@ Constitute the entire agreement between you and us regarding the Service.
 ## 19. Contact Information
 
 Questions about these Terms:
-- **GitHub Issues:** https://github.com/[your-username]/jobeval/issues
-- **GitHub Discussions:** https://github.com/[your-username]/jobeval/discussions
-- **Email:** [your email]
+- **GitHub Issues:** https://github.com/jfeg1/JobEval/issues
+- **GitHub Discussions:** https://github.com/jfeg1/JobEval/discussions
+- **Email:** johnathen.evans-guilbault@proton.me
 
 ## 20. Acknowledgments
 

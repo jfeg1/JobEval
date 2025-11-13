@@ -1,11 +1,30 @@
-# JobEval v0.9
+# JobEval v0.9 ![BETA](https://img.shields.io/badge/status-BETA-orange.svg)
 
 **Fair compensation, democratized.**
 
 JobEval is an open-source salary evaluation tool designed to help small and medium enterprises (5-25 employees) establish defensible, market-aligned base salaries without expensive HR consultants.
 
 ![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
-![Version: 0.9.0](https://img.shields.io/badge/version-0.9.0-green.svg)
+![Version: 0.9.0](https://img.shields.io/badge/version-0.9.0-orange.svg)
+![CI Status](https://github.com/jfeg1/JobEval/workflows/CI/badge.svg)
+
+---
+
+## ⚠️ Beta Notice
+
+**JobEval is currently in public beta testing.** While the core features are functional and tested, you may encounter bugs or limitations. We encourage you to:
+
+- 🐛 **[Report Issues](https://github.com/jfeg1/JobEval/issues/new?template=bug_report.md)** - Found a bug? Let us know!
+- 💡 **[Request Features](https://github.com/jfeg1/JobEval/issues/new?template=feature_request.md)** - Have ideas? We'd love to hear them!
+- 💬 **[Join Discussion](https://github.com/jfeg1/JobEval/discussions)** - Share experiences and ask questions
+
+**Current Beta Limitations:**
+- Limited occupation coverage (20 roles, expanding to 1,000+ in v1.0)
+- National wage data only (no metro-area specificity yet)
+- PDF export available for Quick Advisory only (In-Depth coming in v1.0)
+- Manual testing only (automated tests coming post-MVP)
+
+**Your feedback shapes the future of JobEval!** Thank you for being an early adopter. 🙏
 
 ---
 
@@ -52,8 +71,8 @@ We believe fair compensation shouldn't require expensive consultants. JobEval pr
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/jobeval.git
-cd jobeval
+git clone https://github.com/jfeg1/JobEval.git
+cd JobEval
 ```
 
 2. **Install dependencies:**
@@ -173,7 +192,7 @@ JobEval supports evaluating multiple positions for the same company:
 
 **For Large Enterprises (>25 employees):**
 - Commercial license available
-- Contact: [licensing info to be added]
+- Contact: johnathen.evans-guilbault@proton.me
 
 This dual-licensing approach keeps the tool free for our target audience (SMEs) while creating sustainable funding through enterprise licenses.
 
@@ -237,8 +256,8 @@ We welcome contributions! Here's how to get involved:
 ## 💬 Support & Community
 
 - **Website:** [open-hr.work](https://www.open-hr.work)
-- **Issues:** [GitHub Issues](https://github.com/yourusername/jobeval/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yourusername/jobeval/discussions)
+- **Issues:** [GitHub Issues](https://github.com/jfeg1/JobEval/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/jfeg1/JobEval/discussions)
 
 ---
 

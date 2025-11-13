@@ -16,8 +16,8 @@ Before contributing, please ensure your contribution aligns with JobEval's core 
 
 1. **Fork and clone the repository**
 ```bash
-git clone https://github.com/yourusername/jobeval.git
-cd jobeval
+git clone https://github.com/jfeg1/JobEval.git
+cd JobEval
 ```
 
 2. **Install dependencies**
@@ -270,8 +270,7 @@ Currently, testing is manual. When automated testing is added:
 ### Getting Help
 - **Questions:** Open a Discussion on GitHub
 - **Bugs:** File an Issue
-- **Chat:** [Coming soon]
-- **Email:** [Coming soon]
+- **Email:** johnathen.evans-guilbault@proton.me
 
 ## 📄 License
 
