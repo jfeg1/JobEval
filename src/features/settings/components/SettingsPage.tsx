@@ -14,6 +14,8 @@ import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
 import { useCalculatorStore } from "@/features/calculator/calculatorStore";
 import { Button } from "@/shared/components/ui";
+import { BugReportModal } from "@/components/feedback/BugReportModal";
+import { FeatureRequestModal } from "@/components/feedback/FeatureRequestModal";
 
 interface EvaluatedPosition {
   title: string;
@@ -38,6 +40,8 @@ export function SettingsPage() {
   const hasCompletedEvaluation = !!(profile && position && selectedOccupation && affordableRange);
 
   const [evaluatedPositions, setEvaluatedPositions] = useState<EvaluatedPosition[]>([]);
+  const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+  const [isFeatureRequestOpen, setIsFeatureRequestOpen] = useState(false);
 
   useEffect(() => {
     // Load position history from localStorage
@@ -246,7 +250,133 @@ export function SettingsPage() {
             </p>
           </div>
         </section>
+
+        {/* Help & Feedback Section */}
+        <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">Help & Feedback</h2>
+          <p className="text-gray-600 mb-6">
+            Get help, report issues, or suggest improvements for JobEval.
+          </p>
+
+          <div className="space-y-4 mb-6">
+            {/* Report Bug */}
+            <div className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex-shrink-0 mt-1">
+                <svg
+                  className="w-6 h-6 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-gray-900 mb-1">Report a Bug</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Found something that's not working? Let us know so we can fix it.
+                </p>
+                <Button variant="secondary" onClick={() => setIsBugReportOpen(true)}>
+                  Report Bug
+                </Button>
+              </div>
+            </div>
+
+            {/* Request Feature */}
+            <div className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex-shrink-0 mt-1">
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-gray-900 mb-1">Request a Feature</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Have an idea to improve JobEval? We'd love to hear your suggestions.
+                </p>
+                <Button variant="secondary" onClick={() => setIsFeatureRequestOpen(true)}>
+                  Request Feature
+                </Button>
+              </div>
+            </div>
+
+            {/* External Resources */}
+            <div className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex-shrink-0 mt-1">
+                <svg
+                  className="w-6 h-6 text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-gray-900 mb-1">Documentation & Support</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Access guides, join discussions, or contact the team directly.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://github.com/jfeg1/JobEval#readme"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-700 underline"
+                  >
+                    Documentation
+                  </a>
+                  <a
+                    href="https://github.com/jfeg1/JobEval/discussions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-700 underline"
+                  >
+                    Community Discussions
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-orange-900">
+              <span className="font-semibold">Beta Feedback:</span> Your input helps shape JobEval!
+              All feedback creates a GitHub issue that we review and prioritize.
+            </p>
+          </div>
+        </section>
       </div>
+
+      {/* Feedback Modals */}
+      <BugReportModal isOpen={isBugReportOpen} onClose={() => setIsBugReportOpen(false)} />
+      <FeatureRequestModal
+        isOpen={isFeatureRequestOpen}
+        onClose={() => setIsFeatureRequestOpen(false)}
+      />
     </div>
   );
 }
