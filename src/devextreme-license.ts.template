@@ -1,0 +1,18 @@
+// DevExtreme License Configuration Template
+// If you are contributing to this project and need to run it locally,
+// you have two options:
+//
+// Option 1 (Trial): Use DevExtreme's 30-day trial
+// 1. Register for a free trial at: https://js.devexpress.com/Download/
+// 2. Get your trial key from the DevExpress Download Manager
+// 3. Rename this file to "devextreme-license.ts"
+// 4. Replace YOUR_LICENSE_KEY_HERE with your actual key
+//
+// Option 2 (For SMEs/Non-profits): Request a complimentary key
+// Contact the project maintainer for access to a development key
+// Email: [your-email@domain.com]
+//
+// IMPORTANT: Never commit your license key to version control!
+// The file "devextreme-license.ts" is already in .gitignore
+
+export const licenseKey = "YOUR_LICENSE_KEY_HERE";

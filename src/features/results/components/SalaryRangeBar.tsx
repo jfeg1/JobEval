@@ -1,5 +1,4 @@
 import { CurrencyDisplay } from "@/shared/components/CurrencyDisplay";
-import { getBudgetPositionPercentage } from "@/shared/utils/resultsCalculator";
 
 interface SalaryRangeBarProps {
   percentiles: {
@@ -28,85 +27,68 @@ export default function SalaryRangeBar({
   const range = p90 - p10;
   const getPosition = (value: number) => ((value - p10) / range) * 100;
 
-  const p25Position = getPosition(p25);
-  const p50Position = getPosition(p50);
-  const p75Position = getPosition(p75);
-  const userBudgetPosition = getBudgetPositionPercentage(userBudget, p10, p90);
+  const userBudgetPosition = getPosition(userBudget); // Keep for debugging
 
-  // Determine color based on budget position
-  const getBudgetColor = () => {
-    if (userBudget >= p50) return "bg-green-500";
-    if (userBudget >= p25) return "bg-yellow-500";
-    return "bg-orange-500";
-  };
+  // DEBUG: Log all values
+  console.log("🔍 SalaryRangeBar Debug:");
+  console.log("  P10:", p10);
+  console.log("  P25:", p25);
+  console.log("  P50:", p50);
+  console.log("  P75:", p75);
+  console.log("  P90:", p90);
+  console.log("  User Budget:", userBudget, "→ Position:", userBudgetPosition.toFixed(2) + "%");
+  console.log("  Range (P90-P10):", range);
+  console.log("  NOTE: Budget marker currently disabled for rebuild");
 
   return (
-    <div className="w-full">
+    <div className="w-full" style={{ width: "100%", minWidth: "0", maxWidth: "100%" }}>
       {/* Range bar */}
-      <div className="relative h-4 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 rounded-full mb-8">
-        {/* Percentile markers */}
-        <div
-          className="absolute top-0 w-0.5 h-4 bg-gray-600"
-          style={{ left: "0%" }}
-          aria-label="10th percentile marker"
-        />
-        <div
-          className="absolute top-0 w-0.5 h-4 bg-gray-700"
-          style={{ left: `${p25Position}%` }}
-          aria-label="25th percentile marker"
-        />
-        <div
-          className="absolute top-0 w-1 h-4 bg-gray-900"
-          style={{ left: `${p50Position}%` }}
-          aria-label="Median marker"
-        />
-        <div
-          className="absolute top-0 w-0.5 h-4 bg-gray-700"
-          style={{ left: `${p75Position}%` }}
-          aria-label="75th percentile marker"
-        />
-        <div
-          className="absolute top-0 w-0.5 h-4 bg-gray-600"
-          style={{ left: "100%", transform: "translateX(-100%)" }}
-          aria-label="90th percentile marker"
-        />
-
-        {/* User budget marker */}
+      <div
+        className="relative h-4 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 rounded-full mb-8"
+        style={{ width: "100%", minWidth: "0", maxWidth: "100%", display: "block" }}
+      >
+        {/* User budget marker - Dynamic positioning based on calculation */}
         {userBudget >= p10 && userBudget <= p90 && (
           <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
-            style={{ left: `${userBudgetPosition}%` }}
+            style={{
+              position: "absolute",
+              left: `calc(${userBudgetPosition}% - 12px)`, // Subtract half marker width to center
+              top: "0",
+              width: "24px",
+              height: "24px",
+              marginTop: "-4px", // Position slightly above bar
+              pointerEvents: "none",
+            }}
           >
+            {/* Marker circle */}
             <div
-              className={`w-6 h-6 ${getBudgetColor()} rounded-full border-4 border-white shadow-lg`}
+              style={{
+                width: "24px",
+                height: "24px",
+                borderRadius: "50%",
+                backgroundColor:
+                  userBudget >= p50 ? "#22c55e" : userBudget >= p25 ? "#eab308" : "#f97316",
+                border: "4px solid white",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
             />
-            <div className="absolute top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-              <div className="bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded">
-                Your Budget
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Budget outside range indicators */}
-        {userBudget < p10 && (
-          <div className="absolute -left-2 top-1/2 -translate-y-1/2">
-            <div className="flex items-center gap-2">
-              <span className="text-orange-600 text-xl">←</span>
-              <div className="text-xs font-medium text-orange-600 whitespace-nowrap">
-                Your Budget (Below Range)
-              </div>
-            </div>
-          </div>
-        )}
-
-        {userBudget > p90 && (
-          <div className="absolute -right-2 top-1/2 -translate-y-1/2">
-            <div className="flex items-center gap-2">
-              <div className="text-xs font-medium text-green-600 whitespace-nowrap">
-                Your Budget (Above Range)
-              </div>
-              <span className="text-green-600 text-xl">→</span>
+            {/* Label */}
+            <div
+              style={{
+                position: "absolute",
+                top: "30px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                whiteSpace: "nowrap",
+                backgroundColor: "#1f2937",
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "500",
+                padding: "4px 8px",
+                borderRadius: "4px",
+              }}
+            >
+              Your Budget
             </div>
           </div>
         )}

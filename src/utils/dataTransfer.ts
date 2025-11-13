@@ -85,6 +85,7 @@ export function transferQuickDataToWizard(): TransferResult {
       size: quickData.numEmployees ? convertNumEmployeesToSizeRange(quickData.numEmployees) : "",
       location: quickData.location || "",
       annualRevenue: quickData.annualRevenue || 0,
+      currentPayroll: 0, // Default to 0 for quick advisory transfers
       employeeCount: quickData.numEmployees ? quickData.numEmployees.toString() : "",
       state: "", // Could be extracted from location, but leaving empty for now
     };

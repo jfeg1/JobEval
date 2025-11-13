@@ -20,6 +20,7 @@ export interface CompanyProfile {
   size: string;
   location: string;
   annualRevenue: number;
+  currentPayroll: number;
   employeeCount: string;
   state: string;
 }
@@ -94,7 +95,10 @@ export const useCompanyStore = create<CompanyState>()(
 
       setInternationalProfile: (intlProfile) => {
         // Convert international profile to legacy format for storage
-        const legacyProfile = convertToLegacyCompanyProfile(intlProfile);
+        // Preserve currentPayroll if it exists in current profile
+        const currentProfile = get().profile;
+        const currentPayroll = currentProfile?.currentPayroll || 0;
+        const legacyProfile = convertToLegacyCompanyProfile(intlProfile, currentPayroll);
         set({ profile: legacyProfile });
       },
 

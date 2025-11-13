@@ -23,6 +23,9 @@ src/data/onet/raw/*.txt
 src/data/onet/raw/*.zip
 # Note: processed/*.json files are committed as they're part of the integrated dataset
 
+# DevExtreme license key - contains paid license, do not commit
+src/devextreme-license.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

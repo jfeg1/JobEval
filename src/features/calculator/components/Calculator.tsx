@@ -29,6 +29,9 @@ export default function Calculator() {
   } = useCalculatorStore();
 
   const [hasCalculated, setHasCalculated] = useState(!!affordableRange);
+  const [fullResult, setFullResult] = useState<ReturnType<typeof calculateAffordability> | null>(
+    null
+  );
 
   // Validate prerequisites
   useEffect(() => {
@@ -55,6 +58,9 @@ export default function Calculator() {
       additionalBudget,
     });
 
+    // Store full result for payroll ratio display
+    setFullResult(result);
+
     setCalculationResults({
       affordableRange: result.affordableRange,
       marketAlignment: result.marketAlignment,
@@ -68,7 +74,8 @@ export default function Calculator() {
   };
 
   const handleContinue = () => {
-    navigate("/results");
+    // Pass state to indicate we're completing a new evaluation
+    navigate("/results", { state: { fromCalculator: true } });
   };
 
   if (!company || !selectedOccupation) {
@@ -138,12 +145,25 @@ export default function Calculator() {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Minimum Wage ({company.state})</p>
-                <p className="text-2xl font-light text-gray-900">${minimumWageHourly}/hr</p>
+                <p className="text-sm text-gray-600 mb-1">Current Payroll</p>
+                <p className="text-2xl font-light text-gray-900">
+                  ${company.currentPayroll.toLocaleString()}
+                </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  ${(minimumWageHourly * 2080).toLocaleString()}/year
+                  {company.currentPayroll > 0
+                    ? `${((company.currentPayroll / company.annualRevenue) * 100).toFixed(1)}% of revenue`
+                    : "No current employees"}
                 </p>
               </div>
+            </div>
+
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>Minimum Wage ({company.state}):</strong> ${minimumWageHourly}/hr
+              </p>
+              <p className="text-xs text-gray-500">
+                ${(minimumWageHourly * 2080).toLocaleString()}/year (40 hrs/week × 52 weeks)
+              </p>
             </div>
 
             {/* Budget Percentage Slider */}
@@ -289,11 +309,56 @@ export default function Calculator() {
                     <p className="text-sm text-gray-700">
                       {gap !== null &&
                         (gap > 0
-                          ? `You're $${Math.abs(gap).toLocaleString()} above market median`
-                          : `You're $${Math.abs(gap).toLocaleString()} below market median`)}
+                          ? `You're ${Math.abs(gap).toLocaleString()} above market median`
+                          : `You're ${Math.abs(gap).toLocaleString()} below market median`)}
                     </p>
                   </div>
                 </div>
+
+                {/* Payroll Ratio Analysis */}
+                {affordableRange && fullResult?.payrollRatio && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium text-gray-800 mb-3">
+                      Payroll Ratio Analysis
+                    </h3>
+                    <div
+                      className={`p-4 rounded-lg border-2 ${
+                        fullResult.payrollRatio.status === "sustainable"
+                          ? "bg-green-50 border-green-300"
+                          : fullResult.payrollRatio.status === "warning"
+                            ? "bg-amber-50 border-amber-300"
+                            : "bg-red-50 border-red-300"
+                      }`}
+                    >
+                      <div className="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">Current Payroll Ratio</p>
+                          <p className="text-2xl font-medium text-gray-900">
+                            {fullResult.payrollRatio.currentRatio.toFixed(1)}%
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">New Payroll Ratio</p>
+                          <p className="text-2xl font-medium text-gray-900">
+                            {fullResult.payrollRatio.newRatio.toFixed(1)}%
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700 font-medium">
+                        {fullResult.payrollRatio.status === "sustainable" &&
+                          "✅ Sustainable - Under 35% of revenue"}
+                        {fullResult.payrollRatio.status === "warning" &&
+                          "⚠️ Warning - Approaching high end (35-45% of revenue)"}
+                        {fullResult.payrollRatio.status === "exceed" &&
+                          "⛔ Caution - Exceeds 45% of revenue"}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-2">
+                        Industry benchmark: Payroll should typically be 25-35% of revenue for
+                        healthy operations
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {/* Visual Comparison */}
                 <div className="mb-6">
