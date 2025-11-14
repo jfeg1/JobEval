@@ -39,3 +39,13 @@ src/devextreme-license.ts
 *.njsproj
 *.sln
 *.sw?
+
+# Development session notes
+*_FIX.md
+*_SUMMARY.md
+*_PROMPT.md
+
+# Development session notes
+*_FIX.md
+*_SUMMARY.md
+*_PROMPT.md
