@@ -161,12 +161,13 @@ export default function Results() {
   );
 
   // Map recommendation to market alignment for PDF
+  // budgetStatus values: "competitive" (above median), "below-median" (between 25th-50th), "low" (below 25th)
   const marketAlignment: "below" | "within" | "above" =
     recommendation.budgetStatus === "competitive"
       ? "above"
       : recommendation.budgetStatus === "below-median"
-        ? "within"
-        : "below";
+        ? "below" // Fixed: below-median means below the median
+        : "below"; // Fixed: "low" status also means below market
 
   // Handle navigation
   const handleStartNewEvaluation = () => {

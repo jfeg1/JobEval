@@ -194,19 +194,24 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
     doc.text(`Position: ${data.positionTitle}`, margin, yPosition);
     yPosition += 5;
 
-    // Generated date
+    // Generated date with timestamp
     doc.setFontSize(9);
     const dateStr = data.generatedDate.toLocaleDateString(data.locale || "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
-    doc.text(`Generated: ${dateStr}`, margin, yPosition);
+    const timeStr = data.generatedDate.toLocaleTimeString(data.locale || "en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    doc.text(`Generated: ${dateStr} at ${timeStr}`, margin, yPosition);
     yPosition += 12;
 
     // === EXECUTIVE SUMMARY BOX ===
     const boxY = yPosition;
-    const boxHeight = 40;
+    const boxHeight = 55; // Increased from 40 to accommodate payroll impact details
     doc.setFillColor(239, 246, 255); // Light blue
     doc.rect(margin, boxY, contentWidth, boxHeight, "F");
 
@@ -222,12 +227,17 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
 
     // Key metrics
     const summaryX = margin + 5;
+    doc.setFont("helvetica", "bold");
     doc.text(
-      `Recommended Salary Range: ${formatCurrency(data.affordableRangeMin, data.currencyCode, data.locale)} - ${formatCurrency(data.affordableRangeMax, data.currencyCode, data.locale)}`,
+      `Your Affordable Range: ${formatCurrency(data.affordableRangeMin, data.currencyCode, data.locale)} - ${formatCurrency(data.affordableRangeMax, data.currencyCode, data.locale)}`,
       summaryX,
       yPosition
     );
     yPosition += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`(Based on your company's budget and financial profile)`, summaryX + 2, yPosition);
+    yPosition += 6;
 
     doc.text(
       `Target Salary: ${formatCurrency(data.affordableRangeTarget, data.currencyCode, data.locale)}`,
@@ -250,12 +260,35 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
           ? "Above Market Rate"
           : "Within Market Range";
     doc.text(`Market Alignment: ${alignmentText}`, summaryX, yPosition);
-    yPosition += 5;
+    yPosition += 6;
 
-    if (data.newPayrollRatio !== undefined) {
+    // Payroll Impact section (more detailed)
+    if (data.newPayrollRatio !== undefined && data.currentPayrollRatio !== undefined) {
+      doc.setFont("helvetica", "bold");
+      doc.text("Payroll Impact:", summaryX, yPosition);
+      yPosition += 5;
+
+      doc.setFont("helvetica", "normal");
       doc.text(
-        `Projected Payroll Ratio: ${formatPercentage(data.newPayrollRatio)}`,
-        summaryX,
+        `Current: ${formatCurrency(data.currentPayroll, data.currencyCode, data.locale)} (${formatPercentage(data.currentPayrollRatio)})`,
+        summaryX + 2,
+        yPosition
+      );
+      yPosition += 4;
+
+      const newPayroll = data.currentPayroll + data.affordableRangeTarget;
+      doc.text(
+        `After Hire: ${formatCurrency(newPayroll, data.currencyCode, data.locale)} (${formatPercentage(data.newPayrollRatio)})`,
+        summaryX + 2,
+        yPosition
+      );
+      yPosition += 4;
+
+      const increase = newPayroll - data.currentPayroll;
+      const percentagePointIncrease = data.newPayrollRatio - data.currentPayrollRatio;
+      doc.text(
+        `Increase: +${formatCurrency(increase, data.currencyCode, data.locale)} (+${formatPercentage(percentagePointIncrease)} pts)`,
+        summaryX + 2,
         yPosition
       );
     }
@@ -391,10 +424,10 @@ export async function generateResultsPdf(data: ResultsPdfData): Promise<Blob> {
 
       const statusText =
         data.payrollStatus === "sustainable"
-          ? "✓ Sustainable (Under 35% of revenue)"
+          ? "Sustainable (Under 35% of revenue)"
           : data.payrollStatus === "warning"
-            ? "⚠ Warning (35-45% of revenue)"
-            : "⚠ Exceeds 45% of revenue";
+            ? "Warning (35-45% of revenue)"
+            : "Exceeds 45% of revenue";
 
       doc.text(`Status: ${statusText}`, margin + 5, yPosition);
       yPosition += 8;
