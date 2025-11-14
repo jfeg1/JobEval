@@ -364,42 +364,76 @@ export default function Calculator() {
                 <div className="mb-6">
                   <h3 className="text-lg font-medium text-gray-800 mb-3">Comparison to Market</h3>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Market 10th %ile</span>
-                      <span className="font-medium">
-                        ${selectedOccupation.wages.percentile10?.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Market 25th %ile</span>
-                      <span className="font-medium">
-                        ${selectedOccupation.wages.percentile25?.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-green-100 rounded border-2 border-green-300">
-                      <span className="font-medium text-gray-700">Market Median</span>
-                      <span className="font-bold text-gray-900">
-                        ${selectedOccupation.wages.annualMedian?.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-blue-100 rounded border-2 border-green-300">
-                      <span className="font-medium text-gray-700">Your Target</span>
-                      <span className="font-bold text-gray-900">
-                        ${affordableRange.target.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Market 75th %ile</span>
-                      <span className="font-medium">
-                        ${selectedOccupation.wages.percentile75?.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                      <span className="text-gray-600">Market 90th %ile</span>
-                      <span className="font-medium">
-                        ${selectedOccupation.wages.percentile90?.toLocaleString()}
-                      </span>
-                    </div>
+                    {[
+                      {
+                        label: "Market 10th %ile",
+                        value: selectedOccupation.wages.percentile10,
+                        isTarget: false,
+                        isMedian: false,
+                      },
+                      {
+                        label: "Market 25th %ile",
+                        value: selectedOccupation.wages.percentile25,
+                        isTarget: false,
+                        isMedian: false,
+                      },
+                      {
+                        label: "Market Median",
+                        value: selectedOccupation.wages.annualMedian,
+                        isTarget: false,
+                        isMedian: true,
+                      },
+                      {
+                        label: "Your Target",
+                        value: affordableRange.target,
+                        isTarget: true,
+                        isMedian: false,
+                      },
+                      {
+                        label: "Market 75th %ile",
+                        value: selectedOccupation.wages.percentile75,
+                        isTarget: false,
+                        isMedian: false,
+                      },
+                      {
+                        label: "Market 90th %ile",
+                        value: selectedOccupation.wages.percentile90,
+                        isTarget: false,
+                        isMedian: false,
+                      },
+                    ]
+                      .sort((a, b) => (a.value || 0) - (b.value || 0))
+                      .map((item, index) => (
+                        <div
+                          key={index}
+                          className={`flex justify-between items-center p-${item.isTarget || item.isMedian ? "3" : "2"} rounded border-2 ${
+                            item.isMedian
+                              ? "bg-green-100 border-green-300"
+                              : item.isTarget
+                                ? "bg-blue-100 border-blue-300"
+                                : "bg-gray-50 border-transparent"
+                          }`}
+                        >
+                          <span
+                            className={`${
+                              item.isTarget || item.isMedian
+                                ? "font-medium text-gray-700"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {item.label}
+                          </span>
+                          <span
+                            className={`${
+                              item.isTarget || item.isMedian
+                                ? "font-bold text-gray-900"
+                                : "font-medium"
+                            }`}
+                          >
+                            ${item.value?.toLocaleString()}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>
