@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Job evaluation** (`/evaluate`): point-factor evaluation on the four criteria in Article 4 of the EU Pay Transparency Directive (skills, effort, responsibility, working conditions), with five defined levels per factor.
+  - Imports project files from Open Job Analysis and shows the critical tasks and competencies beside the ratings as evidence.
+  - Pay policy set as explicit numbers: internal weight, market position, extra pay per 100 points, anchor (market-pegged or budgeted), range width. Shows the market's own slope next to the organisation's.
+  - Two ways to build pay: blended (one number) or layered (base pay from the internal line plus a separate market supplement, as U.S. federal pay separates basic pay and locality pay).
+  - Market line fitted only to benchmark jobs (duty match ≥ 70%); used to estimate a market rate for jobs without one.
+  - Grades and ranges, pay by component (base, location, market supplement, other), compa ratio on base pay, and an equity check by grade.
+  - Worked example using BLS OEWS May 2025 national medians.
+- Unit tests (Vitest) for the evaluation engine and the Open Job Analysis import; `npm test` runs in CI.
+- `@headlessui/react` for accessible tabs and radio groups.
+
 ### Removed
 - DevExtreme (`devextreme`, `devextreme-react`) and its licence-key setup: the postinstall script, template file, CI secret and setup guide. No component used it; it was only registered in `main.tsx`. JobEval no longer needs a commercial licence to build.
 - Flowbite, which was installed but never imported.

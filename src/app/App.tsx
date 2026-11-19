@@ -10,6 +10,7 @@ import Results from "../features/results/components/Results";
 import QuickAdvisoryForm from "../features/quick-advisory/components/QuickAdvisoryForm";
 import QuickAdvisoryResults from "../features/quick-advisory/components/QuickAdvisoryResults";
 import SettingsPage from "../features/settings/components/SettingsPage";
+import { JobEvaluationPage } from "../features/job-evaluation";
 import { StartupModal } from "../features/data-management/components/StartupModal";
 import { Navigation } from "../components/Navigation";
 import { BetaBanner } from "../components/BetaBanner/BetaBanner";
@@ -58,6 +59,7 @@ function App() {
             <Route path="/position/match" element={<BLSMatching />} />
             <Route path="/calculator" element={<Calculator />} />
             <Route path="/results" element={<Results />} />
+            <Route path="/evaluate" element={<JobEvaluationPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </div>

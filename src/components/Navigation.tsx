@@ -21,6 +21,7 @@ const routeLabels: Record<string, string> = {
   "/position/match": "Occupation Matching",
   "/calculator": "Budget Calculator",
   "/results": "Results",
+  "/evaluate": "Job Evaluation",
   "/settings": "Settings",
 };
 
