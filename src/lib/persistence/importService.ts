@@ -7,7 +7,6 @@
 
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
-import { useQuickAdvisoryStore } from "@/features/quick-advisory/quickAdvisoryStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import type { JobEvalExportData } from "./dataStructure";
@@ -217,36 +216,7 @@ export function populateStores(data: JobEvalExportData): void {
       usePositionStore.getState().clearPosition();
     }
 
-    // Populate quick advisory store
-    if (data.data.quickAdvisory) {
-      const quickAdvisoryStore = useQuickAdvisoryStore.getState();
-
-      // Set each field individually using the store's setters
-      if (data.data.quickAdvisory.jobTitle) {
-        quickAdvisoryStore.setJobTitle(data.data.quickAdvisory.jobTitle);
-      }
-      if (data.data.quickAdvisory.location) {
-        quickAdvisoryStore.setLocation(data.data.quickAdvisory.location);
-      }
-      if (data.data.quickAdvisory.numEmployees) {
-        quickAdvisoryStore.setNumEmployees(data.data.quickAdvisory.numEmployees);
-      }
-      if (data.data.quickAdvisory.proposedSalary !== undefined) {
-        quickAdvisoryStore.setProposedSalary(data.data.quickAdvisory.proposedSalary);
-      }
-      if (data.data.quickAdvisory.marketPositioning) {
-        quickAdvisoryStore.setMarketPositioning(data.data.quickAdvisory.marketPositioning);
-      }
-      if (data.data.quickAdvisory.annualRevenue !== undefined) {
-        quickAdvisoryStore.setRevenue(data.data.quickAdvisory.annualRevenue);
-      }
-      if (data.data.quickAdvisory.annualPayroll !== undefined) {
-        quickAdvisoryStore.setPayroll(data.data.quickAdvisory.annualPayroll);
-      }
-    } else {
-      // Reset to initial state if no data
-      useQuickAdvisoryStore.getState().resetQuickAdvisory();
-    }
+    // Quick Advisory has been removed: any quickAdvisory data in older files is ignored.
 
     // Populate wizard store
     if (data.data.wizard) {

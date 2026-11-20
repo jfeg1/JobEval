@@ -7,7 +7,6 @@
 
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
-import { useQuickAdvisoryStore } from "@/features/quick-advisory/quickAdvisoryStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { gatherAllData } from "./exportService";
@@ -257,7 +256,6 @@ function subscribeToStores(): void {
   // Subscribe to each store
   const companyUnsubscribe = useCompanyStore.subscribe(handleStoreChange);
   const matchingUnsubscribe = useMatchingStore.subscribe(handleStoreChange);
-  const quickAdvisoryUnsubscribe = useQuickAdvisoryStore.subscribe(handleStoreChange);
   const wizardUnsubscribe = useWizardStore.subscribe(handleStoreChange);
   const positionUnsubscribe = usePositionStore.subscribe(handleStoreChange);
 
@@ -265,7 +263,6 @@ function subscribeToStores(): void {
   storeUnsubscribers = [
     companyUnsubscribe,
     matchingUnsubscribe,
-    quickAdvisoryUnsubscribe,
     wizardUnsubscribe,
     positionUnsubscribe,
   ];

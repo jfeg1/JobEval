@@ -13,8 +13,6 @@ import { SaveStatusIndicator } from "./SaveStatusIndicator";
 // Define breadcrumb labels for each route
 const routeLabels: Record<string, string> = {
   "/": "Home",
-  "/quick": "Quick Advisory",
-  "/quick/results": "Quick Results",
   "/setup/company": "Company Setup",
   "/position/basic": "Position Info",
   "/position/details": "Position Details",

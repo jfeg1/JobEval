@@ -7,7 +7,6 @@
 
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
-import { useQuickAdvisoryStore } from "@/features/quick-advisory/quickAdvisoryStore";
 import { useWizardStore } from "@/features/position-wizard/wizardStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
 import type { JobEvalExportData, SaveError, WizardState } from "./dataStructure";
@@ -15,18 +14,8 @@ import type { JobEvalExportData, SaveError, WizardState } from "./dataStructure"
 /**
  * Determines the type of evaluation based on available data
  */
-function determineEvaluationType(
-  hasQuickAdvisory: boolean,
-  hasFullPosition: boolean
-): "quick" | "full" | "mixed" | "none" {
-  if (hasQuickAdvisory && hasFullPosition) {
-    return "mixed";
-  } else if (hasQuickAdvisory) {
-    return "quick";
-  } else if (hasFullPosition) {
-    return "full";
-  }
-  return "none";
+function determineEvaluationType(hasFullPosition: boolean): "full" | "none" {
+  return hasFullPosition ? "full" : "none";
 }
 
 /**
@@ -55,7 +44,6 @@ export function gatherAllData(): JobEvalExportData {
   // Access store states without hooks
   const companyState = useCompanyStore.getState();
   const matchingState = useMatchingStore.getState();
-  const quickAdvisoryState = useQuickAdvisoryStore.getState();
   const wizardState = useWizardStore.getState();
   const positionState = usePositionStore.getState();
 
@@ -77,9 +65,8 @@ export function gatherAllData(): JobEvalExportData {
   };
 
   // Determine evaluation type
-  const hasQuickAdvisory = !!quickAdvisoryState.formData.jobTitle;
   const hasFullPosition = hasPositionData(position);
-  const evaluationType = determineEvaluationType(hasQuickAdvisory, hasFullPosition);
+  const evaluationType = determineEvaluationType(hasFullPosition);
 
   // Get app version from environment or fallback
   const appVersion = import.meta.env.VITE_APP_VERSION || "0.0.0";
@@ -96,7 +83,7 @@ export function gatherAllData(): JobEvalExportData {
     data: {
       company: companyState.profile,
       position,
-      quickAdvisory: quickAdvisoryState.formData,
+      quickAdvisory: null,
       wizard,
       matching: matchingState.selectedOccupation,
     },

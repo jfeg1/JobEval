@@ -7,7 +7,6 @@
 
 import type { CompanyProfile } from "@/features/company-setup/companyStore";
 import type { SelectedOccupation } from "@/features/bls-matching/matchingStore";
-import type { QuickAdvisoryFormData } from "@/features/quick-advisory/types";
 import type { WizardStep } from "@/features/position-wizard/wizardStore";
 import type {
   BasicInfo,
@@ -57,8 +56,11 @@ export interface JobEvalExportData {
       compensation: Compensation | null;
     } | null;
 
-    /** Quick advisory form data */
-    quickAdvisory: QuickAdvisoryFormData | null;
+    /**
+     * Quick Advisory form data. The Quick Advisory flow has been removed:
+     * new exports always write null, and imports ignore any value here.
+     */
+    quickAdvisory: unknown;
 
     /** Wizard state */
     wizard: WizardState | null;
@@ -67,10 +69,9 @@ export interface JobEvalExportData {
     matching: SelectedOccupation | null;
   };
 
-  /** Results from completed evaluations */
+  /** Results from completed evaluations (legacy Quick Advisory results are ignored) */
   results?: {
-    /** Quick advisory results */
-    quick?: QuickAdvisoryResults;
+    quick?: unknown;
   };
 }
 
@@ -80,21 +81,6 @@ export interface JobEvalExportData {
 export interface WizardState {
   currentStep: number;
   steps: WizardStep[];
-}
-
-/**
- * Quick advisory calculation results
- */
-export interface QuickAdvisoryResults {
-  proposedSalary: number;
-  percentile: number;
-  targetRangeLabel: string;
-  gapDescription: string;
-  recommendedIncrease: number;
-  recommendedSalary: number;
-  currentPayrollRatio: number;
-  newPayrollRatio: number;
-  generatedDate: string; // ISO 8601
 }
 
 /**

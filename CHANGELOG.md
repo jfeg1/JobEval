@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publish workflow: deploys to GitHub Pages and attaches `jobeval.html` to tagged releases.
 
 ### Changed
+- The home page leads with Job Evaluation. The in-depth flow is now called "Budget and market check" and no longer claims to be a point-factor evaluation.
 - **Licence is now MIT** (was AGPL-3.0 with a commercial option). JobEval is fully open source, like Open Job Analysis.
 - The build is one self-contained `index.html` that opens straight from disk; routing uses URL hashes and the occupation data is bundled. This fixes the blank page when opening the built file directly.
 - Feedback buttons open a GitHub issue form instead of posting through a server.
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI runs on Node 20 and 22 (Vite 7 needs 20.19+).
 
 ### Removed
+- **Quick Advisory.** JobEval now leads with the full job evaluation on the four factors. Old `#/quick` links open the job evaluation; older backup files that contain Quick Advisory data still import (that part is ignored).
 - DevExtreme (`devextreme`, `devextreme-react`) and its licence-key setup: the postinstall script, template file, CI secret and setup guide. No component used it; it was only registered in `main.tsx`. JobEval no longer needs a commercial licence to build.
 - Flowbite, which was installed but never imported.
 - Vercel: the hosted feedback function, `vercel.json`, `.vercelignore`, `.env.local.example` and the `vercel` dev dependency.

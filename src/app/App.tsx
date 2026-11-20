@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "../features/landing/components/LandingPage";
 import CompanySetup from "../features/company-setup/components/CompanySetup";
 import PositionBasic from "../features/position-wizard/components/PositionBasic";
@@ -7,8 +7,6 @@ import PositionDetails from "../features/position-wizard/components/PositionDeta
 import BLSMatching from "../features/bls-matching/components/BLSMatching";
 import Calculator from "../features/calculator/components/Calculator";
 import Results from "../features/results/components/Results";
-import QuickAdvisoryForm from "../features/quick-advisory/components/QuickAdvisoryForm";
-import QuickAdvisoryResults from "../features/quick-advisory/components/QuickAdvisoryResults";
 import SettingsPage from "../features/settings/components/SettingsPage";
 import { JobEvaluationPage } from "../features/job-evaluation";
 import { StartupModal } from "../features/data-management/components/StartupModal";
@@ -42,8 +40,8 @@ function App() {
         <div className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/quick" element={<QuickAdvisoryForm />} />
-            <Route path="/quick/results" element={<QuickAdvisoryResults />} />
+            {/* Quick Advisory was removed; send old links to the job evaluation */}
+            <Route path="/quick/*" element={<Navigate to="/evaluate" replace />} />
             <Route path="/setup/company" element={<CompanySetup />} />
             <Route path="/position/basic" element={<PositionBasic />} />
             {/* Placeholder for future routes */}
