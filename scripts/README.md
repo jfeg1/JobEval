@@ -102,7 +102,7 @@ node scripts/fetch-bls-data.js --resume
 
 **Progress Tracking:**
 - Progress saved to: `data/progress.json`
-- Output saved to: `public/data/bls-api-data.json`
+- Output saved to: `src/data/bls-api-data.json`
 - Errors logged to: `data/errors.log`
 
 **API Output Format:**
@@ -146,7 +146,7 @@ node scripts/fetch-bls-data.js --resume
 
 ## Output
 
-The processed data is saved to `public/data/bls-data.json` with this structure:
+The processed data is saved to `src/data/bls-data.json` with this structure:
 
 ```json
 {

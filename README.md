@@ -1,285 +1,64 @@
-# JobEval v0.9 ![BETA](https://img.shields.io/badge/status-BETA-orange.svg)
+# JobEval
 
-**Fair compensation, democratized.**
+A free, open source tool that helps a small business set pay it can explain: evaluate each job on clear factors, compare with what the market pays, and build a simple pay structure.
 
-JobEval is an open-source salary evaluation tool designed to help small and medium enterprises (5-25 employees) establish defensible, market-aligned base salaries without expensive HR consultants.
+It runs entirely in your web browser. There is nothing to install, no account, and no server. Your data stays on your computer.
 
-![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
-![Version: 0.9.0](https://img.shields.io/badge/version-0.9.0-orange.svg)
-![CI Status](https://github.com/jfeg1/JobEval/workflows/CI/badge.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![CI](https://github.com/jfeg1/JobEval/workflows/CI/badge.svg)
 
----
+JobEval is in beta. [Report a bug](https://github.com/jfeg1/JobEval/issues/new?template=bug_report.md), [suggest a feature](https://github.com/jfeg1/JobEval/issues/new?template=feature_request.md) or [start a discussion](https://github.com/jfeg1/JobEval/discussions).
 
-## ⚠️ Beta Notice
+## How to use it
 
-**JobEval is currently in public beta testing.** While the core features are functional and tested, you may encounter bugs or limitations. We encourage you to:
+**Online:** open **https://jfeg1.github.io/JobEval/**.
 
-- 🐛 **[Report Issues](https://github.com/jfeg1/JobEval/issues/new?template=bug_report.md)** - Found a bug? Let us know!
-- 💡 **[Request Features](https://github.com/jfeg1/JobEval/issues/new?template=feature_request.md)** - Have ideas? We'd love to hear them!
-- 💬 **[Join Discussion](https://github.com/jfeg1/JobEval/discussions)** - Share experiences and ask questions
+**Offline:** download `jobeval.html` from the [latest release](https://github.com/jfeg1/JobEval/releases/latest) and double-click it. The whole app is in that one file.
 
-**Current Beta Limitations:**
-- Limited occupation coverage (20 roles, expanding to 1,000+ in v1.0)
-- National wage data only (no metro-area specificity yet)
-- PDF export available for Quick Advisory only (In-Depth coming in v1.0)
-- Manual testing only (automated tests coming post-MVP)
+Then choose what you need:
 
-**Your feedback shapes the future of JobEval!** Thank you for being an early adopter. 🙏
+- **Job evaluation** – rate each job on skills, effort, responsibility and working conditions (the four criteria in the EU Pay Transparency Directive), set your pay philosophy as numbers, and get grades, pay ranges, pay by component and an equity check. It can import a project file from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app), so the ratings sit beside the evidence from your job analysis.
+- **Quick advisory** – a quick check of one salary against market data, with a PDF summary.
+- **In-depth analysis** – company profile, job details, occupation match and an affordability calculator.
 
----
+### Saving your work
 
-## 🎯 Purpose
+The app autosaves in your browser, but browser storage can be cleared. Use **Export Data** to keep a `.json` file, and **Import Data** to pick it up again on any computer.
 
-We believe fair compensation shouldn't require expensive consultants. JobEval provides SMEs with the same systematic, data-driven salary evaluation tools used by large organizations—completely free and open source.
+## Data
 
-**Core Mission:** Level the playing field for smaller organizations who are tired of the underdog having to pay for everything.
+- **Job evaluation:** the built-in example uses U.S. Bureau of Labor Statistics national medians (OEWS, May 2025). You enter the market rates for your own jobs.
+- **Quick advisory and in-depth analysis:** these still use a small **sample** dataset of 20 occupations built for development. Treat their figures as a demonstration, not as market data. Replacing it with full BLS and O*NET data is the next item on the roadmap.
 
----
+## Privacy
 
-## ✨ Features
+Everything happens in your browser. The app makes no network requests and has no analytics. Your work is stored in your browser and in the files you choose to save. The feedback links open GitHub in a new tab; nothing is sent from the app itself.
 
-### Quick Advisory (2-3 minutes)
-- ⚡ Rapid market benchmarking against BLS wage data
-- 💰 Instant affordability analysis
-- 📊 Market positioning comparison
-- 📄 PDF export of recommendations
+## Development
 
-### In-Depth Analysis (30 minutes)
-- 🎯 Point-factor job evaluation methodology
-- 📈 Comprehensive position analysis
-- 💼 Detailed skills and knowledge assessment
-- 🔍 BLS occupation matching (20+ common roles)
-- 💾 Auto-save with data export/import
-- 🔁 Multi-position evaluation within same company
+Requires Node.js 20.19+ or 22.12+.
 
-### Job Evaluation
-- ⚖️ Point-factor evaluation on the EU Pay Transparency Directive's four criteria
-- 📥 Imports job analyses from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app)
-- 🧭 Pay philosophy as numbers: mix internal value and market your way
-- 🧾 Pay by component (base, location, market supplement, other) with compa ratios and an equity check
-
-### Technical Highlights
-- 🌍 International support (US, Canada + 11 more countries)
-- 🔒 Privacy-first: 100% local data storage (no cloud, no tracking)
-- 📱 Responsive design for desktop and mobile
-- ♿ Accessibility-focused UI
-- 🔄 Real-time BLS wage data integration
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18.x or 20.x
-- npm
-
-### Installation
-
-1. **Clone the repository:**
 ```bash
 git clone https://github.com/jfeg1/JobEval.git
 cd JobEval
+npm ci
+npm run dev          # development server at http://localhost:5173
+npm test             # unit tests
+npm run build        # builds dist/index.html, one self-contained file
 ```
 
-2. **Install dependencies:**
-```bash
-npm install
-```
+Before a pull request: `npm run type-check && npm run lint && npm run format:check && npm test && npm run build`.
 
-3. **Run the development server:**
-```bash
-npm run dev
-```
+Built with React, TypeScript, Vite, Tailwind CSS, Zustand and jsPDF. Data scripts are described in [`scripts/README.md`](scripts/README.md). See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute.
 
-4. **Open your browser:**
-Navigate to `http://localhost:5173`
+### Publishing (for maintainers)
 
-### Building for Production
+The **Publish** workflow builds the app and deploys it to GitHub Pages on every push to `main`. One-time setup: in the repository, open **Settings → Pages** and set **Source** to **GitHub Actions**. To make an offline download, push a version tag (for example `git tag v0.10.0 && git push origin v0.10.0`); the workflow attaches `jobeval.html` to that release.
 
-```bash
-npm run build
-```
+## Disclaimer
 
-The production build will be in the `dist/` directory.
+JobEval supports pay decisions; it does not replace professional, legal or financial advice. Check local law, collective agreements and your own circumstances before you set pay.
 
----
+## License
 
-## 📊 Data Sources
-
-- **Occupation Data:** O*NET 30.0 (U.S. Department of Labor)
-- **Wage Data:** Bureau of Labor Statistics (BLS) - May 2024
-- **Coverage:** 20 common SME occupations across management, business operations, technology, and support roles
-
----
-
-## 🛠️ Development
-
-### Available Scripts
-
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript type checking
-npm run format       # Format code with Prettier
-npm run format:check # Check code formatting
-```
-
-### Tech Stack
-
-- **Frontend:** React 19, TypeScript, Vite
-- **Routing:** React Router v7
-- **State:** Zustand
-- **Styling:** Tailwind CSS v4
-- **Database:** Dexie (IndexedDB)
-- **PDF Generation:** jsPDF
-- **Quality:** ESLint, Prettier, Husky
-
----
-
-## 📖 Usage
-
-### Quick Advisory Flow
-1. Enter job title, location, and proposed salary
-2. Specify number of employees in role
-3. Select hiring strategy (market leader, competitive, budget-conscious)
-4. (Optional) Add revenue/payroll for affordability analysis
-5. View instant results with PDF export
-
-### In-Depth Analysis Flow
-1. **Company Setup:** Enter company profile and financials
-2. **Position Definition:** Define role basics and detailed requirements
-3. **BLS Matching:** Match to closest occupation in database
-4. **Calculator:** Set affordable salary range
-5. **Results:** View comprehensive market analysis
-
-### Evaluating Multiple Positions
-
-JobEval supports evaluating multiple positions for the same company:
-
-1. **Complete your first evaluation** - Follow the In-Depth Analysis flow completely
-2. **Click "Evaluate Another Position"** - This keeps your company profile but clears position data
-3. **Update payroll tracking (recommended):**
-   - Go to Settings → Company Profile
-   - Update "Current Payroll" to reflect the newly committed salary
-   - This helps track cumulative payroll impact across multiple hires
-4. **Continue with next position** - Repeat the process for each role
-
-**Note:** In v0.9, payroll tracking is manual. v1.0 will include automatic position history and cumulative budget tracking.
-
----
-
-## 🔐 Privacy & Data
-
-**Your data never leaves your device.** JobEval stores all information locally in your browser using IndexedDB. No servers, no cloud, no tracking, no analytics.
-
-- ✅ 100% local storage
-- ✅ No user accounts required
-- ✅ No data transmission
-- ✅ Export your data anytime
-- ✅ Complete control over your information
-
----
-
-## 📜 License
-
-### Dual Licensing Model
-
-**For SMEs, Nonprofits, and Open Source Projects:**
-- Licensed under GNU Affero General Public License v3.0 (AGPL-3.0)
-- Free to use, modify, and distribute
-- Must share modifications under same license
-- See [LICENSE](LICENSE) for full terms
-
-**For Large Enterprises (>25 employees):**
-- Commercial license available
-- Contact: johnathen.evans-guilbault@proton.me
-
-This dual-licensing approach keeps the tool free for our target audience (SMEs) while creating sustainable funding through enterprise licenses.
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how to get involved:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Contribution Guidelines
-- Follow existing code style (enforced by ESLint + Prettier)
-- Add tests for new features (when testing infrastructure is added)
-- Update documentation as needed
-- Keep PRs focused and atomic
-
----
-
-## 🗺️ Roadmap
-
-### v0.9 (Current - Beta)
-- ✅ Quick Advisory with PDF export
-- ✅ In-Depth Analysis flow
-- ✅ Multi-position evaluation support
-- ✅ 20 common occupations
-- ✅ US/Canada support
-- ✅ Auto-save functionality
-
-### v1.0 (Planned)
-- Full O*NET occupation database (1,000+ roles)
-- Automatic position history tracking
-- Cumulative payroll budget management
-- Multi-position PDF export
-- Enhanced visualization components
-- Expanded international support
-
-### Future Releases
-- Multi-user role-based access controls
-- Advanced analytics and reporting
-- Salary gap analysis tools
-- Integration with HRIS systems
-- Cloud sync option (opt-in, paid feature)
-
----
-
-## 🐛 Known Limitations (v0.9)
-
-- **Occupation Coverage:** 20 common roles (expanding to 1,000+ in v1.0)
-- **Geography:** National-level data only (no metro-area specificity yet)
-- **Multi-Position Tracking:** Manual payroll updates (automatic tracking in v1.0)
-- **PDF Export:** Individual positions only (multi-position export in v1.0)
-- **Testing:** Manual testing only (automated tests coming post-MVP)
-
----
-
-## 💬 Support & Community
-
-- **Website:** [open-hr.work](https://www.open-hr.work)
-- **Issues:** [GitHub Issues](https://github.com/jfeg1/JobEval/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/jfeg1/JobEval/discussions)
-
----
-
-## 🙏 Acknowledgments
-
-- U.S. Department of Labor for O*NET data
-- Bureau of Labor Statistics for wage data
-- Open source community for excellent tools and libraries
-
----
-
-## ⚖️ Disclaimer
-
-JobEval provides guidance based on public market data and your company's financial profile. Final compensation decisions should consider:
-- Local labor laws and regulations
-- Cost of living adjustments
-- Industry-specific factors
-- Professional legal and financial counsel
-
-This tool is for informational purposes and does not constitute legal or financial advice.
-
----
-
-**Built with ❤️ for small businesses by people who believe fair compensation should be accessible to everyone.**
+[MIT](LICENSE). Free to use, change and share.

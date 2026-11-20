@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@config "../../../tailwind.config.js";
 
 @layer base {
   * {
@@ -181,4 +182,12 @@
       transform: translateX(0);
     }
   }
+}
+
+/* Page frame (moved from the old App.css starter file) */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }

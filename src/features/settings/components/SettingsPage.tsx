@@ -14,8 +14,7 @@ import { usePositionStore } from "@/features/position-wizard/positionStore";
 import { useMatchingStore } from "@/features/bls-matching/matchingStore";
 import { useCalculatorStore } from "@/features/calculator/calculatorStore";
 import { Button } from "@/shared/components/ui";
-import { BugReportModal } from "@/components/feedback/BugReportModal";
-import { FeatureRequestModal } from "@/components/feedback/FeatureRequestModal";
+import { openBugReport, openFeatureRequest } from "@/shared/lib/feedbackLinks";
 
 interface EvaluatedPosition {
   title: string;
@@ -40,8 +39,6 @@ export function SettingsPage() {
   const hasCompletedEvaluation = !!(profile && position && selectedOccupation && affordableRange);
 
   const [evaluatedPositions, setEvaluatedPositions] = useState<EvaluatedPosition[]>([]);
-  const [isBugReportOpen, setIsBugReportOpen] = useState(false);
-  const [isFeatureRequestOpen, setIsFeatureRequestOpen] = useState(false);
 
   useEffect(() => {
     // Load position history from localStorage
@@ -282,7 +279,7 @@ export function SettingsPage() {
                 <p className="text-sm text-gray-600 mb-3">
                   Found something that's not working? Let us know so we can fix it.
                 </p>
-                <Button variant="secondary" onClick={() => setIsBugReportOpen(true)}>
+                <Button variant="secondary" onClick={openBugReport}>
                   Report Bug
                 </Button>
               </div>
@@ -311,7 +308,7 @@ export function SettingsPage() {
                 <p className="text-sm text-gray-600 mb-3">
                   Have an idea to improve JobEval? We'd love to hear your suggestions.
                 </p>
-                <Button variant="secondary" onClick={() => setIsFeatureRequestOpen(true)}>
+                <Button variant="secondary" onClick={openFeatureRequest}>
                   Request Feature
                 </Button>
               </div>
@@ -365,18 +362,12 @@ export function SettingsPage() {
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
             <p className="text-sm text-orange-900">
               <span className="font-semibold">Beta Feedback:</span> Your input helps shape JobEval!
-              All feedback creates a GitHub issue that we review and prioritize.
+              Each button opens a GitHub issue form in a new tab. You need a free GitHub account to
+              post it.
             </p>
           </div>
         </section>
       </div>
-
-      {/* Feedback Modals */}
-      <BugReportModal isOpen={isBugReportOpen} onClose={() => setIsBugReportOpen(false)} />
-      <FeatureRequestModal
-        isOpen={isFeatureRequestOpen}
-        onClose={() => setIsFeatureRequestOpen(false)}
-      />
     </div>
   );
 }

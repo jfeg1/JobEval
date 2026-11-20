@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "../features/landing/components/LandingPage";
 import CompanySetup from "../features/company-setup/components/CompanySetup";
@@ -15,15 +15,10 @@ import { StartupModal } from "../features/data-management/components/StartupModa
 import { Navigation } from "../components/Navigation";
 import { BetaBanner } from "../components/BetaBanner/BetaBanner";
 import { Footer } from "../components/Footer/Footer";
-import { BugReportModal } from "../components/feedback/BugReportModal";
-import { FeatureRequestModal } from "../components/feedback/FeatureRequestModal";
+import { openBugReport, openFeatureRequest } from "../shared/lib/feedbackLinks";
 import { initializeAutoSave } from "../lib/persistence/autoSaveManager";
-import "./App.css";
 
 function App() {
-  const [isBugReportOpen, setIsBugReportOpen] = useState(false);
-  const [isFeatureRequestOpen, setIsFeatureRequestOpen] = useState(false);
-
   useEffect(() => {
     // Initialize auto-save on app mount
     initializeAutoSave({
@@ -38,10 +33,7 @@ function App() {
 
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Beta Banner */}
-        <BetaBanner
-          onReportBug={() => setIsBugReportOpen(true)}
-          onRequestFeature={() => setIsFeatureRequestOpen(true)}
-        />
+        <BetaBanner onReportBug={openBugReport} onRequestFeature={openFeatureRequest} />
 
         {/* Navigation with data controls */}
         <Navigation />
@@ -65,18 +57,8 @@ function App() {
         </div>
 
         {/* Footer */}
-        <Footer
-          onReportBug={() => setIsBugReportOpen(true)}
-          onRequestFeature={() => setIsFeatureRequestOpen(true)}
-        />
+        <Footer onReportBug={openBugReport} onRequestFeature={openFeatureRequest} />
       </div>
-
-      {/* Feedback Modals */}
-      <BugReportModal isOpen={isBugReportOpen} onClose={() => setIsBugReportOpen(false)} />
-      <FeatureRequestModal
-        isOpen={isFeatureRequestOpen}
-        onClose={() => setIsFeatureRequestOpen(false)}
-      />
     </>
   );
 }
