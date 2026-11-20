@@ -17,7 +17,7 @@ const LandingPage: React.FC = () => {
         </div>
 
         {/* Two Cards - Side by Side */}
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           {/* Quick Advisory Card */}
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow duration-200">
             <div className="mb-6">
@@ -84,6 +84,40 @@ const LandingPage: React.FC = () => {
 
             <Button variant="primary" className="w-full" onClick={() => navigate("/setup/company")}>
               Start In-Depth Analysis
+            </Button>
+          </div>
+
+          {/* Job Evaluation Card */}
+          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow duration-200">
+            <div className="mb-6">
+              <div className="text-3xl mb-3">⚖️</div>
+              <h2 className="text-2xl font-semibold text-sage-900 mb-2">Job Evaluation</h2>
+              <p className="text-sm font-medium text-accent uppercase tracking-wide mb-4">
+                For several jobs
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Rate jobs from your job analysis, set your pay philosophy, and build grades and
+                ranges you can explain
+              </p>
+            </div>
+
+            <ul className="space-y-3 mb-8 text-sm text-slate-600">
+              <li className="flex items-start">
+                <span className="text-sage-600 mr-2">✓</span>
+                <span>Imports Open Job Analysis files</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-sage-600 mr-2">✓</span>
+                <span>Internal value and market, mixed your way</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-sage-600 mr-2">✓</span>
+                <span>Pay components and an equity check</span>
+              </li>
+            </ul>
+
+            <Button variant="primary" className="w-full" onClick={() => navigate("/evaluate")}>
+              Start Job Evaluation
             </Button>
           </div>
         </div>

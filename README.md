@@ -52,6 +52,12 @@ We believe fair compensation shouldn't require expensive consultants. JobEval pr
 - 💾 Auto-save with data export/import
 - 🔁 Multi-position evaluation within same company
 
+### Job Evaluation
+- ⚖️ Point-factor evaluation on the EU Pay Transparency Directive's four criteria
+- 📥 Imports job analyses from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app)
+- 🧭 Pay philosophy as numbers: mix internal value and market your way
+- 🧾 Pay by component (base, location, market supplement, other) with compa ratios and an equity check
+
 ### Technical Highlights
 - 🌍 International support (US, Canada + 11 more countries)
 - 🔒 Privacy-first: 100% local data storage (no cloud, no tracking)
