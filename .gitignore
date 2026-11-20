@@ -7,27 +7,29 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build output
 node_modules
 dist
 dist-ssr
+
+# Environment files
 *.local
+.env*.local
 
 # Vercel
 .vercel
 
 # BLS data files (root level only, not src/data/)
 /data/
-/data/raw/
-/data/raw/*.zip
-/data/raw/extracted/
 
-# O*NET data files - only ignore raw downloaded data
+# O*NET raw downloads (processed/*.json files are committed)
 src/data/onet/raw/*.txt
 src/data/onet/raw/*.zip
-# Note: processed/*.json files are committed as they're part of the integrated dataset
 
+# Local research inputs (large source files; not distributed with the app)
+/Research/
 
-# Editor directories and files
+# Editor and OS files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -37,11 +39,6 @@ src/data/onet/raw/*.zip
 *.njsproj
 *.sln
 *.sw?
-
-# Development session notes
-*_FIX.md
-*_SUMMARY.md
-*_PROMPT.md
 
 # Development session notes
 *_FIX.md
