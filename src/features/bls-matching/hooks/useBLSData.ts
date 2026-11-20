@@ -37,22 +37,11 @@ export function useBLSData() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch("/data/bls-data.json");
-        if (!response.ok) {
-          throw new Error("Failed to load BLS data");
-        }
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
+    // The dataset is bundled with the app so it works offline and from disk.
+    import("@/data/bls-data.json")
+      .then((module) => setData(module.default as unknown as BLSData))
+      .catch((err: unknown) => setError(err instanceof Error ? err.message : "Unknown error"))
+      .finally(() => setLoading(false));
   }, []);
 
   return { data, loading, error };

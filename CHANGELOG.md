@@ -17,12 +17,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Worked example using BLS OEWS May 2025 national medians.
 - Unit tests (Vitest) for the evaluation engine and the Open Job Analysis import; `npm test` runs in CI.
 - `@headlessui/react` for accessible tabs and radio groups.
+- Publish workflow: deploys to GitHub Pages and attaches `jobeval.html` to tagged releases.
+
+### Changed
+- **Licence is now MIT** (was AGPL-3.0 with a commercial option). JobEval is fully open source, like Open Job Analysis.
+- The build is one self-contained `index.html` that opens straight from disk; routing uses URL hashes and the occupation data is bundled. This fixes the blank page when opening the built file directly.
+- Feedback buttons open a GitHub issue form instead of posting through a server.
+- Tailwind now reads `tailwind.config.js`, so the sage and accent colours render again.
+- CI runs on Node 20 and 22 (Vite 7 needs 20.19+).
 
 ### Removed
 - DevExtreme (`devextreme`, `devextreme-react`) and its licence-key setup: the postinstall script, template file, CI secret and setup guide. No component used it; it was only registered in `main.tsx`. JobEval no longer needs a commercial licence to build.
 - Flowbite, which was installed but never imported.
+- Vercel: the hosted feedback function, `vercel.json`, `.vercelignore`, `.env.local.example` and the `vercel` dev dependency.
+- `COMMERCIAL-LICENSE.md`, `TERMS_OF_SERVICE.md` and `PRIVACY_POLICY.md`; the README now has a short privacy note.
+- Unused files and dependencies (`dexie`, `dexie-react-hooks`, `autoprefixer`), and the starter `App.css` and Vite logo.
 
-## [0.9.0] - 2024-11-13
+## [0.9.0] - 2025-11-13
 
 ### 🎉 Initial MVP Release
 
@@ -124,26 +135,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Browser support: Modern evergreen browsers
 - Database: IndexedDB via Dexie
 - Build output: Static SPA (Single Page Application)
-
----
-
-## [Unreleased]
-
-### Planned for v1.0
-- Full O*NET occupation database (1,000+ occupations)
-- PDF export for In-Depth Analysis results
-- Enhanced visualization components
-- Metro-area geographic specificity
-- Automated testing suite
-- Expanded documentation
-
-### Future Considerations
-- Multi-user role-based access controls
-- Advanced analytics and reporting
-- Salary gap analysis tools
-- HRIS system integrations
-- Optional cloud sync (paid feature)
-- Mobile native applications
 
 ---
 

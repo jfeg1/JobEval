@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -42,21 +42,11 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Verify build artifacts
+      - name: Verify the build is one self-contained file
         run: |
-          test -d dist
-          test -f dist/index.html
+          test "$(ls dist)" = "index.html"
 
       - name: Check bundle size
         run: |
-          SIZE=$(du -sh dist | cut -f1)
+          SIZE=$(du -sh dist/index.html | cut -f1)
           echo "Build size: $SIZE"
-
-      # Verify persistence features
-      - name: Verify persistence files exist
-        run: |
-          test -f src/lib/persistence/dataStructure.ts
-          test -f src/lib/persistence/exportService.ts
-          test -f src/lib/persistence/importService.ts
-          test -f src/lib/persistence/autoSaveManager.ts
-          test -f src/lib/errorReporting.ts

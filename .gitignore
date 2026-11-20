@@ -16,9 +16,6 @@ dist-ssr
 *.local
 .env*.local
 
-# Vercel
-.vercel
-
 # BLS data files (root level only, not src/data/)
 /data/
 

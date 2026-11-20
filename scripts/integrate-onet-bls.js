@@ -25,7 +25,7 @@ const ONET_DATA_PATH = path.join(
   "processed",
   "occupations.json",
 );
-const BLS_DATA_PATH = path.join(__dirname, "..", "public", "data", "bls-data.json");
+const BLS_DATA_PATH = path.join(__dirname, "..", "src", "data", "bls-data.json");
 
 // Output paths
 const OUTPUT_DIR = path.join(__dirname, "..", "src", "data");

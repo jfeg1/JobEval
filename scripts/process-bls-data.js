@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const RAW_DIR = path.join(__dirname, "..", "data", "raw");
 const EXTRACTED_DIR = path.join(RAW_DIR, "extracted");
-const PUBLIC_DATA_DIR = path.join(__dirname, "..", "public", "data");
+const PUBLIC_DATA_DIR = path.join(__dirname, "..", "src", "data");
 
 // Occupational group names by SOC major group code
 const GROUP_NAMES = {
@@ -371,7 +371,7 @@ async function main() {
     console.log(`Search index contains ${Object.keys(index).length} terms`);
     console.log("\nNext steps:");
     console.log("  Run the app with: npm run dev");
-    console.log("  Or explore the data at: public/data/bls-data.json\n");
+    console.log("  Or explore the data at: src/data/bls-data.json\n");
   } catch (error) {
     console.error(`\n✗ Error: ${error.message}`);
     if (error.stack) {

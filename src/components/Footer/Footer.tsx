@@ -1,7 +1,7 @@
 /**
  * Footer Component
  *
- * Minimal footer with links to feedback, documentation, and legal pages.
+ * Minimal footer with links to feedback, documentation, privacy and licence.
  * Uses Scandinavian minimalist design with sage/slate colors.
  */
 
@@ -73,42 +73,14 @@ export function Footer({ onReportBug, onRequestFeature }: FooterProps) {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Privacy and licence */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="/privacy"
-                  className="text-sm text-slate-600 hover:text-sage-600 transition-colors focus:outline-none focus:underline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open(
-                      "https://github.com/jfeg1/JobEval/blob/main/PRIVACY_POLICY.md",
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
-                  }}
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/terms"
-                  className="text-sm text-slate-600 hover:text-sage-600 transition-colors focus:outline-none focus:underline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open(
-                      "https://github.com/jfeg1/JobEval/blob/main/TERMS_OF_SERVICE.md",
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
-                  }}
-                >
-                  Terms of Service
-                </a>
-              </li>
+            <h3 className="text-sm font-semibold text-slate-900 mb-3">Privacy &amp; License</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              JobEval runs entirely in your browser. Nothing you enter is sent anywhere; it stays on
+              this computer and in the files you save.
+            </p>
+            <ul className="space-y-2 mt-3">
               <li>
                 <a
                   href="https://github.com/jfeg1/JobEval/blob/main/LICENSE"
@@ -116,7 +88,7 @@ export function Footer({ onReportBug, onRequestFeature }: FooterProps) {
                   rel="noopener noreferrer"
                   className="text-sm text-slate-600 hover:text-sage-600 transition-colors focus:outline-none focus:underline"
                 >
-                  License (AGPL-3.0)
+                  License (MIT)
                 </a>
               </li>
             </ul>
@@ -127,7 +99,7 @@ export function Footer({ onReportBug, onRequestFeature }: FooterProps) {
         <div className="mt-8 pt-6 border-t border-slate-200">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500">
-              © {currentYear} JobEval. Open source under AGPL-3.0 license.
+              © {currentYear} JobEval. Free and open source under the MIT License.
             </p>
             <div className="flex items-center gap-4">
               <a

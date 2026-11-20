@@ -270,7 +270,7 @@ Currently, testing is manual. When automated testing is added:
 
 ## 📄 License
 
-By contributing to JobEval, you agree that your contributions will be licensed under the AGPL-3.0 license (for SMEs/nonprofits) with commercial licensing available for enterprises.
+By contributing to JobEval, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 
 ## 🙏 Recognition
 

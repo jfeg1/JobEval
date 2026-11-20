@@ -11,7 +11,7 @@ package-lock.json
 pnpm-lock.yaml
 
 # Data files
-public/data/
+src/data/bls-data.json
 
 # Other
 coverage/

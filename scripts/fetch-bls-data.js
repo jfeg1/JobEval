@@ -46,7 +46,7 @@ const ONET_DATA_PATH = path.join(
   "occupations.json"
 );
 const PROGRESS_PATH = path.join(__dirname, "..", "data", "progress.json");
-const OUTPUT_PATH = path.join(__dirname, "..", "public", "data", "bls-api-data.json");
+const OUTPUT_PATH = path.join(__dirname, "..", "src", "data", "bls-api-data.json");
 const ERROR_LOG_PATH = path.join(__dirname, "..", "data", "errors.log");
 
 // Data types to fetch per occupation
