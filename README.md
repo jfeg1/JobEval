@@ -80,17 +80,12 @@ cd JobEval
 npm install
 ```
 
-3. **Configure DevExtreme license:**
-   - Required for UI components
-   - See [DEVEXTREME_SETUP.md](./DEVEXTREME_SETUP.md) for detailed instructions
-   - Quick start: `cp src/devextreme-license.ts.template src/devextreme-license.ts` and add your key
-
-4. **Run the development server:**
+3. **Run the development server:**
 ```bash
 npm run dev
 ```
 
-5. **Open your browser:**
+4. **Open your browser:**
 Navigate to `http://localhost:5173`
 
 ### Building for Production

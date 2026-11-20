@@ -25,16 +25,12 @@ cd JobEval
 npm install
 ```
 
-3. **Configure DevExtreme** (required for UI components)
-   - See [DEVEXTREME_SETUP.md](./DEVEXTREME_SETUP.md) for detailed instructions
-   - Quick start: Copy `src/devextreme-license.ts.template` to `src/devextreme-license.ts` and add your trial key
-
-4. **Start development server**
+3. **Start development server**
 ```bash
 npm run dev
 ```
 
-5. **Run quality checks**
+4. **Run quality checks**
 ```bash
 npm run lint          # Check for code issues
 npm run type-check    # TypeScript validation
