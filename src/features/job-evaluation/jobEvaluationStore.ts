@@ -12,7 +12,7 @@ import {
 } from "./lib/plans";
 import { equalBands } from "./lib/groups";
 import { DEFAULT_POLICY, type EmployeeInput, type PayPolicy } from "./lib/payPolicy";
-import type { OjaSummary } from "./lib/openJobAnalysis";
+import { normalizeSummary, type OjaSummary } from "./lib/openJobAnalysis";
 import type { PairDecision, PairMap } from "./lib/paired";
 import { pairKey } from "./lib/paired";
 import type { JobRecord, StructureSettings, SubRating } from "./lib/assemble";
@@ -171,6 +171,17 @@ export function migrateV1(old: V1State): JobEvaluationData {
         ),
       };
     }),
+  };
+}
+
+/** Browser-storage key of the saved job evaluation. */
+export const STORE_KEY = "job-evaluation-storage";
+
+/** Brings saved jobs up to date: imported analyses gain the fields added since. */
+export function normalizeData(d: JobEvaluationData): JobEvaluationData {
+  return {
+    ...d,
+    jobs: (d.jobs ?? []).map((j) => ({ ...j, analysis: normalizeSummary(j.analysis) })),
   };
 }
 
@@ -367,11 +378,11 @@ export const useJobEvaluationStore = create<JobEvaluationData & Actions>()(
       reset: () => set(initialData()),
     }),
     {
-      name: "job-evaluation-storage",
-      version: 2,
+      name: STORE_KEY,
+      version: 3,
       migrate: (persisted, version) => {
-        if (version < 2) return migrateV1(persisted as V1State) as never;
-        return persisted as never;
+        const d = version < 2 ? migrateV1(persisted as V1State) : (persisted as JobEvaluationData);
+        return normalizeData(d) as never;
       },
       partialize: (s) => {
         // Persist data only, not the action functions.

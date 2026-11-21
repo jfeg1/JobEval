@@ -91,6 +91,31 @@ const asStr = (x: unknown): string => (typeof x === "string" ? x : "");
 
 export class OjaParseError extends Error {}
 
+/**
+ * Fills in fields added after a summary was first saved. Jobs imported before
+ * the job evaluation profile existed have no projectId or expertLevels.
+ */
+export function normalizeSummary(s: unknown): OjaSummary | null {
+  if (!s || typeof s !== "object") return null;
+  const o = s as Partial<OjaSummary>;
+  return {
+    projectId: "",
+    title: "",
+    department: "",
+    reportsTo: "",
+    purpose: "",
+    lang: "en",
+    organisation: "",
+    family: "",
+    sources: "",
+    raterCount: 0,
+    ...o,
+    expertLevels: o.expertLevels && typeof o.expertLevels === "object" ? o.expertLevels : {},
+    criticalTasks: Array.isArray(o.criticalTasks) ? o.criticalTasks : [],
+    criticalCompetencies: Array.isArray(o.criticalCompetencies) ? o.criticalCompetencies : [],
+  };
+}
+
 export function parseOjaProject(raw: unknown): OjaSummary {
   const p = asDict(raw);
   if (p.kind === "oja-response") {
@@ -161,8 +186,10 @@ export function parseOjaProject(raw: unknown): OjaSummary {
   criticalTasks.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
   criticalCompetencies.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
 
+  // Only when the profile is switched on: unticking it in Open Job Analysis
+  // hides the levels there but keeps any already given in the file.
   const expertLevels: Record<string, ExpertLevel> = {};
-  const subIds = new Set(raters.flatMap((r) => Object.keys(asDict(r.e))));
+  const subIds = new Set(p.eige ? raters.flatMap((r) => Object.keys(asDict(r.e))) : []);
   for (const id of subIds) {
     const vals = raters.map((r) => asDict(r.e)[id]).filter((x): x is number => isNum(x) && x >= 0);
     if (!vals.length) continue;

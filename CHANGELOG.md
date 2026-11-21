@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Open Job Analysis hand-off: the job experts' levels are no longer imported when the job evaluation profile was switched off in the project.
+- Jobs imported from Open Job Analysis by an earlier version (no expert levels) no longer break the Rate jobs tab.
+- A JobEval tab left open now picks up jobs sent from Open Job Analysis, and reloads work saved in another JobEval tab instead of writing its older copy over it.
+
 ### Added
 - **EU toolkit alignment (EIGE).** The job evaluation now follows the EU-wide guidelines on gender-neutral job evaluation and classification:
   - The toolkit's factor and subfactor plan as the default: 14 subfactors with levels 0–5 (knowledge 0–8), definitions, assessment questions, "mistakes to avoid" and examples; default weights 40/35/15/10 out of 1,200 points. Scores match the toolkit's Tool 5 workbook.

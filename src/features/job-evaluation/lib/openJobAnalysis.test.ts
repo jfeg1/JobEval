@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { OjaParseError, parseOjaProject } from "./openJobAnalysis";
+import { normalizeSummary, OjaParseError, parseOjaProject } from "./openJobAnalysis";
+import { migrateV1 } from "../jobEvaluationStore";
+import { fromFile } from "./evaluationFile";
 import example from "./__fixtures__/oja-hr-assistant.json";
 
 // The fixture is the "Load example" project from Open Job Analysis
@@ -45,5 +47,30 @@ describe("Open Job Analysis import", () => {
     expect(() => parseOjaProject({ kind: "oja-response" })).toThrow(OjaParseError);
     expect(() => parseOjaProject({ hello: "world" })).toThrow(OjaParseError);
     expect(() => parseOjaProject({ ...example, raterMode: true })).toThrow(OjaParseError);
+  });
+  it("ignores the experts' levels once the profile is switched off", () => {
+    const off = parseOjaProject({ ...example, eige: false });
+    expect(off.expertLevels).toEqual({});
+    expect(off.criticalTasks).toHaveLength(8);
+  });
+  it("fills in fields missing from jobs imported by an earlier version", () => {
+    const old = {
+      title: "HR Assistant",
+      organisation: "",
+      family: "",
+      sources: "",
+      raterCount: 3,
+      criticalTasks: [],
+      criticalCompetencies: [],
+    };
+    expect(normalizeSummary(null)).toBeNull();
+    expect(normalizeSummary(old)?.expertLevels).toEqual({});
+    const migrated = migrateV1({
+      jobs: [{ id: "j1", title: "HR Assistant", analysis: old } as never],
+    });
+    expect(
+      fromFile(JSON.stringify({ kind: "jobeval-evaluation", version: 2, data: migrated })).jobs[0]
+        .analysis?.expertLevels
+    ).toEqual({});
   });
 });
