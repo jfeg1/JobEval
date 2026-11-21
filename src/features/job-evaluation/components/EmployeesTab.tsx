@@ -1,13 +1,8 @@
 import React from "react";
 import { Button } from "@/shared/components/ui";
 import { useJobEvaluationStore } from "../jobEvaluationStore";
-import {
-  equityByGrade,
-  evaluateEmployee,
-  type Evaluation,
-  type Sex,
-  type RangePosition,
-} from "../lib/payPolicy";
+import { equityByGrade, evaluateEmployee, type Sex, type RangePosition } from "../lib/payPolicy";
+import type { FullEvaluation } from "../lib/assemble";
 import { NumberInput, SectionNote } from "./inputs";
 import { money, pct } from "./format";
 
@@ -17,14 +12,14 @@ const POSITION_LABEL: Record<RangePosition, string> = {
   above: "Above maximum",
 };
 
-export const EmployeesTab: React.FC<{ evaluation: Evaluation }> = ({ evaluation }) => {
+export const EmployeesTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
   const { employees, jobs, policy, addEmployee, updateEmployee, removeEmployee } =
     useJobEvaluationStore();
   const c = policy.currency;
-  const results = employees.map((e) => evaluateEmployee(e, evaluation));
-  const equity = equityByGrade(results, evaluation.grades);
+  const results = employees.map((e) => evaluateEmployee(e, ev.gradeForJob));
+  const equity = equityByGrade(results, ev.grades);
   const supplementFor = (jobId: string) =>
-    evaluation.jobs.find((j) => j.job.id === jobId)?.layeredSupplement ?? null;
+    ev.policyEvaluation?.jobs.find((j) => j.job.id === jobId)?.layeredSupplement ?? null;
 
   return (
     <div className="space-y-6">
@@ -34,7 +29,10 @@ export const EmployeesTab: React.FC<{ evaluation: Evaluation }> = ({ evaluation 
           Record pay the way a U.S. Standard Form 50 does: base pay, plus a location differential,
           plus a market supplement, plus other pay, equals total pay. Each component needs its own
           documented, objective criterion. The compa ratio uses base pay only, so a supplement
-          cannot hide a low base. Use IDs, not names, if you will share an export.
+          cannot hide a low base. Enter full-time equivalent annual amounts, so part-time pay
+          compares fairly. For the Directive reports, base pay is the basic salary and every other
+          line counts as complementary or variable pay. Use IDs, not names, if you will share a
+          file.
         </SectionNote>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">

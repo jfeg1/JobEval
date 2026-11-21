@@ -9,6 +9,12 @@
  * importance and frequency cutoffs; rare-but-important tasks count only if the
  * analyst chose to keep them; critical competencies meet the importance cutoff
  * and are needed at entry.
+ *
+ * Projects saved with the job evaluation profile switched on also carry each
+ * job expert's level for the EIGE subfactors (rater.e), and the job profile
+ * fields the toolkit asks for (department, reports to, purpose). JobEval shows
+ * the experts' median and range beside each subfactor. The committee still
+ * decides the level.
  */
 
 export interface OjaTaskEvidence {
@@ -25,8 +31,24 @@ export interface OjaCompetencyEvidence {
   distinguishing: boolean;
 }
 
+export interface ExpertLevel {
+  median: number;
+  min: number;
+  max: number;
+  /** Number of job experts who gave a level. */
+  n: number;
+}
+
 export interface OjaSummary {
+  /** The project's id, used to update the same job when the file is imported again. */
+  projectId: string;
   title: string;
+  department: string;
+  reportsTo: string;
+  purpose: string;
+  lang: string;
+  /** Job experts' levels per EIGE subfactor id. Empty if the profile was not collected. */
+  expertLevels: Record<string, ExpertLevel>;
   organisation: string;
   family: string;
   sources: string;
@@ -139,8 +161,29 @@ export function parseOjaProject(raw: unknown): OjaSummary {
   criticalTasks.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
   criticalCompetencies.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
 
+  const expertLevels: Record<string, ExpertLevel> = {};
+  const subIds = new Set(raters.flatMap((r) => Object.keys(asDict(r.e))));
+  for (const id of subIds) {
+    const vals = raters.map((r) => asDict(r.e)[id]).filter((x): x is number => isNum(x) && x >= 0);
+    if (!vals.length) continue;
+    const sorted = [...vals].sort((a, b) => a - b);
+    const m = Math.floor(sorted.length / 2);
+    expertLevels[id] = {
+      median: sorted.length % 2 ? sorted[m] : (sorted[m - 1] + sorted[m]) / 2,
+      min: sorted[0],
+      max: sorted[sorted.length - 1],
+      n: sorted.length,
+    };
+  }
+
   return {
+    projectId: asStr(p.id),
     title: asStr(job.title),
+    department: asStr(job.dept),
+    reportsTo: asStr(job.reportsTo),
+    purpose: asStr(job.purpose),
+    lang: asStr(p.lang) || "en",
+    expertLevels,
     organisation: asStr(job.org),
     family: asStr(job.family),
     sources: asStr(job.sources),

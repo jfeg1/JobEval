@@ -15,17 +15,27 @@ JobEval is in beta. [Report a bug](https://github.com/jfeg1/JobEval/issues/new?t
 
 **Offline:** download `jobeval.html` from the [latest release](https://github.com/jfeg1/JobEval/releases/latest) and double-click it. The whole app is in that one file.
 
-Then start a **job evaluation**: rate each job on skills, effort, responsibility and working conditions (the four criteria in the EU Pay Transparency Directive), set your pay philosophy as numbers, and get grades, pay ranges, pay by component and an equity check. It can import a project file from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app), so the ratings sit beside the evidence from your job analysis.
+Then start a **job evaluation**. It follows the EU toolkit on gender-neutral job evaluation and classification (EIGE), which puts the four criteria of the EU Pay Transparency Directive (skills, responsibility, effort and working conditions) into practice:
+
+1. **Set up.** Enter your number of workers and JobEval suggests the toolkit's method for your size: graduated factor comparison for micro-organisations, paired comparison for up to 15 job roles, or the point-factor method. The default plan is the toolkit's 14 subfactors (40/35/15/10 out of 1,200 points); a simple four-factor plan is also available. Add your own subfactors and committee members, and choose to rate blind (job titles and pay hidden).
+2. **Rate jobs.** Each subfactor shows its levels, the toolkit's guidance and "mistakes to avoid". Committee members enter their own levels, see the spread, then agree a level and write down why. Jobs from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app) arrive with their critical tasks and competencies, and with the job experts' levels on each subfactor.
+3. **Gender and groups.** Women- or men-dominated jobs (60/40 rule), job groups, and a quick check for higher-scoring jobs paid less than lower-scoring ones.
+4. **Pay structure.** A grade table from your lowest and highest salary and the step between grades, or (point method) a pay line from points and market data with pay in layers.
+5. **Employees.** Pay by component, compa ratios and an equity check by grade.
+6. **Reports** for the Directive: pay criteria (Art. 6), pay ranges for job adverts (Art. 5), the gender pay gap indicators (Art. 9), pay by category and the 5% joint pay assessment check (Art. 7 and 10), and the job evaluation record. Print each one or save it as PDF.
+
+**From Open Job Analysis:** switch on the job evaluation profile in Open Job Analysis, then use **Send to JobEval** on its Report step. Online, the job opens straight in JobEval. Offline, Open Job Analysis saves the project file; import it on the Rate jobs tab. Importing the same project again updates the evidence and keeps your ratings.
 
 A smaller **budget and market check** for a single job (company profile, job details, occupation match and an affordability calculator) is also available from the home page.
 
 ### Saving your work
 
-The app autosaves in your browser, but browser storage can be cleared. Use **Export Data** to keep a `.json` file, and **Import Data** to pick it up again on any computer.
+The app autosaves in your browser, but browser storage can be cleared. On the job evaluation page, use **Save file** to keep a `.json` file of everything (it contains employee pay, so store it like payroll data) and **Open file** to pick it up again on any computer. **Export Data** and **Import Data** in the top bar cover the budget and market check.
 
 ## Data
 
-- **Job evaluation:** the built-in example uses U.S. Bureau of Labor Statistics national medians (OEWS, May 2025). You enter the market rates for your own jobs.
+- **Job evaluation:** the factor and subfactor plan, level descriptions and guidance are from EIGE, *EU-wide guidelines on gender-neutral job evaluation and classification: step-by-step toolkit*. Two worked examples: the toolkit's own catering-company example (fictional), and the seven jobs from "From Job Analysis to Pay" with U.S. Bureau of Labor Statistics national medians (OEWS, May 2025). You enter the market rates for your own jobs.
+- The Directive reports follow Directive (EU) 2023/970. National laws transposing it set the final rules and formats; check yours.
 - **Budget and market check:** this still uses a small **sample** dataset of 20 occupations built for development. Treat its figures as a demonstration, not as market data. Replacing it with full BLS and O*NET data is the next item on the roadmap.
 
 ## Privacy

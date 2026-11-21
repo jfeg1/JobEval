@@ -191,3 +191,25 @@
   padding: 2rem;
   text-align: center;
 }
+
+/* Print one report section at a time (job evaluation reports) */
+@media print {
+  body.printing-one * {
+    visibility: hidden;
+  }
+  body.printing-one .print-me,
+  body.printing-one .print-me * {
+    visibility: visible;
+  }
+  body.printing-one .print-me {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+    border: 0;
+  }
+  body.printing-one .print-me .no-print {
+    display: none;
+  }
+}
