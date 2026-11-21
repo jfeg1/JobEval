@@ -218,18 +218,29 @@ export const JobsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                       ", with a job evaluation profile"}
                     )
                   </summary>
+                  {selected.analysis.stage !== "final" && (
+                    <p className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                      {selected.analysis.stage === "noLinkage"
+                        ? "Linkage (step 7) was not rated in Open Job Analysis, so the report has no final lists yet. These are the critical items so far. Finish linkage there and import the project again."
+                        : "Imported by an earlier version of JobEval: these are the critical items before linkage, not the report's final lists. Import the project again to update them."}
+                    </p>
+                  )}
                   <div className="mt-3 grid gap-4 md:grid-cols-2">
                     <div>
                       <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Critical tasks
+                        {selected.analysis.stage === "final"
+                          ? "Critical tasks linked to competencies"
+                          : "Critical tasks"}
                       </h4>
                       <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-700">
-                        {selected.analysis.criticalTasks.map((t) => (
-                          <li key={t.text}>
+                        {selected.analysis.criticalTasks.map((t, i) => (
+                          <li key={`${t.no ?? ""}-${i}`}>
+                            {t.no !== undefined && <span className="text-slate-500">T{t.no} </span>}
                             {t.text}{" "}
                             <span className="text-xs text-slate-500">
                               (importance {t.importance?.toFixed(1)}
-                              {t.rareButImportant ? ", rare but important" : ""})
+                              {t.rareButImportant ? ", rare but important" : ""}
+                              {t.linked?.length ? `; linked to ${t.linked.join(", ")}` : ""})
                             </span>
                           </li>
                         ))}
@@ -237,12 +248,21 @@ export const JobsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                     </div>
                     <div>
                       <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Critical competencies
+                        {selected.analysis.stage === "final"
+                          ? "Critical competencies linked to tasks"
+                          : "Critical competencies"}
                       </h4>
                       <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-700">
-                        {selected.analysis.criticalCompetencies.map((k) => (
-                          <li key={k.name}>
-                            <strong>{k.name}</strong>: {k.definition}
+                        {selected.analysis.criticalCompetencies.map((k, i) => (
+                          <li key={`${k.name}-${i}`}>
+                            <strong>{k.name}</strong>
+                            {k.definition && `: ${k.definition}`}
+                            {k.linked?.length ? (
+                              <span className="text-xs text-slate-500">
+                                {" "}
+                                (tasks {k.linked.map((n) => `T${n}`).join(", ")})
+                              </span>
+                            ) : null}
                           </li>
                         ))}
                       </ul>

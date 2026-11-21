@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Open Job Analysis hand-off: JobEval now starts from the report's final lists (critical tasks and competencies linked to each other at step 7), in the report's order and with their links, instead of every critical item. Until linkage is rated it shows the critical items so far, marked as not final.
 - Open Job Analysis hand-off: the job experts' levels are no longer imported when the job evaluation profile was switched off in the project.
 - Jobs imported from Open Job Analysis by an earlier version (no expert levels) no longer break the Rate jobs tab.
 - A JobEval tab left open now picks up jobs sent from Open Job Analysis, and reloads work saved in another JobEval tab instead of writing its older copy over it.

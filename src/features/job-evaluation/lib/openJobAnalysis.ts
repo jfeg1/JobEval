@@ -1,14 +1,17 @@
 /**
  * Reads a project file saved by Open Job Analysis
  * (https://github.com/jfeg1/work-analyzer.app) and returns the evidence a
- * rater needs: the critical tasks and competencies, with their averages.
+ * rater needs: the final lists of the job analysis report, with their averages.
  *
  * The rules mirror the app's core (OPM Delegated Examining Operations
  * Handbook, Appendix D): ratings of 0 are left out of averages; a task is
  * removed when at least half of raters scored it 0; critical tasks meet the
  * importance and frequency cutoffs; rare-but-important tasks count only if the
  * analyst chose to keep them; critical competencies meet the importance cutoff
- * and are needed at entry.
+ * and are needed at entry. Once linkage ratings exist, the final lists keep
+ * only the critical tasks and competencies linked to each other (average
+ * linkage rating at or above the cutoff), as the report does; before that,
+ * the report has no final lists and JobEval shows the critical items so far.
  *
  * Projects saved with the job evaluation profile switched on also carry each
  * job expert's level for the EIGE subfactors (rater.e), and the job profile
@@ -18,10 +21,14 @@
  */
 
 export interface OjaTaskEvidence {
+  /** Task number in the job analysis (T1, T2 …). */
+  no?: number;
   text: string;
   importance: number | null;
   frequency: number | null;
   rareButImportant: boolean;
+  /** Names of the competencies this task is linked to. */
+  linked?: string[];
 }
 
 export interface OjaCompetencyEvidence {
@@ -29,7 +36,17 @@ export interface OjaCompetencyEvidence {
   definition: string;
   importance: number | null;
   distinguishing: boolean;
+  /** Numbers of the tasks this competency is linked to. */
+  linked?: number[];
 }
+
+/**
+ * Which lists the summary holds:
+ * - "final": the report's final lists (critical and linked);
+ * - "noLinkage": linkage not rated yet, so the critical items so far;
+ * - "legacy": imported by an earlier JobEval that did not apply linkage.
+ */
+export type OjaStage = "final" | "noLinkage" | "legacy";
 
 export interface ExpertLevel {
   median: number;
@@ -53,6 +70,8 @@ export interface OjaSummary {
   family: string;
   sources: string;
   raterCount: number;
+  stage: OjaStage;
+  /** The report's final tasks (or the critical tasks so far; see stage). */
   criticalTasks: OjaTaskEvidence[];
   criticalCompetencies: OjaCompetencyEvidence[];
 }
@@ -64,6 +83,7 @@ interface Cutoffs {
   compImp: number;
   compEntry: number;
   compDV: number;
+  link: number;
 }
 
 const DEFAULT_CUTOFFS: Cutoffs = {
@@ -73,6 +93,7 @@ const DEFAULT_CUTOFFS: Cutoffs = {
   compImp: 3,
   compEntry: 2,
   compDV: 3,
+  link: 3,
 };
 
 type Dict = Record<string, unknown>;
@@ -109,6 +130,7 @@ export function normalizeSummary(s: unknown): OjaSummary | null {
     family: "",
     sources: "",
     raterCount: 0,
+    stage: "legacy",
     ...o,
     expertLevels: o.expertLevels && typeof o.expertLevels === "object" ? o.expertLevels : {},
     criticalTasks: Array.isArray(o.criticalTasks) ? o.criticalTasks : [],
@@ -137,32 +159,38 @@ export function parseOjaProject(raw: unknown): OjaSummary {
   const keep = asDict(p.keepTasks);
   const raters = asArr(p.raters);
 
-  const criticalTasks: OjaTaskEvidence[] = [];
-  for (const t of asArr(p.tasks)) {
+  type Task = OjaTaskEvidence & { id: string };
+  type Comp = OjaCompetencyEvidence & { id: string };
+
+  const tasks: Task[] = [];
+  asArr(p.tasks).forEach((t, i) => {
     const id = asStr(t.id);
     const rs = raters
       .map((r) => asDict(asDict(r.t)[id]))
       .filter((x) => isNum(x.imp) && isNum(x.freq));
     const n = rs.length;
-    if (!n) continue;
+    if (!n) return;
     const notPerformed = rs.filter((x) => x.imp === 0 || x.freq === 0).length;
-    if (notPerformed >= n / 2) continue;
+    if (notPerformed >= n / 2) return;
     const imp = mean(rs.map((x) => x.imp));
     const freq = mean(rs.map((x) => x.freq));
-    if (imp === null || freq === null) continue;
+    if (imp === null || freq === null) return;
     const byRule = imp >= c.taskImp && freq >= c.taskFreq;
     const rare = !byRule && imp >= c.rareImp && freq < c.taskFreq;
     if (byRule || (rare && keep[id] === true)) {
-      criticalTasks.push({
+      tasks.push({
+        id,
+        no: i + 1,
         text: asStr(t.text),
         importance: imp,
         frequency: freq,
         rareButImportant: rare,
+        linked: [],
       });
     }
-  }
+  });
 
-  const criticalCompetencies: OjaCompetencyEvidence[] = [];
+  const comps: Comp[] = [];
   for (const k of asArr(p.competencies)) {
     const id = asStr(k.id);
     const rs = raters
@@ -174,17 +202,35 @@ export function parseOjaProject(raw: unknown): OjaSummary {
     const dv = mean(rs.map((x) => x.dv));
     if (imp === null || entry === null) continue;
     if (imp >= c.compImp && entry <= c.compEntry) {
-      criticalCompetencies.push({
+      comps.push({
+        id,
         name: asStr(k.name),
         definition: asStr(k.definition),
         importance: imp,
         distinguishing: dv !== null && dv >= c.compDV,
+        linked: [],
       });
     }
   }
 
-  criticalTasks.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
-  criticalCompetencies.sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0));
+  // Linkage: every critical task against every critical competency.
+  let rated = 0;
+  for (const t of tasks) {
+    for (const k of comps) {
+      const key = `${t.id}|${k.id}`;
+      const vals = raters.map((r) => asDict(r.l)[key]).filter(isNum);
+      if (vals.length) rated++;
+      const avg = mean(vals);
+      if (avg !== null && avg >= c.link) {
+        t.linked!.push(k.name);
+        k.linked!.push(t.no!);
+      }
+    }
+  }
+  const final = rated > 0;
+  const strip = <T extends { id: string }>({ id: _id, ...rest }: T) => rest; // eslint-disable-line @typescript-eslint/no-unused-vars
+  const criticalTasks = (final ? tasks.filter((t) => t.linked!.length) : tasks).map(strip);
+  const criticalCompetencies = (final ? comps.filter((k) => k.linked!.length) : comps).map(strip);
 
   // Only when the profile is switched on: unticking it in Open Job Analysis
   // hides the levels there but keeps any already given in the file.
@@ -215,6 +261,7 @@ export function parseOjaProject(raw: unknown): OjaSummary {
     family: asStr(job.family),
     sources: asStr(job.sources),
     raterCount: raters.length,
+    stage: final ? "final" : "noLinkage",
     criticalTasks,
     criticalCompetencies,
   };

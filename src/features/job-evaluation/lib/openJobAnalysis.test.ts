@@ -13,9 +13,20 @@ describe("Open Job Analysis import", () => {
     expect(s.title).toBe("HR Assistant (example)");
     expect(s.raterCount).toBe(3);
   });
-  it("finds the same critical items as the app", () => {
-    expect(s.criticalTasks.length).toBe(8);
+  it("takes the final lists of the job analysis report", () => {
+    // 8 critical tasks, of which T11 is linked to no critical competency.
+    expect(s.stage).toBe("final");
+    expect(s.criticalTasks.map((t) => t.no)).toEqual([1, 2, 4, 6, 7, 8, 12]);
     expect(s.criticalCompetencies.length).toBe(5);
+    expect(s.criticalTasks.every((t) => t.linked?.length)).toBe(true);
+    expect(s.criticalCompetencies.every((k) => k.linked?.length)).toBe(true);
+  });
+  it("shows the critical items so far when linkage is not rated", () => {
+    const raw = example as unknown as { raters: { l: unknown }[] };
+    const noLink = parseOjaProject({ ...raw, raters: raw.raters.map((r) => ({ ...r, l: {} })) });
+    expect(noLink.stage).toBe("noLinkage");
+    expect(noLink.criticalTasks).toHaveLength(8);
+    expect(noLink.criticalCompetencies).toHaveLength(5);
   });
   it("keeps the rare-but-important audit task the analyst chose to keep", () => {
     const audit = s.criticalTasks.find((t) => t.text.startsWith("Prepares records"));
@@ -51,7 +62,7 @@ describe("Open Job Analysis import", () => {
   it("ignores the experts' levels once the profile is switched off", () => {
     const off = parseOjaProject({ ...example, eige: false });
     expect(off.expertLevels).toEqual({});
-    expect(off.criticalTasks).toHaveLength(8);
+    expect(off.criticalTasks).toHaveLength(7);
   });
   it("fills in fields missing from jobs imported by an earlier version", () => {
     const old = {
@@ -65,6 +76,7 @@ describe("Open Job Analysis import", () => {
     };
     expect(normalizeSummary(null)).toBeNull();
     expect(normalizeSummary(old)?.expertLevels).toEqual({});
+    expect(normalizeSummary(old)?.stage).toBe("legacy");
     const migrated = migrateV1({
       jobs: [{ id: "j1", title: "HR Assistant", analysis: old } as never],
     });
