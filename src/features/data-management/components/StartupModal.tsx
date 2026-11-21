@@ -20,7 +20,6 @@ import { Modal } from "@/shared/components/ui/Modal";
 import { useToast } from "@/shared/components/ui/Toast";
 import { useCompanyStore } from "@/features/company-setup/companyStore";
 import { usePositionStore } from "@/features/position-wizard/positionStore";
-import { useQuickAdvisoryStore } from "@/features/quick-advisory/quickAdvisoryStore";
 import { importAllData } from "@/lib/persistence/importService";
 import type { JobEvalExportData } from "@/lib/persistence/dataStructure";
 
@@ -30,9 +29,7 @@ import type { JobEvalExportData } from "@/lib/persistence/dataStructure";
 function hasExistingData(): boolean {
   const hasCompanyData = useCompanyStore.getState().profile !== null;
   const hasPositionData = usePositionStore.getState().basicInfo !== null;
-  const hasQuickData = useQuickAdvisoryStore.getState().formData.jobTitle !== "";
-
-  return hasCompanyData || hasPositionData || hasQuickData;
+  return hasCompanyData || hasPositionData;
 }
 
 /**
@@ -139,19 +136,9 @@ function formatTimestamp(date: Date): string {
 function getRedirectPath(data: JobEvalExportData): string {
   const { evaluationType } = data.metadata;
 
-  // Redirect based on evaluation type
-  switch (evaluationType) {
-    case "quick":
-      return "/quick";
-    case "full":
-      return "/position/basic";
-    case "mixed":
-      // If has both, go to quick advisory (simpler workflow)
-      return "/quick";
-    case "none":
-    default:
-      return "/";
-  }
+  // Backups with position data resume the wizard. Everything else, including
+  // older backups made with the removed Quick Advisory, starts on the home page.
+  return evaluationType === "full" || evaluationType === "mixed" ? "/position/basic" : "/";
 }
 
 export interface StartupModalProps {

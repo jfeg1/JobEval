@@ -15,11 +15,9 @@ JobEval is in beta. [Report a bug](https://github.com/jfeg1/JobEval/issues/new?t
 
 **Offline:** download `jobeval.html` from the [latest release](https://github.com/jfeg1/JobEval/releases/latest) and double-click it. The whole app is in that one file.
 
-Then choose what you need:
+Then start a **job evaluation**: rate each job on skills, effort, responsibility and working conditions (the four criteria in the EU Pay Transparency Directive), set your pay philosophy as numbers, and get grades, pay ranges, pay by component and an equity check. It can import a project file from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app), so the ratings sit beside the evidence from your job analysis.
 
-- **Job evaluation** – rate each job on skills, effort, responsibility and working conditions (the four criteria in the EU Pay Transparency Directive), set your pay philosophy as numbers, and get grades, pay ranges, pay by component and an equity check. It can import a project file from [Open Job Analysis](https://github.com/jfeg1/work-analyzer.app), so the ratings sit beside the evidence from your job analysis.
-- **Quick advisory** – a quick check of one salary against market data, with a PDF summary.
-- **In-depth analysis** – company profile, job details, occupation match and an affordability calculator.
+A smaller **budget and market check** for a single job (company profile, job details, occupation match and an affordability calculator) is also available from the home page.
 
 ### Saving your work
 
@@ -28,7 +26,7 @@ The app autosaves in your browser, but browser storage can be cleared. Use **Exp
 ## Data
 
 - **Job evaluation:** the built-in example uses U.S. Bureau of Labor Statistics national medians (OEWS, May 2025). You enter the market rates for your own jobs.
-- **Quick advisory and in-depth analysis:** these still use a small **sample** dataset of 20 occupations built for development. Treat their figures as a demonstration, not as market data. Replacing it with full BLS and O*NET data is the next item on the roadmap.
+- **Budget and market check:** this still uses a small **sample** dataset of 20 occupations built for development. Treat its figures as a demonstration, not as market data. Replacing it with full BLS and O*NET data is the next item on the roadmap.
 
 ## Privacy
 

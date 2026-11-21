@@ -14,7 +14,6 @@ export interface ErrorReport {
   dataState: {
     hasCompanyData: boolean;
     hasPositionData: boolean;
-    hasQuickAdvisory: boolean;
     hasWizardProgress: boolean;
   };
 }
@@ -76,13 +75,11 @@ function getDataState() {
     // Check localStorage for persisted Zustand stores
     const companyData = localStorage.getItem("company-storage");
     const positionData = localStorage.getItem("position-storage");
-    const quickAdvisoryData = localStorage.getItem("quick-advisory-storage");
     const wizardData = localStorage.getItem("wizard-storage");
 
     return {
       hasCompanyData: !!(companyData && JSON.parse(companyData)?.state?.profile),
       hasPositionData: !!(positionData && JSON.parse(positionData)?.state?.basicInfo),
-      hasQuickAdvisory: !!(quickAdvisoryData && JSON.parse(quickAdvisoryData)?.state?.formData),
       hasWizardProgress: !!(wizardData && JSON.parse(wizardData)?.state?.currentStep),
     };
   } catch {
@@ -90,7 +87,6 @@ function getDataState() {
     return {
       hasCompanyData: false,
       hasPositionData: false,
-      hasQuickAdvisory: false,
       hasWizardProgress: false,
     };
   }
@@ -119,7 +115,6 @@ export function formatErrorReportMarkdown(report: ErrorReport): string {
   const dataStateLines = [
     `- Company data present: ${report.dataState.hasCompanyData ? "Yes" : "No"}`,
     `- Position data present: ${report.dataState.hasPositionData ? "Yes" : "No"}`,
-    `- Quick Advisory completed: ${report.dataState.hasQuickAdvisory ? "Yes" : "No"}`,
     `- Wizard in progress: ${report.dataState.hasWizardProgress ? "Yes" : "No"}`,
   ].join("\n");
 

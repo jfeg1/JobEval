@@ -12,107 +12,38 @@ const LandingPage: React.FC = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-light text-sage-900 mb-4">Welcome to JobEval</h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Choose the evaluation approach that best fits your needs
+            Set pay you can explain: score each job on skills, effort, responsibility and working
+            conditions, then build a pay structure from the scores.
           </p>
         </div>
 
-        {/* Two Cards - Side by Side */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-          {/* Quick Advisory Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow duration-200">
-            <div className="mb-6">
-              <div className="text-3xl mb-3">⚡</div>
-              <h2 className="text-2xl font-semibold text-sage-900 mb-2">Quick Advisory</h2>
-              <p className="text-sm font-medium text-accent uppercase tracking-wide mb-4">
-                2-3 minutes
-              </p>
-              <p className="text-slate-600 leading-relaxed">
-                Get fast market comparison and affordability check for your proposed salary
-              </p>
-            </div>
-
-            {/* Features List */}
-            <ul className="space-y-3 mb-8 text-sm text-slate-600">
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Rapid market benchmarking</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Instant affordability analysis</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Quick decision support</span>
-              </li>
-            </ul>
-
-            <Button variant="primary" className="w-full" onClick={() => navigate("/quick")}>
-              Start Quick Advisory
-            </Button>
-          </div>
-
-          {/* In-Depth Analysis Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow duration-200">
-            <div className="mb-6">
-              <div className="text-3xl mb-3">🎯</div>
-              <h2 className="text-2xl font-semibold text-sage-900 mb-2">In-Depth Analysis</h2>
-              <p className="text-sm font-medium text-accent uppercase tracking-wide mb-4">
-                30 minutes
-              </p>
-              <p className="text-slate-600 leading-relaxed">
-                Comprehensive point-factor evaluation with detailed job analysis and defensible
-                salary justification
-              </p>
-            </div>
-
-            {/* Features List */}
-            <ul className="space-y-3 mb-8 text-sm text-slate-600">
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Detailed point-factor evaluation</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Complete job analysis</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-sage-600 mr-2">✓</span>
-                <span>Defensible documentation</span>
-              </li>
-            </ul>
-
-            <Button variant="primary" className="w-full" onClick={() => navigate("/setup/company")}>
-              Start In-Depth Analysis
-            </Button>
-          </div>
-
-          {/* Job Evaluation Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-8 hover:shadow-md transition-shadow duration-200">
+        <div className="grid md:grid-cols-5 gap-8 mb-8">
+          {/* Job Evaluation Card (recommended) */}
+          <div className="md:col-span-3 bg-white rounded-lg shadow-sm border p-8 hover:shadow-md transition-shadow duration-200 border-sage-300">
             <div className="mb-6">
               <div className="text-3xl mb-3">⚖️</div>
               <h2 className="text-2xl font-semibold text-sage-900 mb-2">Job Evaluation</h2>
               <p className="text-sm font-medium text-accent uppercase tracking-wide mb-4">
-                For several jobs
+                Recommended
               </p>
               <p className="text-slate-600 leading-relaxed">
-                Rate jobs from your job analysis, set your pay philosophy, and build grades and
-                ranges you can explain
+                Rate each job on the four factors in the EU Pay Transparency Directive, set your pay
+                philosophy as numbers, and build grades and pay ranges you can explain.
               </p>
             </div>
 
             <ul className="space-y-3 mb-8 text-sm text-slate-600">
               <li className="flex items-start">
                 <span className="text-sage-600 mr-2">✓</span>
-                <span>Imports Open Job Analysis files</span>
+                <span>Imports Open Job Analysis files as evidence for each rating</span>
               </li>
               <li className="flex items-start">
                 <span className="text-sage-600 mr-2">✓</span>
-                <span>Internal value and market, mixed your way</span>
+                <span>Your job values and the market, combined by your own rule</span>
               </li>
               <li className="flex items-start">
                 <span className="text-sage-600 mr-2">✓</span>
-                <span>Pay components and an equity check</span>
+                <span>Grades, pay by component and an equity check</span>
               </li>
             </ul>
 
@@ -120,19 +51,29 @@ const LandingPage: React.FC = () => {
               Start Job Evaluation
             </Button>
           </div>
-        </div>
 
-        {/* Footer Link */}
-        <div className="text-center">
-          <button
-            className="text-sm text-slate-500 hover:text-accent transition-colors duration-200 underline"
-            onClick={() => {
-              // Placeholder for future comparison page
-              alert("Comparison guide coming soon!");
-            }}
-          >
-            Not sure? Compare approaches
-          </button>
+          {/* In-Depth Analysis Card */}
+          <div className="md:col-span-2 bg-white rounded-lg shadow-sm border p-8 hover:shadow-md transition-shadow duration-200 border-slate-200">
+            <div className="mb-6">
+              <div className="text-3xl mb-3">🎯</div>
+              <h2 className="text-2xl font-semibold text-sage-900 mb-2">Budget and market check</h2>
+              <p className="text-sm font-medium text-accent uppercase tracking-wide mb-4">
+                One job
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Describe one job and your company, match it to an occupation, and check a salary
+                range against your budget. Uses demonstration data for now.
+              </p>
+            </div>
+
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => navigate("/setup/company")}
+            >
+              Start budget check
+            </Button>
+          </div>
         </div>
       </div>
     </div>
