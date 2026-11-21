@@ -4,6 +4,12 @@ import type { ActiveSubfactor, Method } from "../lib/plans";
 import { pointsFor, round1 } from "../lib/plans";
 import type { SubRating } from "../lib/assemble";
 import type { ExpertLevel } from "../lib/openJobAnalysis";
+import {
+  EVIDENCE_CHECK_TEXT,
+  EVIDENCE_CHECK_TEXT_NO_PROFILE,
+  openEvidenceCheck,
+  type SkillEvidence,
+} from "../lib/competencyEvidence";
 import type { Rater } from "../jobEvaluationStore";
 import { fmtScore } from "./labels";
 
@@ -14,6 +20,8 @@ interface Props {
   rating: SubRating | undefined;
   raters: Rater[];
   expert: ExpertLevel | undefined;
+  /** Competencies from the job analysis placed under this subfactor (skills only). */
+  evidence?: SkillEvidence | null;
   onFinal: (level: number) => void;
   onRater: (raterId: string, level: number | null) => void;
   onRationale: (text: string) => void;
@@ -32,6 +40,7 @@ export const SubfactorRating: React.FC<Props> = ({
   rating,
   raters,
   expert,
+  evidence = null,
   onFinal,
   onRater,
   onRationale,
@@ -47,6 +56,7 @@ export const SubfactorRating: React.FC<Props> = ({
     .filter((x): x is number => typeof x === "number");
   const spread = given.length ? Math.max(...given) - Math.min(...given) : null;
   const name = `sub-${sub.id}`;
+  const check = openEvidenceCheck(evidence, final, expert?.median, sub.maxLevel, rating?.rationale);
   const [open, setOpen] = useState(final === null);
 
   return (
@@ -78,6 +88,11 @@ export const SubfactorRating: React.FC<Props> = ({
               spread {spread}
             </span>
           )}
+          {check && (
+            <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-900">
+              rationale needed
+            </span>
+          )}
         </span>
       </summary>
 
@@ -97,6 +112,45 @@ export const SubfactorRating: React.FC<Props> = ({
                 Start from level {Math.round(expert.median)}
               </button>
             )}
+          </p>
+        )}
+
+        {evidence && (
+          <div className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-700">
+            <p className="font-semibold text-slate-800">
+              Competency evidence (Open Job Analysis):{" "}
+              {evidence.strength === "strong"
+                ? "strong"
+                : evidence.strength === "some"
+                  ? "some"
+                  : "none placed under this subfactor"}
+            </p>
+            {evidence.competencies.length > 0 && (
+              <ul className="mt-1 list-disc space-y-0.5 pl-5">
+                {evidence.competencies.map((k, i) => (
+                  <li key={`${k.name}-${i}`}>
+                    <strong>{k.name}</strong>{" "}
+                    <span className="text-xs text-slate-500">
+                      (importance {k.importance?.toFixed(1)}
+                      {k.linked?.length
+                        ? `; ${k.linked.length} linked task${k.linked.length > 1 ? "s" : ""}: ${k.linked.map((n) => `T${n}`).join(", ")}`
+                        : ""}
+                      )
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!expert && (
+              <p className="mt-1 text-xs text-slate-500">
+                No job evaluation profile in the analysis, so there is no suggested level.
+              </p>
+            )}
+          </div>
+        )}
+        {check && (
+          <p role="status" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            {(expert ? EVIDENCE_CHECK_TEXT : EVIDENCE_CHECK_TEXT_NO_PROFILE)[check]}
           </p>
         )}
 

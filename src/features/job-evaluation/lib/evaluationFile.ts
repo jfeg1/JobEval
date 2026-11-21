@@ -3,7 +3,7 @@
  * JSON file so the work survives a cleared browser and can move to another
  * computer. It contains employee pay: store it as carefully as payroll data.
  */
-import { initialData, type JobEvaluationData } from "../jobEvaluationStore";
+import { initialData, normalizeData, type JobEvaluationData } from "../jobEvaluationStore";
 
 export const FILE_KIND = "jobeval-evaluation";
 export const FILE_VERSION = 2;
@@ -35,11 +35,11 @@ export function fromFile(text: string): JobEvaluationData {
   if ((o.version ?? 0) > FILE_VERSION)
     throw new EvaluationFileError("This file was saved by a newer version of JobEval.");
   const base = initialData();
-  return {
+  return normalizeData({
     ...base,
     ...o.data,
     settings: { ...base.settings, ...o.data.settings },
-  } as JobEvaluationData;
+  } as JobEvaluationData);
 }
 
 /**

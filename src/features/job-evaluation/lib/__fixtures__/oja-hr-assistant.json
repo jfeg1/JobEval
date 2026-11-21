@@ -81,61 +81,71 @@
       "id": "c1",
       "name": "Reading",
       "definition": "Understands and interprets written material, including rules, instructions and reports.",
-      "source": "Occupational study"
+      "source": "Occupational study",
+      "subfactor": "communication"
     },
     {
       "id": "c2",
       "name": "Writing",
       "definition": "Communicates information in a succinct and organized manner, using correct grammar, punctuation and spelling, for the intended audience.",
-      "source": "Occupational study"
+      "source": "Occupational study",
+      "subfactor": "communication"
     },
     {
       "id": "c3",
       "name": "Interpersonal Skills",
       "definition": "Shows understanding, courtesy, tact and concern; relates well to different people.",
-      "source": "Job description"
+      "source": "Job description",
+      "subfactor": "communication"
     },
     {
       "id": "c4",
       "name": "Oral Communication",
       "definition": "Expresses information to individuals or groups effectively; listens to others.",
-      "source": "Job description"
+      "source": "Job description",
+      "subfactor": "communication"
     },
     {
       "id": "c5",
       "name": "Reasoning",
       "definition": "Identifies rules, principles or relationships that explain facts or data; draws sound conclusions.",
-      "source": "Levelling guide"
+      "source": "Levelling guide",
+      "subfactor": "problemSolving"
     },
     {
       "id": "c6",
       "name": "Decision Making",
       "definition": "Makes sound, well-informed decisions and commits to action.",
-      "source": "Levelling guide"
+      "source": "Levelling guide",
+      "subfactor": "problemSolving"
     },
     {
       "id": "c7",
       "name": "Customer Service",
       "definition": "Works with clients and customers to assess needs, provide information and resolve problems.",
-      "source": "Levelling guide"
+      "source": "Levelling guide",
+      "subfactor": "communication"
     },
     {
       "id": "c8",
       "name": "Arithmetic",
       "definition": "Performs computations using whole numbers, fractions, decimals and percentages.",
-      "source": "Job experts"
+      "source": "Job experts",
+      "subfactor": "knowledge"
     },
     {
       "id": "c9",
       "name": "Mathematical Reasoning",
       "definition": "Solves practical problems by choosing appropriately from a variety of mathematical techniques.",
-      "source": "Job experts"
+      "source": "Job experts",
+      "subfactor": "problemSolving"
     },
     {
       "id": "c10",
       "name": "Personnel and Human Resources",
       "definition": "Knowledge of HR concepts, practices and rules, such as recruitment, pay and employee relations.",
-      "source": "Job experts"
+      "source": "Job experts",
+      "subfactor": "knowledge"
     }
   ],
   "raters": [

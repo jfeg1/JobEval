@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Button } from "@/shared/components/ui";
-import { dataOf, useJobEvaluationStore } from "../jobEvaluationStore";
+import { dataOf, STORE_KEY, useJobEvaluationStore } from "../jobEvaluationStore";
 import { evaluateAll } from "../lib/assemble";
 import { METHOD_INFO } from "../lib/plans";
 import { parseOjaProject } from "../lib/openJobAnalysis";
-import { EvaluationFileError, fromFile, takeInbox, toFile } from "../lib/evaluationFile";
+import { EvaluationFileError, fromFile, INBOX_KEY, takeInbox, toFile } from "../lib/evaluationFile";
 import { eigeExample, part6Example } from "../example";
 import { SetupTab } from "./SetupTab";
 import { JobsTab } from "./JobsTab";
@@ -32,27 +32,40 @@ const JobEvaluationPage: React.FC = () => {
   const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Projects sent from Open Job Analysis with "Send to JobEval".
+  // Projects sent from Open Job Analysis with "Send to JobEval": waiting when
+  // the page opens, or arriving while it is open in another tab.
   useEffect(() => {
-    const items = takeInbox();
-    if (!items.length) return;
-    let added = 0;
-    let updated = 0;
-    for (const item of items) {
-      try {
-        const r = useJobEvaluationStore.getState().importOja(parseOjaProject(item));
-        if (r.updated) updated++;
-        else added++;
-      } catch {
-        /* skip anything that is not a project */
+    const importInbox = () => {
+      const items = takeInbox();
+      if (!items.length) return;
+      let added = 0;
+      let updated = 0;
+      for (const item of items) {
+        try {
+          const r = useJobEvaluationStore.getState().importOja(parseOjaProject(item));
+          if (r.updated) updated++;
+          else added++;
+        } catch {
+          /* skip anything that is not a project */
+        }
       }
-    }
-    if (added + updated) {
-      setTab(1);
-      setNotice(
-        `From Open Job Analysis: ${[added && `${added} job${added > 1 ? "s" : ""} added`, updated && `${updated} updated`].filter(Boolean).join(", ")}.`
-      );
-    }
+      if (added + updated) {
+        setTab(1);
+        setNotice(
+          `From Open Job Analysis: ${[added && `${added} job${added > 1 ? "s" : ""} added`, updated && `${updated} updated`].filter(Boolean).join(", ")}.`
+        );
+      }
+    };
+    importInbox();
+    // Another tab (JobEval opened again by "Send to JobEval") saved its work:
+    // reload it here, so this tab does not write its older copy over it.
+    const onStorage = (e: StorageEvent) => {
+      if (e.storageArea !== localStorage) return;
+      if (e.key === INBOX_KEY && e.newValue) importInbox();
+      else if (e.key === STORE_KEY) void useJobEvaluationStore.persist.rehydrate();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   const load = (which: "part6" | "eige") => {

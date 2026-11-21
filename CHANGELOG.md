@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Competency evidence for the skills subfactors: competencies placed under a skills subfactor in Open Job Analysis are listed under it with their importance and linked tasks. A level below the job experts' median despite strong evidence, or above it with no competency, asks for a rationale (Rate jobs tab and job evaluation record). Thresholds (importance 4, two linked tasks) can be changed on the Set up tab.
+
+### Fixed
+- Open Job Analysis hand-off: JobEval now starts from the report's final lists (critical tasks and competencies linked to each other at step 7), in the report's order and with their links, instead of every critical item. Until linkage is rated it shows the critical items so far, marked as not final.
+- Open Job Analysis hand-off: the job experts' levels are no longer imported when the job evaluation profile was switched off in the project.
+- Jobs imported from Open Job Analysis by an earlier version (no expert levels) no longer break the Rate jobs tab.
+- A JobEval tab left open now picks up jobs sent from Open Job Analysis, and reloads work saved in another JobEval tab instead of writing its older copy over it.
+
+### Added
 - **EU toolkit alignment (EIGE).** The job evaluation now follows the EU-wide guidelines on gender-neutral job evaluation and classification:
   - The toolkit's factor and subfactor plan as the default: 14 subfactors with levels 0–5 (knowledge 0–8), definitions, assessment questions, "mistakes to avoid" and examples; default weights 40/35/15/10 out of 1,200 points. Scores match the toolkit's Tool 5 workbook.
   - Three methods by organisation size: graduated factor comparison (micro), paired comparison (up to 15 roles, with a check for circular decisions), point-factor.
