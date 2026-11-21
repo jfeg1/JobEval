@@ -13,6 +13,7 @@ import {
 import { equalBands } from "./lib/groups";
 import { DEFAULT_POLICY, type EmployeeInput, type PayPolicy } from "./lib/payPolicy";
 import { normalizeSummary, type OjaSummary } from "./lib/openJobAnalysis";
+import { DEFAULT_EVIDENCE_RULES, type EvidenceRules } from "./lib/competencyEvidence";
 import type { PairDecision, PairMap } from "./lib/paired";
 import { pairKey } from "./lib/paired";
 import type { JobRecord, StructureSettings, SubRating } from "./lib/assemble";
@@ -48,6 +49,8 @@ export interface JobEvaluationData {
   justifications: Record<string, string>;
   /** How pay progresses within and between grades, in plain words (Art. 6). */
   progressionCriteria: string;
+  /** When competencies from the job analysis count as strong evidence for a skills subfactor. */
+  evidenceRules: EvidenceRules;
 }
 
 interface Actions {
@@ -83,6 +86,7 @@ interface Actions {
 
   setJustification: (grade: number, text: string) => void;
   setProgressionCriteria: (text: string) => void;
+  setEvidenceRules: (patch: Partial<EvidenceRules>) => void;
 
   replaceAll: (data: JobEvaluationData) => void;
   reset: () => void;
@@ -120,6 +124,7 @@ export const initialData = (): JobEvaluationData => ({
   employees: [],
   justifications: {},
   progressionCriteria: "",
+  evidenceRules: { ...DEFAULT_EVIDENCE_RULES },
 });
 
 export const emptyJob = (id: string, title: string): EvaluatedJob => ({
@@ -181,6 +186,7 @@ export const STORE_KEY = "job-evaluation-storage";
 export function normalizeData(d: JobEvaluationData): JobEvaluationData {
   return {
     ...d,
+    evidenceRules: { ...DEFAULT_EVIDENCE_RULES, ...d.evidenceRules },
     jobs: (d.jobs ?? []).map((j) => ({ ...j, analysis: normalizeSummary(j.analysis) })),
   };
 }
@@ -373,6 +379,8 @@ export const useJobEvaluationStore = create<JobEvaluationData & Actions>()(
       setJustification: (grade, text) =>
         set((s) => ({ justifications: { ...s.justifications, [grade]: text } })),
       setProgressionCriteria: (progressionCriteria) => set({ progressionCriteria }),
+      setEvidenceRules: (patch) =>
+        set((s) => ({ evidenceRules: { ...s.evidenceRules, ...patch } })),
 
       replaceAll: (data) => set({ ...initialData(), ...data }),
       reset: () => set(initialData()),

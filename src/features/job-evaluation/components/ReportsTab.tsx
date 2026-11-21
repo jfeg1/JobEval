@@ -12,6 +12,7 @@ import {
 import { payRecords, type FullEvaluation } from "../lib/assemble";
 import { gapReport, reportingDuty, type CategoryRow } from "../lib/directive";
 import { SectionNote } from "./inputs";
+import { openEvidenceCheck, skillEvidence } from "../lib/competencyEvidence";
 import { money, pct } from "./format";
 import { fmtRange, fmtScore, PREDOMINANCE_LABEL } from "./labels";
 import { csvRow, downloadText, printSection } from "./print";
@@ -48,6 +49,7 @@ const thead = "bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-
 export const ReportsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
   const st = useJobEvaluationStore();
   const { org, settings, employees, policy, justifications, progressionCriteria, raters } = st;
+  const analysisOf = (jobId: string) => st.jobs.find((j) => j.id === jobId)?.analysis ?? null;
   const c = policy.currency;
   const subs = activeSubfactors(settings);
   const report = gapReport(payRecords(employees, ev));
@@ -414,6 +416,14 @@ export const ReportsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                 <tbody className="divide-y divide-slate-100">
                   {subs.map((d) => {
                     const r = o.job.ratings[d.id];
+                    const analysis = analysisOf(o.job.id);
+                    const unexplained = openEvidenceCheck(
+                      skillEvidence(analysis, d.id, st.evidenceRules),
+                      r?.final,
+                      analysis?.expertLevels[d.id]?.median,
+                      d.maxLevel,
+                      r?.rationale
+                    );
                     const given = Object.values(r?.byRater ?? {}).filter(
                       (x): x is number => typeof x === "number"
                     );
@@ -426,7 +436,15 @@ export const ReportsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                             ? `committee ${Math.min(...given)}–${Math.max(...given)}`
                             : ""}
                         </td>
-                        <td className="py-1 align-top text-slate-600">{r?.rationale}</td>
+                        <td className="py-1 align-top text-slate-600">
+                          {r?.rationale}
+                          {unexplained && (
+                            <span className="text-amber-800">
+                              Rationale needed: the level goes against the competency evidence from
+                              the job analysis.
+                            </span>
+                          )}
+                        </td>
                       </tr>
                     );
                   })}

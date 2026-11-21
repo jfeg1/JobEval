@@ -2,8 +2,9 @@ import React, { useRef, useState } from "react";
 import { Button, Textarea } from "@/shared/components/ui";
 import { useJobEvaluationStore } from "../jobEvaluationStore";
 import { activeSubfactors, FACTOR_KEYS, FACTOR_NAMES, weightsTotal } from "../lib/plans";
-import { EIGE_FACTOR_INTROS } from "../lib/eigePlan";
+import { EIGE_FACTOR_INTROS, EIGE_SUBFACTORS } from "../lib/eigePlan";
 import { OjaParseError, parseOjaProject } from "../lib/openJobAnalysis";
+import { skillEvidence } from "../lib/competencyEvidence";
 import type { FullEvaluation } from "../lib/assemble";
 import { SubfactorRating } from "./SubfactorRating";
 import { PairedComparison } from "./PairedComparison";
@@ -14,7 +15,7 @@ const OJA_URL = "https://jfeg1.github.io/work-analyzer.app/";
 
 export const JobsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
   const st = useJobEvaluationStore();
-  const { jobs, settings, raters, blind, policy, structure } = st;
+  const { jobs, settings, raters, blind, policy, structure, evidenceRules } = st;
   const [selectedId, setSelectedId] = useState<string | null>(jobs[0]?.id ?? null);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -256,6 +257,11 @@ export const JobsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                         {selected.analysis.criticalCompetencies.map((k, i) => (
                           <li key={`${k.name}-${i}`}>
                             <strong>{k.name}</strong>
+                            {k.subfactor && (
+                              <span className="ml-1 rounded bg-slate-200 px-1.5 py-0.5 text-xs text-slate-700">
+                                {EIGE_SUBFACTORS.find((d) => d.id === k.subfactor)?.name}
+                              </span>
+                            )}
                             {k.definition && `: ${k.definition}`}
                             {k.linked?.length ? (
                               <span className="text-xs text-slate-500">
@@ -298,6 +304,7 @@ export const JobsTab: React.FC<{ ev: FullEvaluation }> = ({ ev }) => {
                           rating={selected.ratings[d.id]}
                           raters={raters}
                           expert={selected.analysis?.expertLevels[d.id]}
+                          evidence={skillEvidence(selected.analysis, d.id, evidenceRules)}
                           onFinal={(level) => st.setRating(selected.id, d.id, { final: level })}
                           onRater={(rid, level) => st.setRaterLevel(selected.id, d.id, rid, level)}
                           onRationale={(text) =>

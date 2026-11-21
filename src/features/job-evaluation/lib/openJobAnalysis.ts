@@ -19,6 +19,7 @@
  * the experts' median and range beside each subfactor. The committee still
  * decides the level.
  */
+import { SKILL_SUBFACTORS } from "./competencyEvidence";
 
 export interface OjaTaskEvidence {
   /** Task number in the job analysis (T1, T2 …). */
@@ -38,6 +39,8 @@ export interface OjaCompetencyEvidence {
   distinguishing: boolean;
   /** Numbers of the tasks this competency is linked to. */
   linked?: number[];
+  /** The skills subfactor the analyst placed it under (EIGE subfactor id), or "". */
+  subfactor?: string;
 }
 
 /**
@@ -209,6 +212,9 @@ export function parseOjaProject(raw: unknown): OjaSummary {
         importance: imp,
         distinguishing: dv !== null && dv >= c.compDV,
         linked: [],
+        subfactor: (SKILL_SUBFACTORS as readonly string[]).includes(asStr(k.subfactor))
+          ? asStr(k.subfactor)
+          : "",
       });
     }
   }

@@ -20,7 +20,7 @@ const METHODS: Method[] = ["graduated", "paired", "points"];
 
 export const SetupTab: React.FC = () => {
   const st = useJobEvaluationStore();
-  const { org, settings, raters, blind, jobs } = st;
+  const { org, settings, raters, blind, jobs, evidenceRules } = st;
   const suggested = suggestMethod(org.workers, jobs.length);
   const subs = activeSubfactors({ ...settings, method: "points" });
   const total = weightsTotal(settings);
@@ -301,6 +301,46 @@ export const SetupTab: React.FC = () => {
           </div>
         </details>
       </div>
+
+      {settings.planId === "eige" && (
+        <div className="card space-y-4">
+          <h3 className="card-title">Competency evidence from the job analysis</h3>
+          <SectionNote>
+            In Open Job Analysis each competency can be placed under one of the five skills
+            subfactors. On the Rate jobs tab, a subfactor whose competencies are strong evidence
+            asks for a rationale when the agreed level is below the job experts&apos; level, and a
+            subfactor with no competency asks for one when the level is above it. Importance never
+            sets the level: it says how much a competency matters, not how demanding it is.
+          </SectionNote>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="ev-imp">
+                Strong evidence: average importance at least (1–5)
+              </label>
+              <NumberInput
+                id="ev-imp"
+                value={evidenceRules.strongImportance}
+                step={0.1}
+                min={1}
+                max={5}
+                onChange={(v) => st.setEvidenceRules({ strongImportance: v ?? 4 })}
+              />
+            </div>
+            <div>
+              <label className="label" htmlFor="ev-links">
+                …and linked to at least this many critical tasks
+              </label>
+              <NumberInput
+                id="ev-links"
+                value={evidenceRules.strongLinks}
+                step={1}
+                min={0}
+                onChange={(v) => st.setEvidenceRules({ strongLinks: v ?? 2 })}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="card space-y-4">
         <h3 className="card-title">Job evaluation committee</h3>

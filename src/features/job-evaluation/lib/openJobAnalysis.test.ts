@@ -77,6 +77,8 @@ describe("Open Job Analysis import", () => {
     expect(normalizeSummary(null)).toBeNull();
     expect(normalizeSummary(old)?.expertLevels).toEqual({});
     expect(normalizeSummary(old)?.stage).toBe("legacy");
+    const opened = fromFile(JSON.stringify({ kind: "jobeval-evaluation", version: 2, data: {} }));
+    expect(opened.evidenceRules).toEqual({ strongImportance: 4, strongLinks: 2 });
     const migrated = migrateV1({
       jobs: [{ id: "j1", title: "HR Assistant", analysis: old } as never],
     });

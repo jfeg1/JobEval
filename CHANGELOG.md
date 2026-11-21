@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Competency evidence for the skills subfactors: competencies placed under a skills subfactor in Open Job Analysis are listed under it with their importance and linked tasks. A level below the job experts' median despite strong evidence, or above it with no competency, asks for a rationale (Rate jobs tab and job evaluation record). Thresholds (importance 4, two linked tasks) can be changed on the Set up tab.
+
 ### Fixed
 - Open Job Analysis hand-off: JobEval now starts from the report's final lists (critical tasks and competencies linked to each other at step 7), in the report's order and with their links, instead of every critical item. Until linkage is rated it shows the critical items so far, marked as not final.
 - Open Job Analysis hand-off: the job experts' levels are no longer imported when the job evaluation profile was switched off in the project.
