@@ -19,6 +19,28 @@ describe("Open Job Analysis import", () => {
     const audit = s.criticalTasks.find((t) => t.text.startsWith("Prepares records"));
     expect(audit?.rareButImportant).toBe(true);
   });
+  it("reads the job profile and the job experts' levels on the EU toolkit subfactors", () => {
+    expect(s.department).toBe("Human Resources");
+    expect(s.reportsTo).toBe("HR Manager");
+    expect(s.projectId).toBe(example.id);
+    expect(Object.keys(s.expertLevels)).toHaveLength(14);
+    expect(s.expertLevels.knowledge).toEqual({ median: 4, min: 4, max: 4, n: 3 });
+    expect(s.expertLevels.problemSolving).toEqual({ median: 3, min: 3, max: 4, n: 3 });
+  });
+  it("updates the same job when the project is imported again", async () => {
+    const { useJobEvaluationStore } = await import("../jobEvaluationStore");
+    const st = useJobEvaluationStore.getState();
+    st.reset();
+    const a = useJobEvaluationStore.getState().importOja(s);
+    useJobEvaluationStore.getState().setRating(a.id, "knowledge", { final: 5 });
+    const b = useJobEvaluationStore.getState().importOja({ ...s, criticalTasks: [] });
+    expect(b).toEqual({ id: a.id, updated: true });
+    const job = useJobEvaluationStore.getState().jobs[0];
+    expect(useJobEvaluationStore.getState().jobs).toHaveLength(1);
+    expect(job.title).toBe("HR Assistant");
+    expect(job.ratings.knowledge.final).toBe(5);
+    expect(job.analysis?.criticalTasks).toHaveLength(0);
+  });
   it("rejects rater files and other JSON", () => {
     expect(() => parseOjaProject({ kind: "oja-response" })).toThrow(OjaParseError);
     expect(() => parseOjaProject({ hello: "world" })).toThrow(OjaParseError);

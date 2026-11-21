@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **EU toolkit alignment (EIGE).** The job evaluation now follows the EU-wide guidelines on gender-neutral job evaluation and classification:
+  - The toolkit's factor and subfactor plan as the default: 14 subfactors with levels 0–5 (knowledge 0–8), definitions, assessment questions, "mistakes to avoid" and examples; default weights 40/35/15/10 out of 1,200 points. Scores match the toolkit's Tool 5 workbook.
+  - Three methods by organisation size: graduated factor comparison (micro), paired comparison (up to 15 roles, with a check for circular decisions), point-factor.
+  - Additional subfactors (one per factor), subfactor weights, shortlist for the graduated method.
+  - Evaluation committee: each member's level, the spread, the agreed level and its rationale; optional blind rating.
+  - Gender representation per job (60/40 rule), job groups in equal bands with manual overrides, a score chart by gender predominance and a quick check for higher-scoring jobs paid less.
+  - Grade table from lowest and highest salary and the progression between grades.
+  - Reports for the Directive: pay criteria (Art. 6), pay ranges for adverts (Art. 5), gender pay gap indicators (a)–(g) with CSV (Art. 9), pay by category with the 5% joint pay assessment check (Art. 7 and 10), job evaluation record; print or save as PDF.
+  - Open Job Analysis hand-off: several files at once, re-import updates the same job, job profile fields, and the job experts' levels on each subfactor; "Send to JobEval" from Open Job Analysis opens the job directly.
+  - Save file / Open file for the whole evaluation.
+  - The toolkit's catering-company example.
+
+### Changed
+- The simple four-factor plan uses 35/35/20/10, and the Part 6 example has seven jobs (IT Support Technician added), matching the article's draft v2.
+- Saved work from the earlier version opens on the simple plan with its weights.
+
 - **Job evaluation** (`/evaluate`): point-factor evaluation on the four criteria in Article 4 of the EU Pay Transparency Directive (skills, effort, responsibility, working conditions), with five defined levels per factor.
   - Imports project files from Open Job Analysis and shows the critical tasks and competencies beside the ratings as evidence.
   - Pay policy set as explicit numbers: internal weight, market position, extra pay per 100 points, anchor (market-pegged or budgeted), range width. Shows the market's own slope next to the organisation's.

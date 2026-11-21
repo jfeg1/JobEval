@@ -15,9 +15,6 @@
  *   from locality pay).
  */
 
-import type { Factor, FactorLevels } from "./factors";
-import { jobPoints } from "./factors";
-
 export type Approach = "blended" | "layered";
 
 export interface Band {
@@ -71,7 +68,6 @@ export const DEFAULT_POLICY: PayPolicy = {
 export interface JobInput {
   id: string;
   title: string;
-  levels: FactorLevels;
   /** Annual market median in the policy currency, if known. */
   marketMedian: number | null;
   /** Share of the survey job's duties this job matches, 0–1. */
@@ -132,6 +128,8 @@ export function internalAt(policy: PayPolicy, anchor: number, points: number): n
 
 export interface Grade {
   grade: number;
+  /** Job group the grade was built from, when grades come from groups. */
+  group?: number;
   from: number;
   to: number;
   midpoint: number;
@@ -168,8 +166,12 @@ export function buildGrades(
   });
 }
 
+/** Grade by lower limits, so a score with decimals (e.g. 499.6) still finds its grade. */
 export function gradeOf(points: number, grades: Grade[]): Grade | null {
-  return grades.find((g) => points >= g.from && points <= g.to) ?? null;
+  if (!grades.length || points < grades[0].from) return null;
+  let found: Grade | null = null;
+  for (const g of grades) if (points >= g.from) found = g;
+  return found && points <= grades[grades.length - 1].to ? found : null;
 }
 
 export interface JobResult {
@@ -202,13 +204,13 @@ export function isBenchmark(job: JobInput, policy: PayPolicy): boolean {
   );
 }
 
+/** Pay targets for jobs whose points are known; `points[i]` belongs to `jobs[i]`. */
 export function evaluate(
   jobs: JobInput[],
-  factors: Factor[],
-  totalPoints: number,
+  points: (number | null)[],
   policy: PayPolicy
 ): Evaluation {
-  const pts = jobs.map((j) => jobPoints(j.levels, factors, totalPoints));
+  const pts = points;
   const benchIdx = jobs
     .map((_, i) => i)
     .filter((i) => pts[i] !== null && isBenchmark(jobs[i], policy));
@@ -266,7 +268,7 @@ export interface EmployeeInput {
   label: string;
   jobId: string;
   sex: Sex;
-  /** Annual base pay. Compa ratio uses base pay only. */
+  /** Annual base pay, full-time equivalent. Compa ratio uses base pay only. */
   basePay: number | null;
   /** Location differential as a share of base pay, e.g. 0.1706. */
   locationPct: number;
@@ -285,9 +287,11 @@ export interface EmployeeResult {
   rangePosition: RangePosition | null;
 }
 
-export function evaluateEmployee(e: EmployeeInput, ev: Evaluation): EmployeeResult {
-  const job = ev.jobs.find((j) => j.job.id === e.jobId);
-  const grade = job?.grade ?? null;
+export function evaluateEmployee(
+  e: EmployeeInput,
+  gradeForJob: (jobId: string) => Grade | null
+): EmployeeResult {
+  const grade = gradeForJob(e.jobId);
   const base = e.basePay;
   const locationPay = base !== null ? base * (e.locationPct || 0) : 0;
   const totalPay =

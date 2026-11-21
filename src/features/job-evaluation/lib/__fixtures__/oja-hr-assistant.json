@@ -1,13 +1,17 @@
 {
   "kind": "oja-project",
-  "version": 1,
-  "id": "oeamvwtr",
+  "version": 2,
+  "lang": "en",
+  "id": "xy4e51z4",
   "job": {
     "title": "HR Assistant (example)",
     "org": "Example Co.",
     "family": "Human Resources",
     "analyst": "Your name",
     "date": "",
+    "dept": "Human Resources",
+    "reportsTo": "HR Manager",
+    "purpose": "Supports the HR team by answering employee questions, keeping personnel records accurate and confidential, and applying HR policies and procedures to day-to-day cases.",
     "sources": "Job description; performance standards; interviews with two job holders and their manager."
   },
   "tasks": [
@@ -282,6 +286,22 @@
         "t12|c3": 2,
         "t12|c4": 1,
         "t12|c7": 2
+      },
+      "e": {
+        "knowledge": 4,
+        "communication": 3,
+        "problemSolving": 3,
+        "planning": 2,
+        "physicalSkills": 1,
+        "people": 1,
+        "goods": 1,
+        "information": 3,
+        "financial": 1,
+        "mentalEffort": 2,
+        "emotionalEffort": 3,
+        "physicalEffort": 1,
+        "environment": 1,
+        "organisational": 1
       }
     },
     {
@@ -431,6 +451,22 @@
         "t12|c3": 1,
         "t12|c4": 2,
         "t12|c7": 1
+      },
+      "e": {
+        "knowledge": 4,
+        "communication": 3,
+        "problemSolving": 4,
+        "planning": 2,
+        "physicalSkills": 1,
+        "people": 1,
+        "goods": 1,
+        "information": 3,
+        "financial": 1,
+        "mentalEffort": 2,
+        "emotionalEffort": 4,
+        "physicalEffort": 1,
+        "environment": 1,
+        "organisational": 1
       }
     },
     {
@@ -580,6 +616,22 @@
         "t12|c3": 2,
         "t12|c4": 2,
         "t12|c7": 2
+      },
+      "e": {
+        "knowledge": 4,
+        "communication": 3,
+        "problemSolving": 3,
+        "planning": 2,
+        "physicalSkills": 1,
+        "people": 1,
+        "goods": 1,
+        "information": 2,
+        "financial": 1,
+        "mentalEffort": 2,
+        "emotionalEffort": 3,
+        "physicalEffort": 1,
+        "environment": 1,
+        "organisational": 1
       }
     }
   ],
@@ -596,5 +648,6 @@
   "keepTasks": {
     "t12": true
   },
-  "seq": 20
+  "seq": 20,
+  "eige": true
 }

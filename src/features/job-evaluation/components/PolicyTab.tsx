@@ -1,7 +1,6 @@
 import React from "react";
 import { Description, Label, Radio, RadioGroup } from "@headlessui/react";
 import { useJobEvaluationStore } from "../jobEvaluationStore";
-import { weightsTotal } from "../lib/factors";
 import type { Approach, Evaluation } from "../lib/payPolicy";
 import { NumberInput, SectionNote } from "./inputs";
 import { money, pct } from "./format";
@@ -35,9 +34,8 @@ const Field: React.FC<{
 );
 
 export const PolicyTab: React.FC<{ evaluation: Evaluation }> = ({ evaluation }) => {
-  const { policy, updatePolicy, factors, updateFactorWeight } = useJobEvaluationStore();
+  const { policy, updatePolicy } = useJobEvaluationStore();
   const { line, anchor } = evaluation;
-  const total = weightsTotal(factors);
 
   return (
     <div className="space-y-6">
@@ -171,36 +169,6 @@ export const PolicyTab: React.FC<{ evaluation: Evaluation }> = ({ evaluation }) 
             ))}
           </div>
         </RadioGroup>
-      </div>
-
-      <div className="card space-y-3">
-        <h3 className="card-title">Factor weights</h3>
-        <SectionNote>
-          The four factors are the criteria named in Article 4 of the EU Pay Transparency Directive
-          (Directive (EU) 2023/970): skills, effort, responsibility and working conditions. Change
-          the weights only for a reason you can explain.
-        </SectionNote>
-        <div className="grid gap-4 md:grid-cols-4">
-          {factors.map((f) => (
-            <div key={f.id}>
-              <label className="label" htmlFor={`w-${f.id}`}>
-                {f.name}
-              </label>
-              <NumberInput
-                id={`w-${f.id}`}
-                percent
-                value={f.weight}
-                onChange={(v) => updateFactorWeight(f.id, v ?? 0)}
-              />
-            </div>
-          ))}
-        </div>
-        <p
-          className={`text-sm ${Math.abs(total - 1) < 1e-6 ? "text-slate-600" : "font-semibold text-red-700"}`}
-        >
-          Weights total {pct(total)}
-          {Math.abs(total - 1) < 1e-6 ? "." : ": they must total 100%."}
-        </p>
       </div>
     </div>
   );
